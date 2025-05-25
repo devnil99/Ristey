@@ -1,0 +1,16 @@
+@media (max-width: 768px) {
+    .profile-card {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .profile-card img {
+      margin-bottom: 10px;
+    }
+  
+    .profile-card-details {
+      margin-left: 0;
+      text-align: center;
+    }
+  }
+  
