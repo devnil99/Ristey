@@ -83,7 +83,7 @@ function App() {
           <Route path="/User_Login" element={<User_Login />} />
 
           <Route path="/Home_Page_Log" element={<Home_Page_Log />} />
-          <Route path="/Home_Page_WLog" element={<Home_Page_WLog />} />
+          <Route path="/" element={<Home_Page_WLog />} />
           <Route path="/User_Data_wl/:id" element={<User_Data_wl />} />
 
 
