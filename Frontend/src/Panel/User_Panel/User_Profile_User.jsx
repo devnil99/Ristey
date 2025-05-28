@@ -110,6 +110,7 @@ function User_Profile_User() {
   // }, [file])
 
   return (
+    <>
     <div>
       <div style={{ width: '100%', height: '50px', backgroundColor: 'rgba(7, 110, 148,1)', position: 'fixed', zIndex: '999', display: 'flex',marginTop:'-10px' }}>
         <Link to='/Home_Page_wLog'>
@@ -1019,6 +1020,8 @@ function User_Profile_User() {
         </Card>
       ))}
     </div>
+
+    </>
   );
 }
 

@@ -1,12 +1,10 @@
-
-
-
 import React, { useEffect, useState } from "react";
 import { Button, Card, message } from "antd";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSend } from "react-icons/io5";
 import { IoCall } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import './Home_Page_Log.css';
 
 import {
   UserGet,
@@ -28,54 +26,55 @@ function Home_Page_Log() {
   const id = localStorage.getItem("user_id");
   const baseurl = "http://127.0.0.1:8000/";
 
-
   const [user, setUser] = useState([]); // current user
-  const [alluser, setAlluser] = useState([]) // all user
+  const [alluser, setAlluser] = useState([]); // all user
   const [data, setData] = useState([]); // male/Female filterd user
   const [admin, setAdmin] = useState([]); // admin
   const [staff_Json, setStaff_Json] = useState([]); // staff
   const [developer, setDeveloper] = useState([]); // developer
   const [charges, setCharges] = useState([]); // charges
-  const [reload, setReload] = useState(0)
+  const [reload, setReload] = useState(0);
 
   const today = new Date();
   const month = String(today.getMonth() + 1).padStart(2, "0"); // Ensure 2-digit month
   const year = today.getFullYear();
   // const formattedDate = `${year}-${month}-01`; // ✅ Corrected format (No extra quotes)
 
-
   const user_get = async () => {
     const response = await UserGet();
 
-    const alluser_filter = response.filter(i => i.role === 'user')
-    setAlluser(alluser_filter)
+    const alluser_filter = response.filter((i) => i.role === "user");
+    setAlluser(alluser_filter);
 
-    const admin_filter = response.filter(i => i.role === 'admin')
-    setAdmin(admin_filter)
+    const admin_filter = response.filter((i) => i.role === "admin");
+    setAdmin(admin_filter);
 
-    const staff_filter = response.filter(i => i.role === 'staff')
-    setStaff_Json(staff_filter)
+    const staff_filter = response.filter((i) => i.role === "staff");
+    setStaff_Json(staff_filter);
 
-    const developer_filter = response.filter(i => i.role === 'developer')
-    setDeveloper(developer_filter)
+    const developer_filter = response.filter((i) => i.role === "developer");
+    setDeveloper(developer_filter);
 
     const current_user = response.filter((i) => i.id === id);
     setUser(current_user); // current
 
     const response_UserDataGet = await UserDataGet();
     const user_geder = current_user.map((i) => i.gender);
-    const user_geder_str = String(user_geder)
+    const user_geder_str = String(user_geder);
     if (user_geder_str == "Male") {
-      const filter_female = response_UserDataGet.filter((i) => i.gender === "Female");
+      const filter_female = response_UserDataGet.filter(
+        (i) => i.gender === "Female"
+      );
       setData(filter_female);
     } else {
-      const filter_male = response_UserDataGet.filter((i) => i.gender === "Male");
+      const filter_male = response_UserDataGet.filter(
+        (i) => i.gender === "Male"
+      );
       setData(filter_male);
     }
 
     const response_PostCharges = await PostChargesGet();
     setCharges(response_PostCharges);
-
   };
 
   useEffect(() => {
@@ -87,7 +86,6 @@ function Home_Page_Log() {
       distribute(i);
     }
   };
-
 
   const distribute = async (value) => {
     const data_id = value.User_id;
@@ -109,21 +107,21 @@ function Home_Page_Log() {
         response1,
         "****** (1) user_reduce_balance Main okkkkkkk ******"
       ); // ok
-      const current_admin = response1.filter((i) => i.role === 'admin');
-      const current_staff = response1.filter((i) => i.role === 'staff');
-      const current_dev = response1.filter((i) => i.role === 'developer');
+      const current_admin = response1.filter((i) => i.role === "admin");
+      const current_staff = response1.filter((i) => i.role === "staff");
+      const current_dev = response1.filter((i) => i.role === "developer");
       const current_user = response1.filter((i) => i.id === id);
-      setAdmin(current_admin)
-      setStaff_Json(current_staff)
-      setDeveloper(current_dev)
+      setAdmin(current_admin);
+      setStaff_Json(current_staff);
+      setDeveloper(current_dev);
       setAlluser(response1);
       setUser(current_user);
-
 
       const plateform_charge = (amount * 2) / 100; // plateform charge $2 = $98
       const after_pateform_charge = amount - plateform_charge;
 
-      const staffCommision = (parseInt(after_pateform_charge) * parseInt(commision)) / 100; // send Staff 98 ka 15% = 14.7 == 83.3
+      const staffCommision =
+        (parseInt(after_pateform_charge) * parseInt(commision)) / 100; // send Staff 98 ka 15% = 14.7 == 83.3
       const staff_Commision = parseInt(staffCommision);
 
       //////////////////////////////// Staff Commossion ////////////////////////////////////////////
@@ -142,16 +140,15 @@ function Home_Page_Log() {
           response2,
           "***** (2) refer_staff_commission okkkkk ******"
         ); // ok
-        const current_admin = response2.filter((i) => i.role === 'admin');
-        const current_staff = response2.filter((i) => i.role === 'staff');
-        const current_dev = response2.filter((i) => i.role === 'developer');
+        const current_admin = response2.filter((i) => i.role === "admin");
+        const current_staff = response2.filter((i) => i.role === "staff");
+        const current_dev = response2.filter((i) => i.role === "developer");
         const current_user = response2.filter((i) => i.id === id);
-        setAdmin(current_admin)
-        setStaff_Json(current_staff)
-        setDeveloper(current_dev)
+        setAdmin(current_admin);
+        setStaff_Json(current_staff);
+        setDeveloper(current_dev);
         setAlluser(response2);
         setUser(current_user);
-
 
         value.user_apply.push({
           suser_id: id,
@@ -170,15 +167,15 @@ function Home_Page_Log() {
           "****** (2,1) User_Array_Staff_commisssion okkkkk *******"
         );
 
-        const staffrev = ({
+        const staffrev = {
           suser_id: id,
           ruser_id: data_id,
           staff_amount: staff_Commision,
           total_amount: amount,
           date: today,
           month: month,
-          staff_id: staff_id
-        });
+          staff_id: staff_id,
+        };
 
         const adminresponse5 = await StaffTotalRevenuePost(staffrev);
         console.log(adminresponse5, "****** Stafftotal revenue okkkkk *******");
@@ -190,7 +187,7 @@ function Home_Page_Log() {
         parseInt(after_pateform_charge) - parseInt(staff_Commision); // 83.3
 
       const int_dev_commision = (after_staff_Commision * 15) / 100; // send developer  12
-      const dev_commision = parseInt(int_dev_commision)
+      const dev_commision = parseInt(int_dev_commision);
       const dev_id = developer.map((i) => i.id);
       const developer_id = String(dev_id);
 
@@ -200,13 +197,13 @@ function Home_Page_Log() {
       const fix_developer_amount = { balance: add_developer_balance };
 
       const response3 = await UserUpdate(developer_id, fix_developer_amount);
-      const current_admin3 = response3.filter((i) => i.role === 'admin');
-      const current_staff3 = response3.filter((i) => i.role === 'staff');
-      const current_dev3 = response3.filter((i) => i.role === 'developer');
+      const current_admin3 = response3.filter((i) => i.role === "admin");
+      const current_staff3 = response3.filter((i) => i.role === "staff");
+      const current_dev3 = response3.filter((i) => i.role === "developer");
       const current_user3 = response3.filter((i) => i.id === id);
-      setAdmin(current_admin3)
-      setStaff_Json(current_staff3)
-      setDeveloper(current_dev3)
+      setAdmin(current_admin3);
+      setStaff_Json(current_staff3);
+      setDeveloper(current_dev3);
       setAlluser(response3);
       setUser(current_user3);
       console.log(response3, "***** (3) Dev_commission Main okkkkkk ******"); // ok
@@ -220,8 +217,8 @@ function Home_Page_Log() {
         total_amount: amount,
         date: today,
         month: month,
-        dev_id: developer_id
-      }
+        dev_id: developer_id,
+      };
 
       const devresponse5 = await DevTotalRevenuePost(devrev);
 
@@ -229,18 +226,19 @@ function Home_Page_Log() {
 
       const filter_Dev = developer.filter((i) => i.refer === value.ref);
       if (filter_Dev.length === 1) {
-        const parse_add = parseInt(staff_Commision) + parseInt(add_developer_balance); // send Dev API 14
-        const add = parseInt(parse_add)
+        const parse_add =
+          parseInt(staff_Commision) + parseInt(add_developer_balance); // send Dev API 14
+        const add = parseInt(parse_add);
         const fix_Dev_amount = { balance: add };
 
         const response4 = await UserUpdate(developer_id, fix_Dev_amount);
-        const current_admin4 = response4.filter((i) => i.role === 'admin');
-        const current_staff4 = response4.filter((i) => i.role === 'staff');
-        const current_dev4 = response4.filter((i) => i.role === 'developer');
+        const current_admin4 = response4.filter((i) => i.role === "admin");
+        const current_staff4 = response4.filter((i) => i.role === "staff");
+        const current_dev4 = response4.filter((i) => i.role === "developer");
         const current_user4 = response4.filter((i) => i.id === id);
-        setAdmin(current_admin4)
-        setStaff_Json(current_staff4)
-        setDeveloper(current_dev4)
+        setAdmin(current_admin4);
+        setStaff_Json(current_staff4);
+        setDeveloper(current_dev4);
         setAlluser(response4);
         setUser(current_user4);
         console.log(response4, "***** (3,1) refer_Dev_commission ******"); // ok
@@ -261,24 +259,21 @@ function Home_Page_Log() {
           "***** (3,2) UserData_Array_Update_Dev_commission /////  okkkkk ******"
         ); // ok
 
-        const devrev = ({
+        const devrev = {
           suser_id: id,
           ruser_id: data_id,
           dev_amount: dev_commision,
           total_amount: amount,
           date: today,
           month: month,
-          dev_id: developer_id
-
-        });
+          dev_id: developer_id,
+        };
 
         const devresponse5 = await DevTotalRevenuePost(devrev);
         console.log(devresponse5, "****** devtotal revenue okkkkk *******");
       }
 
-
       //////////////////////// Admin Commission ///////////////////////////////
-
 
       const admincommision = after_staff_Commision - dev_commision; // send admin 71
       const admin_commision = parseInt(admincommision);
@@ -291,32 +286,35 @@ function Home_Page_Log() {
       const fix_admin_amount = { balance: add_Admin_balance };
 
       const response6 = await UserUpdate(admin_id, fix_admin_amount);
-      const current_admin6 = response6.filter((i) => i.role === 'admin');
-      const current_staff6 = response6.filter((i) => i.role === 'staff');
-      const current_dev6 = response6.filter((i) => i.role === 'developer');
+      const current_admin6 = response6.filter((i) => i.role === "admin");
+      const current_staff6 = response6.filter((i) => i.role === "staff");
+      const current_dev6 = response6.filter((i) => i.role === "developer");
       const current_user6 = response6.filter((i) => i.id === id);
-      setAdmin(current_admin6)
-      setStaff_Json(current_staff6)
-      setDeveloper(current_dev6)
+      setAdmin(current_admin6);
+      setStaff_Json(current_staff6);
+      setDeveloper(current_dev6);
       setAlluser(response6);
       setUser(current_user6);
       console.log(response6, "***** (4) Admin_Commission Main ////// *****"); // ok
 
-      const filter_admin = admin.filter((i) => i.refer === value.ref && i.role === 'admin');
+      const filter_admin = admin.filter(
+        (i) => i.refer === value.ref && i.role === "admin"
+      );
       if (filter_admin.length === 1) {
-        const parse_add = parseInt(staff_Commision) + parseInt(add_Admin_balance); // send Dev API 14
-        const add = parseInt(parse_add)
+        const parse_add =
+          parseInt(staff_Commision) + parseInt(add_Admin_balance); // send Dev API 14
+        const add = parseInt(parse_add);
         const fix_admin_amount = { balance: add };
 
         const response7 = await UserUpdate(admin_id, fix_admin_amount);
         // const admin_filter = response7.filter(i => i.role === 'admin')
-        const current_admin7 = response7.filter((i) => i.role === 'admin');
-        const current_staff7 = response7.filter((i) => i.role === 'staff');
-        const current_dev7 = response7.filter((i) => i.role === 'developer');
+        const current_admin7 = response7.filter((i) => i.role === "admin");
+        const current_staff7 = response7.filter((i) => i.role === "staff");
+        const current_dev7 = response7.filter((i) => i.role === "developer");
         const current_user7 = response7.filter((i) => i.id === id);
-        setAdmin(current_admin7)
-        setStaff_Json(current_staff7)
-        setDeveloper(current_dev7)
+        setAdmin(current_admin7);
+        setStaff_Json(current_staff7);
+        setDeveloper(current_dev7);
         setAlluser(response7);
         setUser(current_user7);
         console.log(response7, "***** (4,1) refer_Admin_Commission ******"); // ok
@@ -335,36 +333,33 @@ function Home_Page_Log() {
           response8,
           "***** (4,1) UserData_Array_Update_Admin_Commission ******"
         ); // ok
-        setData(response8)
+        setData(response8);
 
-        const adminrev = ({
+        const adminrev = {
           suser_id: id,
           ruser_id: data_id,
           admin_amount: admin_scom_adcom,
           total_amount: amount,
           date: today,
           month: month,
-          admin_id: admin_id
-        });
+          admin_id: admin_id,
+        };
 
         const adminresponse11 = await AdminTotalRevenuePost(adminrev);
         console.log(
           adminresponse11,
           "****** (5,3) Admintotal revenue okkkkkkk *******"
         );
-
       } else {
-
-        const adminrev = ({
+        const adminrev = {
           suser_id: id,
           ruser_id: data_id,
           admin_amount: admin_commision,
           total_amount: amount,
           date: today,
           month: month,
-          admin_id: admin_id
-
-        });
+          admin_id: admin_id,
+        };
 
         const adminresponse11 = await AdminTotalRevenuePost(adminrev);
         console.log(
@@ -373,31 +368,32 @@ function Home_Page_Log() {
         );
       }
 
-
-      const filter_user = alluser.filter((i) => i.refer === value.ref && i.role === 'user');
-      console.log(filter_user, '******** all user *********')
+      const filter_user = alluser.filter(
+        (i) => i.refer === value.ref && i.role === "user"
+      );
+      console.log(filter_user, "******** all user *********");
 
       const alluser__id = filter_user.map((i) => i.id);
       const alluser_id = String(alluser__id);
-      const filter_user_balance = filter_user.map(i => i.balance)
+      const filter_user_balance = filter_user.map((i) => i.balance);
 
-      const alluser_balance = (parseInt(filter_user_balance))
+      const alluser_balance = parseInt(filter_user_balance);
       if (filter_user.length === 1) {
         const add = parseInt(staff_Commision) + parseInt(alluser_balance); // send Dev API 14
         const fix_user_amount = { balance: add };
-        console.log(fix_user_amount, '******* fix_user_amount *******')
+        console.log(fix_user_amount, "******* fix_user_amount *******");
         const response9 = await UserUpdate(alluser_id, fix_user_amount);
         console.log(
           response9,
           "***** (5) refer_User_commission Okkkkkkkkk ******"
         ); // ok
-        const current_admin9 = response9.filter((i) => i.role === 'admin');
-        const current_staff9 = response9.filter((i) => i.role === 'staff');
-        const current_dev9 = response9.filter((i) => i.role === 'developer');
+        const current_admin9 = response9.filter((i) => i.role === "admin");
+        const current_staff9 = response9.filter((i) => i.role === "staff");
+        const current_dev9 = response9.filter((i) => i.role === "developer");
         const current_user9 = response9.filter((i) => i.id === id);
-        setAdmin(current_admin9)
-        setStaff_Json(current_staff9)
-        setDeveloper(current_dev9)
+        setAdmin(current_admin9);
+        setStaff_Json(current_staff9);
+        setDeveloper(current_dev9);
         setAlluser(response9);
         setUser(current_user9);
 
@@ -418,15 +414,15 @@ function Home_Page_Log() {
           "***** (5,1) UserData_Array_Update_User_commission Okkkkkkkkk *****"
         );
 
-        const userrev = ({
+        const userrev = {
           suser_id: id,
           ruser_id: data_id,
           user_amount: staff_Commision,
           total_amount: amount,
           date: today,
           month: month,
-          user_id: alluser_id
-        });
+          user_id: alluser_id,
+        };
 
         const userresponse11 = await UserTotalRevenuePost(userrev);
         console.log(
@@ -441,227 +437,289 @@ function Home_Page_Log() {
       setReload(1);
     }
   };
+
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowWidth(window.innerWidth);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Determine grid columns based on width
+  let gridColumns = "repeat(4, 1fr)";
+  if (windowWidth <= 600) {
+    gridColumns = "1fr";
+  } else if (windowWidth <= 1024) {
+    gridColumns = "repeat(2, 1fr)";
+  }
+
+  // Responsive margins for header links
+  let profileMarginLeft = windowWidth > 1300 ? "1300px" : windowWidth > 900 ? "800px" : "20px";
+  let signUpMarginLeft = windowWidth > 1200 ? "1200px" : windowWidth > 900 ? "700px" : "20px";
+
   return (
     <>
-      <div style={{width: '100%', height: '50px', backgroundColor: 'rgba(7, 110, 148,1)', position: 'fixed', zIndex: '999', display: 'flex' }}>
-        <Link to='/Home_Page_wLog'>
-          <p style={{ fontSize: '30px', color: 'white', marginLeft:'20px',marginTop:'-1px'}}>Ristey</p>
+    <div
+        style={{
+          width: "100%",
+          height: "50px",
+          backgroundColor: "rgba(7, 110, 148,1)",
+          position: "fixed",
+          zIndex: "999",
+          display: "flex",
+          alignItems: "center",
+          padding: "0 20px",
+          boxSizing: "border-box",
+          justifyContent: "space-between",
+        }}
+      >
+        <Link to="/Home_Page_wLog">
+          <p
+            style={{
+              fontSize: "30px",
+              color: "white",
+              margin: 0,
+              cursor: "pointer",
+            }}
+          >
+            Ristey
+          </p>
         </Link>
 
         {id ? (
-          <Link to='/User_panel'>
-            <p style={{ fontSize: '15px', color: 'white',  marginTop: '13px', marginLeft: '1300px' }}>Profile</p>
+          <Link to="/User_panel">
+            <p
+              style={{
+                fontSize: "15px",
+                color: "white",
+                margin: 0,
+                marginLeft: profileMarginLeft,
+                cursor: "pointer",
+              }}
+            >
+              Profile
+            </p>
           </Link>
         ) : (
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Link to='/User_Reg/885695'>
-              <p style={{ fontSize: '15px', color: 'white',marginTop: '13px', marginLeft: '1200px'  }}>Sign Up</p>
+          <div style={{ display: "flex", gap: "20px" }}>
+            <Link to="/User_Reg/885695">
+              <p
+                style={{
+                  fontSize: "15px",
+                  color: "white",
+                  margin: 0,
+                  marginLeft: signUpMarginLeft,
+                  cursor: "pointer",
+                }}
+              >
+                Sign Up
+              </p>
             </Link>
-            <Link to='/User_Login'>
-              <p style={{ fontSize: '15px', color: 'white',marginTop: '13px', marginLeft: '30px'  }}>Login</p>
+            <Link to="/User_Login">
+              <p
+                style={{
+                  fontSize: "15px",
+                  color: "white",
+                  margin: 0,
+                  marginLeft: "30px",
+                  cursor: "pointer",
+                }}
+              >
+                Login
+              </p>
             </Link>
           </div>
         )}
       </div>
-      <div>
-        <div style={{ height: "80px", display: "flex", marginLeft: "300px" }}>
-          {/* <img
-            src="https://images.pexels.com/photos/174938/pexels-photo-174938.jpeg?auto=compress&cs=tinysrgb&w=600"
-            alt=""
-            style={{
-              width: "200px",
-              height: "70px",
-              paddingTop: "10px",
-              marginLeft: "30px",
-            }}
-          /> */}
-          {/* <div style={{ paddingTop: "70px", marginLeft: "200px" }}>
-            <Link to="/User_Profile">My Profile</Link>{" "}
-          </div> */}
+
+      <div style={{ paddingTop: "60px" }}>
+        <div
+          style={{
+            height: "80px",
+            display: "flex",
+            justifyContent: "center",
+            marginLeft: windowWidth > 300 ? "300px" : "20px",
+          }}
+        >
+          {/* Optional content here */}
         </div>
 
-        <div style={{ paddingTop: "20px" }}>
+        <div
+          style={{
+            // paddingTop: "10px",
+            // background: "blue",
+            paddingBottom: "40px",
+          }}
+        >
           <div
             style={{
-              // border: "2px solid",
-              width: "1600px",
-              // height: "600px",
-              marginLeft: "120px",
-              display: "flex",
-              columnGap: "20px",
+              display: "grid",
+              gridTemplateColumns: gridColumns,
+              gap: "20px",
+              maxWidth: "1600px",
+              margin: "0 auto",
+              padding: "0 15px",
+              // border: "2px solid red",
+              boxSizing: "border-box",
+              backgroundColor:"yellowgreen"
             }}
           >
             {data.map((i) => (
               <div
+                key={i.User_id}
                 style={{
-                  paddingTop: "1px",
-                  paddingLeft: "7px",
-                  height: "180px",
-                  width: "500px",
                   backgroundColor: "white",
                   borderRadius: "10px",
-                  boxShadow: "1px 0.5px 4px gray",
+                  boxShadow: "1px 0.5px 6px rgba(0,0,0,0.2)",
+                  padding: "20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  height: "100%",
+                  cursor: "pointer",
                 }}
               >
                 <Link
                   to={`/User_data/${i.User_id}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    width: "100%",
+                    display: "flex",
+                    gap: "15px",
+                    flexDirection: windowWidth < 600 ? "column" : "row",
+                    alignItems: windowWidth < 600 ? "center" : "flex-start",
+                  }}
                 >
-                  <p>
-                    <img
-                      src={`${baseurl}${i.pic}`}
+                  <img
+                    src={`${baseurl}${i.pic}`}
+                    alt={i.firstname ? `${i.firstname}'s pic` : "User pic"}
+                    style={{
+                      width: "170px",
+                      height: "240px",
+                      marginTop:"10px",
+                      borderRadius: "10px",
+                      objectFit: "cover",
+                      flexShrink: 0,
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      gap: "6px",
+                      marginTop: windowWidth < 600 ? "10px" : "0",
+                      textAlign: windowWidth < 600 ? "center" : "left",
+                    }}
+                  >
+                    <h2 style={{ margin: 0, fontSize: "24px", color: "#222" }}>
+                      {i.firstname}
+                    </h2>
+                    <p style={{ margin: 0, fontSize: "16px", color: "#555" }}>
+                      Age: {i.age}
+                    </p>
+                    <p style={{ margin: 0, fontSize: "16px", color: "#555" }}>
+                      {i.religion}
+                    </p>
+                    <p
                       style={{
-                        width: "150px",
-                        height: "150px",
-                        borderRadius: "5%",
-                        marginLeft: "2px",
-                        // marginTop: "-13px",
-                        marginTop: "5px",
-                        marginBottom: "10px",
+                        margin: 0,
+                        fontSize: "16px",
+                        color: "#555",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        justifyContent: windowWidth < 600 ? "center" : "flex-start",
                       }}
-                    />
-                  </p>
-
-                  <p
-                    style={{
-                      marginTop: "-180px",
-                      marginLeft: "170px",
-                      fontSize: "28px",
-                      color: "black",
-                    }}
-                  >
-                    {i.firstname}
-                  </p>
-                  <p
-                    style={{
-                      marginTop: "-10px",
-                      marginLeft: "170px",
-                      fontSize: "18px",
-                      color: "black",
-                    }}
-                  >
-                    Age : {i.age}
-                  </p>
-                  <p
-                    style={{
-                      marginTop: "-30px",
-                      marginLeft: "255px",
-                      fontSize: "18px",
-                      color: "black",
-                    }}
-                  >
-                    {i.religion}
-                  </p>
-                  {/* <p
-                    style={{
-                      marginTop: "-30px",
-                      marginLeft: "325px",
-                      fontSize: "18px",
-                      color: "black",
-                    }}
-                  >
-                    {i.gender}
-                  </p> */}
-
-                  <p
-                    style={{
-                      marginTop: "-5px",
-                      marginLeft: "170px",
-                      fontSize: "18px",
-                      color: "black"
-                    }}
-                  >
-                    <PiStudentFill style={{ fontSize: "18px" }} /> {i.course}
-                  </p>
-                  <p
-                    style={{
-                      marginTop: "-5px",
-                      marginLeft: "170px",
-                      fontSize: "18px",
-                      color: "black",
-                    }}
-                  >
-                    <MdOutlineWork style={{ fontSize: "18px" }} /> {i.job_title}
-                  </p>
+                    >
+                      <PiStudentFill style={{ fontSize: "18px" }} />
+                      {i.course}
+                    </p>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "16px",
+                        color: "#555",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        justifyContent: windowWidth < 600 ? "center" : "flex-start",
+                      }}
+                    >
+                      <MdOutlineWork style={{ fontSize: "18px" }} />
+                      {i.job_title}
+                    </p>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "16px",
+                        color: "#555",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        justifyContent: windowWidth < 600 ? "center" : "flex-start",
+                      }}
+                    >
+                      <FaLocationDot style={{ fontSize: "18px" }} />
+                      {i.disttrict}
+                    </p>
+                    <p
+                      style={{
+                        marginTop: "8px",
+                        fontSize: "14px",
+                        color: "gray",
+                        textAlign: windowWidth < 600 ? "center" : "left",
+                      }}
+                    >
+                      {i.create_date && !isNaN(new Date(i.create_date))
+                        ? timeAgo(new Date(i.create_date), { addSuffix: true }).replace("about ", "")
+                        : "Invalid date"}
+                    </p>
+                  </div>
                 </Link>
-                <FaLocationDot
+
+                <div
                   style={{
-                    marginTop: "-5px",
-                    marginLeft: "170px",
-                    fontSize: "18px",
-                    color: "black",
-                  }}
-                />
-                <p
-                  style={{
-                    marginTop: "-27px",
-                    marginLeft: "190px",
-                    fontSize: "18px",
-                    color: "black",
+                    marginTop: "15px",
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: "10px",
                   }}
                 >
-                  {i.disttrict}
-                </p>
-                <p
-                  style={{
-                    marginTop: "-4px",
-                    marginLeft: "170px",
-                    fontSize: "18px",
-                    color: "black",
-                  }}
-                >
-                  {i.create_date && !isNaN(new Date(i.create_date)) ? (
-                    timeAgo(new Date(i.create_date), {
-                      addSuffix: true,
-                    }).replace("about ", "")
-                  ) : (
-                    "Invalid date"
-                  )}
-                </p>
-
-
-                {/* {i.user_apply.some((u) => u.suser_id === id) ? (
-                  <p style={{ marginTop: "-40px", marginLeft: "385px" }}>
-                    <Button
-                      onClick={() =>
-                        (window.location.href = `tel:${i.contact}`)
-                      }
-                      style={{ height: "33px", width: "100px" }}
-                    >
-                      <IoCall style={{ fontSize: "18px" }} />
-                    </Button>
-                  </p>
-                ) : (
-                  <p style={{ marginTop: "-40px", marginLeft: "385px" }}>
-                    <Button style={{ height: "33px", width: "100px" }}>
-                      <IoSend
-                        style={{ fontSize: "25px" }}
-                        onClick={() => alert_popup(i)}
-                      />
-                    </Button>
-                  </p>
-                )} */}
-
-                {i.user_apply?.some((u) => u.suser_id === id) ? (
-                  <p style={{ marginTop: "-40px", marginLeft: "385px" }}>
-                    <Button
+                  {i.user_apply?.some((u) => u.suser_id === id) ? (
+                    <button
                       onClick={() => (window.location.href = `tel:${i.contact}`)}
-                      style={{ height: "33px", width: "100px" }}
+                      style={{
+                        height: "36px",
+                        width: "110px",
+                        cursor: "pointer",
+                      }}
                     >
                       <IoCall style={{ fontSize: "18px" }} />
-                    </Button>
-                  </p>
-                ) : (
-                  <p style={{ marginTop: "-40px", marginLeft: "385px" }}>
-                    <Button style={{ height: "33px", width: "100px" }}>
-                      <IoSend
-                        style={{ fontSize: "25px" }}
-                        onClick={() => alert_popup(i)}
-                      />
-                    </Button>
-                  </p>
-                )}
-
+                      Call
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => alert_popup(i)}
+                      style={{
+                        height: "36px",
+                        width: "110px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <IoSend style={{ fontSize: "22px" }} />
+                     
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

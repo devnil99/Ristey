@@ -1,108 +1,84 @@
-// import "./styles.css";
-import img from "../Assets/wedding3.jpeg";
-// import { ReactComponent as LeftQuote } from "./assets/svgs/quote-left-solid.svg";
-import "../Header/CardSlider.css";
-export default function CardSlider() {
+
+import React, { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css"; // Import AOS styles
+import "../Header/CardSlider.css"; // Import external CSS
+
+// Import images correctly
+import testmonials1 from "../Assets/User-images/testmonials1.jpg";
+import testmonials2 from "../Assets/User-images/testmonials2.jpg";
+import testmonials3 from "../Assets/User-images/testmonials3.jpg";
+
+// Define Testimonials Data
+const testimonials = [
+  {
+    id: 1,
+    name: "Kshitiz & Meenal",
+    image: testmonials1,
+    description: "Our journey began on matrimonial. From the first call to endless conversations, we knew we were meant to be! Happily married since 2023.",
+  },
+  {
+    id: 2,
+    name: "Abhishek & Amrita",
+    image: testmonials2,
+    description: "We found love through matrimonial in 2024. Our first chat on August 27th turned into a lifetime of happiness.",
+  },
+  {
+    id: 3,
+    name: "Sudipta & Monalisa",
+    image: testmonials3,
+    description: "A simple match request changed our lives forever. Married in 2021, and every day feels like a dream!",
+  },
+  {
+    id: 4,
+    name: "Ashish & Priya",
+    image: testmonials1,
+    description: "From two strangers to soulmates, our love story is proof that destiny works in wonderful ways. Thank you, matrimonial!",
+  },
+  {
+    id: 5,
+    name: "Tikesh & Laxmi",
+    image: testmonials2,
+    description: "Meeting on matrimonial was pure luck. Our love grew, and we tied the knot with blessings from our families in 2022.",
+  },
+  {
+    id: 6,
+    name: "Hem & Falguni",
+    image: testmonials3,
+    description: "Our first conversation felt special. Within months, we knew we were meant for each other. Now, we celebrate our love every day!",
+  },
+];
+
+const CardSlider = () => {
+  // Initialize AOS animation
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animation duration (in milliseconds)
+      easing: "ease-in-out",
+      once: true, // Animations run once when they come into view
+    });
+  }, []);
+
   return (
-    <div className="CardSlider11">
-                <h2>Our Success Story Couple </h2>
-
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div className="testimonialContainer">
-          <div className="testimonialHeader">
-            <div className="imageContainer">
-              <img
-                width="100%"
-                height="100%"
-                style={{ borderRadius: "70%" }}
-                src={img}
-                alt="krittibas"
-              />
-            </div>
-            <div className="nameContainer">
-              <h4>Amrita Goswami</h4>
-              <p>Baby Carer</p>
-            </div>
-            <div className="iconContainer">
-              {/* <LeftQuote style={{ fill: "grey" }} className="icon" /> */}
-            </div>
+    <div className="testimonials-container" data-aos="fade-up">
+      <h2 className="title"> ❤️ Our Success Stories ❤️</h2>
+      <div className="testimonials-grid">
+        {testimonials.map((testimonial, index) => (
+          <div
+            key={testimonial.id}
+            className="testimonial-card"
+            data-aos={index % 2 === 0 ? "fade-right" : "fade-left"} // Alternate animations for better effect
+          >
+            <img src={testimonial.image} alt={testimonial.name} className="testimonial-img" />
+            <h3 className="testimonial-name">{testimonial.name}</h3>
+            <p className="testimonial-description">{testimonial.description}</p>
+            <a href="#" className="read-more">Read More</a>
           </div>
-          <div className="testimonialBody">
-            <p className="testimonialBodyText">
-              "I am really grateful to BlueHelmet for finding a baby carer for
-              my child. Happy with the woman who was given to me. The BlueHelmet
-              team was extremely cooperative. It is a great portal for working
-              parents like us who can easily search and find any kind of
-              domestic help."
-            </p>
-          </div>
-        </div>
-
-        <div className="testimonialContainer">
-          <div className="testimonialHeader">
-            <div className="imageContainer">
-              <img
-                width="100%"
-                height="100%"
-                style={{ borderRadius: "50%" }}
-                src={img}
-                alt="krittibas"
-              />
-            </div>
-            <div className="nameContainer">
-              <h4>Mohan Mathur</h4>
-              <p>Baby Carer</p>
-            </div>
-            <div style={{}} className="iconContainer">
-              {/* <LeftQuote style={{ fill: "#796088" }} className="icon" /> */}
-            </div>
-          </div>
-          <div className="testimonialBody">
-            <p className="testimonialBodyText">
-              “Thank You BlueHelmet for helping me find a baby carer for my
-              little one. I am extremely happy with the lady who was chosen to
-              look after my baby. The BlueHelmet team was very helpful. ”
-            </p>
-          </div>
-        </div>
-
-        <div className="testimonialContainer">
-          <div className="testimonialHeader">
-            <div className="imageContainer">
-              <img
-                width="100%"
-                height="100%"
-                style={{ borderRadius: "50%" }}
-                src={img}
-                alt="krittibas"
-              />
-            </div>
-            <div className="nameContainer">
-              <h4>Sourav Vashisht</h4>
-              <p>Chef, Maid</p>
-              <p>House Maid</p>
-            </div>
-            <div className="iconContainer">
-              {/* <LeftQuote className="icon" /> */}
-            </div>
-          </div>
-          <div className="testimonialBody">
-            <p className="testimonialBodyText">
-              “I hired a Chef, Maid (24hrs), House Manager and Helper through
-              BlueHelmet. They provided experienced and fully vaccinated
-              candidates for the role. I found the platform pretty user friendly
-              and their support team quite patient.
-            </p>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
-}
+};
+
+export default CardSlider;
+

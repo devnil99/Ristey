@@ -89,7 +89,6 @@
 //     formData.append("gender", values.gender);
 //     formData.append("email", values.email);
 
-
 //     console.log(values, "****** formData ******");
 //     setData((prev) => ({ ...prev, ...values }));
 //     setOtp(otp + 1);
@@ -374,6 +373,8 @@ import {
   Select,
   DatePicker,
   message,
+  Col,
+  Row,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -386,30 +387,31 @@ import {
   UserDataPostwt,
   UserDataUpdatewl,
   User_StateGet,
-  User_CasteGet
+  User_CasteGet,
 } from "../../Api/CoreApi";
+import { getRenderPropValue } from "antd/es/_util/getRenderPropValue";
 
-// const { Option } = Select;
+const { Option } = Select;
 
 function User_Reg() {
-  const Navigate =  useNavigate()
-  const admin_id = localStorage.getItem('ref')
-  const reid = useParams()
-  const ref = reid.id
+  const Navigate = useNavigate();
+  const admin_id = localStorage.getItem("ref");
+  const reid = useParams();
+  const ref = reid.id;
   // const ad_ref = admin_id
-  console.log(admin_id, '************* ref *********')
-  const user_id = localStorage.getItem('user_id')
+  console.log(admin_id, "************* ref *********");
+  const user_id = localStorage.getItem("user_id");
   const [form] = Form.useForm();
   const [fileName, setFileName] = useState("");
   const [file, setFile] = useState(null); // Store file object
-  const [email_pop, setEmail_pop] = useState(0)
-  const [user, setUser] = useState([])
-  const [data, setData] = useState([])
+  const [email_pop, setEmail_pop] = useState(0);
+  const [user, setUser] = useState([]);
+  const [data, setData] = useState([]);
   // const [ref, setRef] = useState([])
 
-  const [district, setDistrict] = useState([])
-  const [state, setState] = useState([])
-  const [caste, setCaste] = useState([])
+  const [district, setDistrict] = useState([]);
+  const [state, setState] = useState([]);
+  const [caste, setCaste] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -420,72 +422,76 @@ function User_Reg() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  console.log(data, '****** data ******')
+  console.log(data, "****** data ******");
 
   const handleStateChange = async (value) => {
-    setState(setState)
-    const response = await User_StateGet()
-    const filter = response.filter(i => i.state === value)
-    const datamap = filter.map(i => i.district)
-    setDistrict(datamap)
-  }
+    setState(setState);
+    const response = await User_StateGet();
+    const filter = response.filter((i) => i.state === value);
+    const datamap = filter.map((i) => i.district);
+    setDistrict(datamap);
+  };
 
   const handlereligionChange = async (value) => {
-    const response = await User_CasteGet()
-    const filter = response.filter(i => i.religion === value || i.state === state)
-    const mapcaste = filter.map(i => i.caste)
-    setCaste(mapcaste.sort())
-    console.log(response, '99999', mapcaste)
-  }
+    const response = await User_CasteGet();
+    const filter = response.filter(
+      (i) => i.religion === value || i.state === state
+    );
+    const mapcaste = filter.map((i) => i.caste);
+    setCaste(mapcaste.sort());
+    console.log(response, "99999", mapcaste);
+  };
 
   const send = async (value) => {
-    const response = await User_send_otp(value)
-    console.log(response, '********* response ******')
-    if (response.message === 'Email already exists.') {
-      message.error('Email already exists.')
+    const response = await User_send_otp(value);
+    console.log(response, "********* response ******");
+    if (response.message === "Email already exists.") {
+      message.error("Email already exists.");
+    } else {
+      message.success("Check Your Email");
+      setEmail_pop(1);
+      form.setFieldsValue(value);
     }
-    else {
-      message.success("Check Your Email")
-      setEmail_pop(1)
-      form.setFieldsValue(value)
-    }
-
-  }
+  };
 
   const verify = async (value) => {
-    const response = await User_verify_otp(value)
-    const email = response.email
-    const user_id1 = response.user_id
-    const mail = ({ email: email })
-    setData(mail)
-    localStorage.setItem('user_id', user_id1)
-    console.log(response, '********* response ******')
-    setEmail_pop(2)
-  }
+    const response = await User_verify_otp(value);
+    const email = response.email;
+    const user_id1 = response.user_id;
+    const mail = { email: email };
+    setData(mail);
+    localStorage.setItem("user_id", user_id1);
+    console.log(response, "********* response ******");
+    setEmail_pop(2);
+  };
 
   const username = async (value) => {
-    const response = await UserRegUpdate(user_id, value)
-    const user_filter = response.filter(i => i.id === user_id)
-    setData(user_filter)
-    setEmail_pop(3)
-    form.setFieldsValue(value)
-
-  }
+    const response = await UserRegUpdate(user_id, value);
+    const user_filter = response.filter((i) => i.id === user_id);
+    setData(user_filter);
+    setEmail_pop(3);
+    form.setFieldsValue(value);
+  };
 
   const profile_details = async (value) => {
-    const gender = value.gender
-    const disttrict = value.disttrict
-    const state = value.state
-    const firstname = value.firstname 
+    const gender = value.gender;
+    const disttrict = value.disttrict;
+    const state = value.state;
+    const firstname = value.firstname;
 
-    const email = data.map(i => i.email)
-    const refer = data.map(i => i.refer)
-    const user_name = data.map(i => i.username)
+    const email = data.map((i) => i.email);
+    const refer = data.map((i) => i.refer);
+    const user_name = data.map((i) => i.username);
 
-    let refValu = ref ? ref : (admin_id ? admin_id : "ref");
+    let refValu = ref ? ref : admin_id ? admin_id : "ref";
 
-
-    const user_update = {"first_name":firstname,"gender": gender, "disttrict": disttrict, "state": state, "ref": refValu }
+    const user_update = {
+      first_name: firstname,
+      gender: gender,
+      disttrict: disttrict,
+      state: state,
+      ref: refValu,
+    };
     // const data = ({ ...value, "User_id": user_id })
 
     // console.log("Form values:", value);
@@ -496,35 +502,362 @@ function User_Reg() {
     formData.append("User_id", user_id);
     formData.append("email", email);
     // formData.append("ref", ref);
-    let refValue = ref ? ref : (admin_id ? admin_id : "ref");
+    let refValue = ref ? ref : admin_id ? admin_id : "ref";
     formData.append("ref", refValue);
     formData.append("refer", refer);
     formData.append("username", user_name);
 
-
     Object.entries(value).forEach(([key, val]) => {
       formData.append(key, val);
     });
-    const response = await UserDataPostwt(formData)
-    const response1 = await UserRegUpdate(user_id, user_update)
-    if(response.length >=0){
-      message.success("Registration Success")
+    const response = await UserDataPostwt(formData);
+    const response1 = await UserRegUpdate(user_id, user_update);
+    if (response.length >= 0) {
+      message.success("Registration Success");
       // window.location.reload();
-      Navigate('/User_Login')
+      Navigate("/User_Login");
     }
 
-    console.log(response, '****** response *******')
+    console.log(response, "****** response *******");
 
-    console.log(formData, '****** response1 *******')
-    
-
-  }
+    console.log(formData, "****** response1 *******");
+  };
 
   return (
+    // <div
+    //   style={{
+    //     backgroundImage:
+    //       "url('https://images.pexels.com/photos/5713682/pexels-photo-5713682.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
+    //     backgroundSize: "cover",
+    //     backgroundPosition: "center",
+    //     minHeight: "100vh",
+    //     display: "flex",
+    //     justifyContent: "center",
+    //     alignItems: "start",
+    //     paddingTop: isMobile ? "100px" : "200px",
+    //   }}
+    // >
+    //   <div
+    //     style={{
+    //       width: isMobile ? "80%" : "1100px",
+    //       backgroundColor: "rgba(255, 255, 255, 0.9)",
+    //       padding: "30px",
+    //       borderRadius: "15px",
+    //       boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+    //       marginTop: isMobile ? "-150px" : "-100px",
+    //     }}
+    //   >
+    //     <div style={{ textAlign: "center" }}>
+    //       <h2>Signup Form</h2>
+    //     </div>
+
+    //     <Card>
+    //       {email_pop === 0 && (
+    //         <Form onFinish={send}>
+    //           <Form.Item name="email">
+    //             <Input type="email" placeholder="Enter the your email" />
+    //           </Form.Item>
+    //           <Form.Item>
+    //             <Button htmlType="submit">Send</Button>
+    //           </Form.Item>
+    //         </Form>
+    //       )}
+    //       {email_pop === 1 && (
+    //         <Form onFinish={verify} form={form} initialValues={form}>
+    //           <Form.Item name="email">
+    //             <Input type="email" readOnly />
+    //           </Form.Item>
+    //           <Form.Item name="otp">
+    //             <Input type="number" />
+    //           </Form.Item>
+    //           <Form.Item>
+    //             <Button htmlType="submit">Verify</Button>
+    //           </Form.Item>
+    //         </Form>
+    //       )}
+
+    //       {email_pop === 2 && (
+    //         <Form onFinish={username}>
+    //           <Form.Item name="username">
+    //             <Input placeholder="Enter the user name" />
+    //           </Form.Item>
+    //           <Form.Item name="password">
+    //             <Input type="password" placeholder="Enter the your password" />
+    //           </Form.Item>
+    //           <Form.Item>
+    //             <Button htmlType="submit">Submit </Button>
+    //           </Form.Item>
+    //         </Form>
+    //       )}
+    //       {email_pop === 3 && (
+    //         <Form form={form} onFinish={profile_details} initialValues={form}>
+    //           <Row gutter={[16, 16]}>
+    //             <Col span={6}>
+    //               <Form.Item label="Profile Picture" required>
+    //                 <Upload
+    //                   beforeUpload={(file) => {
+    //                     setFile(file);
+    //                     form.setFieldsValue({ pic: file.name });
+    //                     return false;
+    //                   }}
+    //                   showUploadList={false}
+    //                 >
+    //                   <Button icon={<UploadOutlined />}>Choose File</Button>
+    //                 </Upload>
+    //                 <Form.Item name="pic" noStyle>
+    //                   <Input
+    //                     style={{ marginTop: 8 }}
+    //                     disabled
+    //                     placeholder="No file selected"
+    //                   />
+    //                 </Form.Item>
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="firstname" label="Full Name">
+    //                 <Input placeholder="Full Name" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="gender" label="Gender">
+    //                 <Select placeholder="Select gender">
+    //                   <Option value="Male">Male</Option>
+    //                   <Option value="Female">Female</Option>
+    //                 </Select>
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="state" label="State">
+    //                 <Select placeholder="State" onChange={handleStateChange}>
+    //                   <Option value="andhra_pradesh">Andhra Pradesh</Option>
+    //                   <Option value="arunachal_pradesh">
+    //                     Arunachal Pradesh
+    //                   </Option>
+    //                   <Option value="assam">Assam</Option>
+    //                   <Option value="bihar">Bihar</Option>
+    //                   <Option value="Chhattisgarh">Chhattisgarh</Option>
+    //                   <Option value="goa">Goa</Option>
+    //                   <Option value="gujarat">Gujarat</Option>
+    //                   <Option value="haryana">Haryana</Option>
+    //                   <Option value="himachal_pradesh">Himachal Pradesh</Option>
+    //                   <Option value="jharkhand">Jharkhand</Option>
+    //                   <Option value="karnataka">Karnataka</Option>
+    //                   <Option value="kerala">Kerala</Option>
+    //                   <Option value="madhya_pradesh">Madhya Pradesh</Option>
+    //                   <Option value="maharashtra">Maharashtra</Option>
+    //                   <Option value="manipur">Manipur</Option>
+    //                   <Option value="meghalaya">Meghalaya</Option>
+    //                   <Option value="mizoram">Mizoram</Option>
+    //                   <Option value="nagaland">Nagaland</Option>
+    //                   <Option value="odisha">Odisha</Option>
+    //                   <Option value="punjab">Punjab</Option>
+    //                   <Option value="rajasthan">Rajasthan</Option>
+    //                   <Option value="sikkim">Sikkim</Option>
+    //                   <Option value="tamil_nadu">Tamil Nadu</Option>
+    //                   <Option value="telangana">Telangana</Option>
+    //                   <Option value="tripura">Tripura</Option>
+    //                   <Option value="uttar_pradesh">Uttar Pradesh</Option>
+    //                   <Option value="uttarakhand">Uttarakhand</Option>
+    //                   <Option value="west_bengal">West Bengal</Option>
+    //                   <Option value="andaman_nicobar">
+    //                     Andaman and Nicobar Islands
+    //                   </Option>
+    //                   <Option value="chandigarh">Chandigarh</Option>
+    //                   <Option value="dadra_nagar_haveli_daman_diu">
+    //                     Dadra and Nagar Haveli and Daman and Diu
+    //                   </Option>
+    //                   <Option value="delhi">Delhi</Option>
+    //                   <Option value="jammu_kashmir">Jammu and Kashmir</Option>
+    //                   <Option value="ladakh">Ladakh</Option>
+    //                   <Option value="lakshadweep">Lakshadweep</Option>
+    //                   <Option value="puducherry">Puducherry</Option>
+    //                 </Select>
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="disttrict" label="District">
+    //                 <Select placeholder="District">
+    //                   {district?.[0]?.map((item, index) => (
+    //                     <Option key={index} value={item}>
+    //                       {item}
+    //                     </Option>
+    //                   ))}
+    //                 </Select>
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="city" label="City">
+    //                 <Input placeholder="City" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="religion" label="Religion">
+    //                 <Select
+    //                   placeholder="Religion"
+    //                   onChange={handlereligionChange}
+    //                 >
+    //                   <Option value="Hindu">Hindu</Option>
+    //                   <Option value="muslim">Muslim</Option>
+    //                   <Option value="christian">Christian</Option>
+    //                   <Option value="sikh">Sikh</Option>
+    //                   <Option value="buddhist">Buddhist</Option>
+    //                   <Option value="jain">Jain</Option>
+    //                   <Option value="other">Other</Option>
+    //                 </Select>
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="caste" label="Caste">
+    //                 <Select
+    //                   showSearch
+    //                   allowClear
+    //                   placeholder="Caste"
+    //                   optionFilterProp="children"
+    //                   filterOption={(input, option) =>
+    //                     option?.children
+    //                       ?.toLowerCase()
+    //                       .includes(input.toLowerCase())
+    //                   }
+    //                 >
+    //                   {(Array.isArray(caste[0]) ? caste[0] : caste).map(
+    //                     (item, index) => (
+    //                       <Option key={index} value={item}>
+    //                         {item}
+    //                       </Option>
+    //                     )
+    //                   )}
+    //                 </Select>
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="dob" label="DOB">
+    //                 <Input type="date" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="age" label="Age">
+    //                 <Input type="number" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="father_name" label="Father's Name">
+    //                 <Input placeholder="Father Name" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="mother_name" label="Mother's Name">
+    //                 <Input placeholder="Mother Name" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="brother" label="No. of Brothers">
+    //                 <Input type="number" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="brother_marrige" label="Married Brothers">
+    //                 <Input type="number" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="sister" label="No. of Sisters">
+    //                 <Input type="number" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="sister_marrige" label="Married Sisters">
+    //                 <Input type="number" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="university" label="University/School">
+    //                 <Input />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="course" label="Course">
+    //                 <Input />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="job_title" label="Job Title">
+    //                 <Input />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="job_type" label="Job Type">
+    //                 <Select placeholder="Select Job Type">
+    //                   <Option value="government">Government</Option>
+    //                   <Option value="private">Private</Option>
+    //                   <Option value="unemployed">Unemployed</Option>
+    //                 </Select>
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="marrige_status" label="Marriage Status">
+    //                 <Select placeholder="Marriage Status">
+    //                   <Option value="Unmarried">Unmarried</Option>
+    //                   <Option value="Married">Married</Option>
+    //                 </Select>
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="salary" label="Salary">
+    //                 <Input type="number" />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="contact" label="WhatsApp Number">
+    //                 <Input />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={6}>
+    //               <Form.Item name="instagram" label="Instagram Link">
+    //                 <Input />
+    //               </Form.Item>
+    //             </Col>
+
+    //             <Col span={24}>
+    //               <Form.Item>
+    //                 <Button type="primary" htmlType="submit">
+    //                   Save
+    //                 </Button>
+    //               </Form.Item>
+    //             </Col>
+    //           </Row>
+    //         </Form>
+    //       )}
+    //     </Card>
+    //   </div>
+    // </div>
+
     <div
       style={{
         backgroundImage:
-          "url('https://img.freepik.com/free-vector/abstract-beautiful-mandala-design-background_1055-2471.jpg')",
+          "url('https://images.pexels.com/photos/5713682/pexels-photo-5713682.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "100vh",
@@ -536,266 +869,305 @@ function User_Reg() {
     >
       <div
         style={{
-          width: isMobile ? "80%" : "600px",
-          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          width: isMobile ? "90%" : "1100px",
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
           padding: "30px",
           borderRadius: "15px",
           boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
           marginTop: isMobile ? "-150px" : "-100px",
+          marginTop:"5px"
         }}
       >
-        <div style={{ textAlign: "center" }}>
+        <div style={{ textAlign: "center", marginBottom: 20,marginTop:"40px" }}>
           <h2>Signup Form</h2>
         </div>
 
         <Card>
           {email_pop === 0 && (
-            <Form onFinish={send}>
-              <Form.Item name='email'>
-                <Input type="email" />
-              </Form.Item>
-              <Form.Item>
-                <Button htmlType="submit">Send</Button>
-              </Form.Item>
-            </Form>
-          )}
-          {email_pop === 1 && (
-            <Form onFinish={verify} form={form} initialValues={form}>
-              <Form.Item name='email'>
-                <Input type="email" readOnly />
-              </Form.Item>
-              <Form.Item name='otp'>
-                <Input type="number" />
-              </Form.Item>
-              <Form.Item>
-                <Button htmlType="submit">Verify</Button>
-              </Form.Item>
-            </Form>
-          )}
-
-          {email_pop === 2 && (
-            <Form onFinish={username}>
-              <Form.Item name='username'>
-                <Input />
-              </Form.Item>
-              <Form.Item name='password'>
-                <Input type="password" />
-              </Form.Item>
-              <Form.Item>
-                <Button htmlType="submit">Submit </Button>
-              </Form.Item>
-            </Form>
-          )}
-
-          {email_pop === 3 && (
-            <Form form={form} onFinish={profile_details} initialValues={form}>
-              <Form.Item label="Profile Picture" required>
-                <Upload
-                  beforeUpload={(file) => {
-                    setFile(file); // Store the actual file
-                    form.setFieldsValue({ pic: file.name }); // Set filename in input
-                    return false; // Prevent automatic upload
-                  }}
-                  showUploadList={false}
-                >
-                  <Button icon={<UploadOutlined />}>Choose File</Button>
-                </Upload>
-
-                {/* 👉 This input holds the filename, with name="pic" */}
-                <Form.Item name="pic" noStyle>
+            <div
+              style={{
+                width: "90%", // 90% of the parent/container width
+                maxWidth: "800px", // max width on large screens
+                margin: "0 auto",
+              }}
+            >
+              <Form onFinish={send}>
+                <Form.Item name="email">
                   <Input
-                    style={{ marginTop: 8 }}
-                    disabled
-                    placeholder="No file selected"
+                    type="email"
+                    placeholder="Enter your email"
+                    size="middle"
                   />
                 </Form.Item>
-              </Form.Item>
+                <Form.Item style={{ textAlign: "center" }}>
+                  <Button
+                    htmlType="submit"
+                    size="middle"
+                    style={{
+                      width: "100%", // full width button on small screens
+                      maxWidth: "120px", // limit max button width on bigger screens
+                      color: "green",
+                     border: "1px solid green"
+                    }}
+                  >
+                    Send
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
+          )}
 
-              <Form.Item name='firstname'>
-                <Input placeholder="Full Name" />
-              </Form.Item>
+          {/* OTP VERIFICATION */}
+          {email_pop === 1 && (
+            <div
+              style={{
+                width: "90%",
+                maxWidth: "800px",
+                margin: "0 auto",
+              }}
+            >
+              <Form onFinish={verify} form={form} initialValues={form}>
+                <Form.Item name="email">
+                  <Input type="email" readOnly size="middle" />
+                </Form.Item>
+                <Form.Item name="otp">
+                  <Input type="number" placeholder="Enter OTP" size="middle" />
+                </Form.Item>
+                <Form.Item style={{ textAlign: "center" }}>
+                  <Button
+                    htmlType="submit"
+                    size="middle"
+                    style={{
+                      width: "100%",
+                      maxWidth: "120px",
+                    }}
+                  >
+                    Verify
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
+          )}
 
-              <Form.Item name='gender'>
-                <Select placeholder="Select gender">
-                  <Select.Option value="Male">Male</Select.Option>
-                  <Select.Option value="Female">Female</Select.Option>
-                </Select>
+          {/* USERNAME & PASSWORD */}
+          {email_pop === 2 && (
+            <Form onFinish={username}>
+              <Form.Item name="username">
+                <Input placeholder="Enter your username" size="middle" />
               </Form.Item>
-
-              <Form.Item name="state">
-                <Select placeholder="State" onChange={handleStateChange} style={{ width: '200px', marginTop: '5px', height: '35px' }}>
-                  {/* States */}
-                  <Select.Option value="andhra_pradesh">Andhra Pradesh</Select.Option>
-                  <Select.Option value="arunachal_pradesh">Arunachal Pradesh</Select.Option>
-                  <Select.Option value="assam">Assam</Select.Option>
-                  <Select.Option value="bihar">Bihar</Select.Option>
-                  <Select.Option value="Chhattisgarh">Chhattisgarh</Select.Option>
-                  <Select.Option value="goa">Goa</Select.Option>
-                  <Select.Option value="gujarat">Gujarat</Select.Option>
-                  <Select.Option value="haryana">Haryana</Select.Option>
-                  <Select.Option value="himachal_pradesh">Himachal Pradesh</Select.Option>
-                  <Select.Option value="jharkhand">Jharkhand</Select.Option>
-                  <Select.Option value="karnataka">Karnataka</Select.Option>
-                  <Select.Option value="kerala">Kerala</Select.Option>
-                  <Select.Option value="madhya_pradesh">Madhya Pradesh</Select.Option>
-                  <Select.Option value="maharashtra">Maharashtra</Select.Option>
-                  <Select.Option value="manipur">Manipur</Select.Option>
-                  <Select.Option value="meghalaya">Meghalaya</Select.Option>
-                  <Select.Option value="mizoram">Mizoram</Select.Option>
-                  <Select.Option value="nagaland">Nagaland</Select.Option>
-                  <Select.Option value="odisha">Odisha</Select.Option>
-                  <Select.Option value="punjab">Punjab</Select.Option>
-                  <Select.Option value="rajasthan">Rajasthan</Select.Option>
-                  <Select.Option value="sikkim">Sikkim</Select.Option>
-                  <Select.Option value="tamil_nadu">Tamil Nadu</Select.Option>
-                  <Select.Option value="telangana">Telangana</Select.Option>
-                  <Select.Option value="tripura">Tripura</Select.Option>
-                  <Select.Option value="uttar_pradesh">Uttar Pradesh</Select.Option>
-                  <Select.Option value="uttarakhand">Uttarakhand</Select.Option>
-                  <Select.Option value="west_bengal">West Bengal</Select.Option>
-
-                  {/* Union Territories */}
-                  <Select.Option value="andaman_nicobar">Andaman and Nicobar Islands</Select.Option>
-                  <Select.Option value="chandigarh">Chandigarh</Select.Option>
-                  <Select.Option value="dadra_nagar_haveli_daman_diu">Dadra and Nagar Haveli and Daman and Diu</Select.Option>
-                  <Select.Option value="delhi">Delhi</Select.Option>
-                  <Select.Option value="jammu_kashmir">Jammu and Kashmir</Select.Option>
-                  <Select.Option value="ladakh">Ladakh</Select.Option>
-                  <Select.Option value="lakshadweep">Lakshadweep</Select.Option>
-                  <Select.Option value="puducherry">Puducherry</Select.Option>
-                </Select>
+              <Form.Item name="password">
+                <Input.Password
+                  placeholder="Enter your password"
+                  size="middle"
+                />
               </Form.Item>
-              <Form.Item name="disttrict">
-                <Select placeholder="District" style={{ width: '150px', marginTop: '5px', height: '35px' }}>
-                  {district.length > 0 &&
-                    district[0]?.map((item, index) => (
-                      <Select.Option key={index} value={item}>
-                        {item}
-                      </Select.Option>
-                    ))}
-                </Select>
-              </Form.Item>
-
-              <Form.Item name="city">
-                <Input placeholder='City' />
-              </Form.Item>
-
-              <Form.Item name="religion">
-                <Select placeholder="Religion" onChange={handlereligionChange} style={{ width: '100px', marginTop: '5px', height: '35px' }}>
-                  <Select.Option value="Hindu">Hindu</Select.Option>
-                  <Select.Option value="muslim">Muslim</Select.Option>
-                  <Select.Option value="christian">Christian</Select.Option>
-                  <Select.Option value="sikh">Sikh</Select.Option>
-                  <Select.Option value="buddhist">Buddhist</Select.Option>
-                  <Select.Option value="jain">Jain</Select.Option>
-                  <Select.Option value="other">Other</Select.Option>
-                </Select>
-              </Form.Item>
-
-              <Form.Item name="caste">
-                <Select
-                  placeholder="Caste"
-                  style={{ width: '150px', marginTop: '5px', height: '35px' }}
-                  showSearch
-                  allowClear
-                  optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    option?.children?.toLowerCase().includes(input.toLowerCase())
-                  }
-                >
-                  {Array.isArray(caste[0])
-                    ? caste[0].map((item, index) => (
-                      <Select.Option key={index} value={item}>
-                        {item}
-                      </Select.Option>
-                    ))
-                    : caste.map((item, index) => (
-                      <Select.Option key={index} value={item}>
-                        {item}
-                      </Select.Option>
-                    ))}
-                </Select>
-              </Form.Item>
-
-              <Form.Item name="dob">
-                <Input type="date" placeholder='Date of Birth' />
-              </Form.Item>
-
-              <Form.Item name="age">
-                <Input type='number' placeholder='Age' />
-              </Form.Item>
-              <Form.Item name="father_name" >
-                <Input placeholder='Father name' />
-              </Form.Item>
-
-              <Form.Item name="mother_name">
-                <Input placeholder='Mother name' />
-              </Form.Item>
-
-              <Form.Item name="brother">
-                <Input type="number" placeholder='No. of Brothers' />
-              </Form.Item>
-
-              <Form.Item name="brother_marrige">
-                <Input type="number" placeholder='No. of Married Brothers' />
-              </Form.Item>
-
-              <Form.Item name="sister">
-                <Input type="number" placeholder='No. of Sisters' />
-              </Form.Item>
-
-              <Form.Item name="sister_marrige">
-                <Input type="number" placeholder='No. of Married Sisters' />
-              </Form.Item>
-
-              {/* <Form.Item name="sister_marrige">
-                <Input type="number" placeholder='No. of Married Brothers' />
-              </Form.Item> */}
-
-              <Form.Item name="university">
-                <Input placeholder='University or School' />
-              </Form.Item>
-
-              <Form.Item name="course">
-                <Input placeholder='Course' />
-              </Form.Item>
-
-              <Form.Item name="job_title">
-                <Input placeholder='Job' />
-              </Form.Item>
-
-              <Form.Item name="job_type" label="Job Type">
-                <Select placeholder="Select Job Type">
-                  <Select.Option value="government">Government</Select.Option>
-                  <Select.Option value="private">Private</Select.Option>
-                  <Select.Option value="unemployed">Unemployed</Select.Option>
-                </Select>
-              </Form.Item>
-
-              <Form.Item name="marrige_status" label="marrige_status">
-                <Select placeholder="marrige_status">
-                  <Select.Option value="Unmarried">Unmarried</Select.Option>
-                  <Select.Option value="Married">Married</Select.Option>
-                </Select>
-              </Form.Item>
-
-              <Form.Item name="salary">
-                <Input type="number" placeholder='Salary' />
-              </Form.Item>
-
-              <Form.Item name="contact">
-                <Input placeholder='Whatsapp Number' />
-              </Form.Item>
-              <Form.Item name="instagram">
-                <Input placeholder='Instagram Link' />
-              </Form.Item>
-
               <Form.Item>
-                <Button type='primary' htmlType='submit' style={{ marginTop: '6px', marginLeft: '10px', height: '32px' }} >Save</Button>
+                <Button htmlType="submit" size="middle">
+                  Submit
+                </Button>
               </Form.Item>
             </Form>
           )}
 
+          {/* FULL PROFILE FORM */}
+          {email_pop === 3 && (
+            <Form
+              form={form}
+              onFinish={profile_details}
+              initialValues={form}
+              layout="vertical"
+            >
+              <Row gutter={[16, 16]}>
+                {/* Image Upload - Full Width */}
+                <Col span={24}>
+                  <Form.Item label="Profile Picture" required>
+                    <Upload
+                      beforeUpload={(file) => {
+                        setFile(file);
+                        form.setFieldsValue({ pic: file.name });
+                        return false;
+                      }}
+                      showUploadList={false}
+                    >
+                      <Button icon={<UploadOutlined />} size="middle">
+                        Choose File
+                      </Button>
+                    </Upload>
+                    <Form.Item name="pic" noStyle>
+                      <Input
+                        style={{ marginTop: 8 }}
+                        disabled
+                        placeholder="No file selected"
+                        size="middle"
+                      />
+                    </Form.Item>
+                  </Form.Item>
+                </Col>
+
+                {/* All Other Fields in Responsive Columns */}
+                {[
+                  { name: "firstname", label: "Full Name" },
+                  {
+                    name: "gender",
+                    label: "Gender",
+                    type: "select",
+                    options: ["Male", "Female"],
+                  },
+                  {
+                    name: "state",
+                    label: "State",
+                    type: "select",
+                    options: [
+                      "Andhra Pradesh",
+                      "Arunachal Pradesh",
+                      "Assam",
+                      "Bihar",
+                      "Chhattisgarh",
+                      "Goa",
+                      "Gujarat",
+                      "Haryana",
+                      "Himachal Pradesh",
+                      "Jharkhand",
+                      "Karnataka",
+                      "Kerala",
+                      "Madhya Pradesh",
+                      "Maharashtra",
+                      "Manipur",
+                      "Meghalaya",
+                      "Mizoram",
+                      "Nagaland",
+                      "Odisha",
+                      "Punjab",
+                      "Rajasthan",
+                      "Sikkim",
+                      "Tamil Nadu",
+                      "Telangana",
+                      "Tripura",
+                      "Uttar Pradesh",
+                      "Uttarakhand",
+                      "West Bengal",
+                      "Andaman and Nicobar Islands",
+                      "Chandigarh",
+                      "Dadra and Nagar Haveli and Daman and Diu",
+                      "Delhi",
+                      "Jammu and Kashmir",
+                      "Ladakh",
+                      "Lakshadweep",
+                      "Puducherry",
+                    ],
+                    onChange: handleStateChange,
+                  },
+                  {
+                    name: "disttrict",
+                    label: "District",
+                    type: "select",
+                    dynamic: district?.[0],
+                  },
+                  { name: "city", label: "City" },
+                  {
+                    name: "religion",
+                    label: "Religion",
+                    type: "select",
+                    options: [
+                      "Hindu",
+                      "Muslim",
+                      "Christian",
+                      "Sikh",
+                      "Buddhist",
+                      "Jain",
+                      "Other",
+                    ],
+                    onChange: handlereligionChange,
+                  },
+                  {
+                    name: "caste",
+                    label: "Caste",
+                    type: "select",
+                    dynamic: Array.isArray(caste[0]) ? caste[0] : caste,
+                    searchable: true,
+                  },
+                  { name: "dob", label: "DOB", type: "date" },
+                  { name: "age", label: "Age", type: "number" },
+                  { name: "father_name", label: "Father's Name" },
+                  { name: "mother_name", label: "Mother's Name" },
+                  { name: "brother", label: "No. of Brothers", type: "number" },
+                  {
+                    name: "brother_marrige",
+                    label: "Married Brothers",
+                    type: "number",
+                  },
+                  { name: "sister", label: "No. of Sisters", type: "number" },
+                  {
+                    name: "sister_marrige",
+                    label: "Married Sisters",
+                    type: "number",
+                  },
+                  { name: "university", label: "University/School" },
+                  { name: "course", label: "Course" },
+                  { name: "job_title", label: "Job Title" },
+                  {
+                    name: "job_type",
+                    label: "Job Type",
+                    type: "select",
+                    options: ["Government", "Private", "Unemployed"],
+                  },
+                  {
+                    name: "marrige_status",
+                    label: "Marriage Status",
+                    type: "select",
+                    options: ["Unmarried", "Married"],
+                  },
+                  { name: "salary", label: "Salary", type: "number" },
+                  { name: "contact", label: "WhatsApp Number" },
+                  { name: "instagram", label: "Instagram Link" },
+                ].map((field, idx) => (
+                  <Col key={field.name} xs={24} sm={12} md={12} lg={6}>
+                    <Form.Item name={field.name} label={field.label}>
+                      {field.type === "select" ? (
+                        <Select
+                          showSearch={field.searchable}
+                          allowClear
+                          placeholder={field.label}
+                          onChange={field.onChange}
+                          size="middle"
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            option?.children
+                              ?.toLowerCase()
+                              .includes(input.toLowerCase())
+                          }
+                        >
+                          {(field.dynamic || field.options || []).map(
+                            (opt, i) => (
+                              <Option key={i} value={opt}>
+                                {opt}
+                              </Option>
+                            )
+                          )}
+                        </Select>
+                      ) : field.type === "date" ? (
+                        <Input type="date" size="middle" />
+                      ) : (
+                        <Input
+                          type={field.type || "text"}
+                          placeholder={field.label}
+                          size="middle"
+                        />
+                      )}
+                    </Form.Item>
+                  </Col>
+                ))}
+
+                <Col span={24}>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" size="middle">
+                      Save
+                    </Button>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+          )}
         </Card>
       </div>
     </div>

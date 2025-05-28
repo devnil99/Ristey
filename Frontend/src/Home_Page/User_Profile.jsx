@@ -397,17 +397,11 @@ function User_Profile() {
         <Card
           style={{ marginLeft: "400px", width: "1000px", marginTop: "10px" }}
         >
-          {/* <img
-            style={{ height: "280px", width: "100%" }}
-            src="https://photosgreet.com/wp-content/uploads/ddd5e16d0fa25d3c110b9d95c2530224.jpg"
-          /> */}
+         
 
           <Image style={{ height: "280px", width: "940px" }} src={user_image} />
 
-          {/* <Card style={{ marginTop:'-100px',marginLeft: '30px', width: '300px', display: 'flex',height:'100px',borderRadius:'50px' }}>
-                    <p><img style={{ width: '100px', height: '100px', borderRadius: '50px' }} src='https://photosgreet.com/wp-content/uploads/ddd5e16d0fa25d3c110b9d95c2530224.jpg' /></p>
-                    <h2 style={{ marginTop: '30px',marginLeft:'10px' }}>Naincy Garg</h2>
-                </Card> */}
+         
 
           <Card
             style={{
@@ -822,65 +816,7 @@ function User_Profile() {
               </div>
             )}
 
-            {/* address :---------- */}
-            {/* {activeTab === "address" && (
-              <div style={{ marginTop: "20px", marginLeft: "20px" }}>
-                <Form onFinish={submit} initialValues={obj}>
-                  <Form.Item
-                    label="City/Village"
-                    name="city"
-                    style={{ width: "500px", height: "5px" }}
-                    // initialValue={User[0].city}
-                  >
-                    <Input style={{}} />
-                  </Form.Item>
-                  <br></br>
-                  <Form.Item
-                    label="disttrict"
-                    name="disttrict"
-                    style={{ width: "500px", height: "5px" }}
-                    // initialValue={User[0].disttrict}
-                  >
-                    <Input style={{}} />
-                  </Form.Item>
-                  <br></br>
-
-                  <Form.Item
-                    label="state"
-                    name="state"
-                    style={{ width: "500px", height: "5px" }}
-                    // initialValue={User[0].state}
-                  >
-                    <Input style={{}} />
-                  </Form.Item>
-                  <br></br>
-
-                  <Form.Item
-                    label="country"
-                    name="country"
-                    style={{ width: "500px", height: "5px" }}
-                    // initialValue={User[0].country}
-                  >
-                    <Input style={{}} />
-                  </Form.Item>
-                  <br></br>
-
-                  <Form.Item
-                    label="full_address"
-                    name="full_address"
-                    style={{ width: "500px", height: "5px" }}
-                    // initialValue={User[0].full_address}
-                  >
-                    <Input style={{}} />
-                  </Form.Item>
-                  <br />
-                  <Button htmlType="submit" style={{ marginLeft: "35%" }}>
-                    Save
-                  </Button>
-                </Form>
-              </div>
-            )} */}
-
+            
             {activeTab === "address" && (
               <div
                 style={{ marginTop: "20px", marginLeft: "20px", width: "80%" }}
@@ -1144,14 +1080,3 @@ function User_Profile() {
 
 export default User_Profile;
 
-
-
-// import React from 'react'
-
-// function User_Profile() {
-//   return (
-//     <div>User_Profile</div>
-//   )
-// }
-
-// export default User_Profile

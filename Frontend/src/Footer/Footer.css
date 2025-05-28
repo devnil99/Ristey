@@ -1,82 +1,76 @@
-/* Footer.css */
 .footer {
-  background-color: #1a202c;
-  color: white;
-  padding: 40px 20px;
-  text-align: center;
+  background-color: #1c1c1c;
+  color: #ffffff;
+  padding: 40px 20px 20px;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .footer-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 70px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
 }
 
+.footer-section {
+  flex: 1 1 250px;
+}
 
 .footer-section h2 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #ffcc00;
 }
 
 .footer-section p,
-.footer-section ul {
-  color: #a0aec0;
-  font-size: 0.9rem;
-}
-
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-section ul li {
-  margin-bottom: 8px;
-}
-
-.footer-section ul li a {
+.footer-section a {
+  color: #cccccc;
+  font-size: 14px;
   text-decoration: none;
-  color: #a0aec0;
-  transition: color 0.3s ease;
+  line-height: 1.6;
 }
 
-.footer-section ul li a:hover {
-  color: white;
-}
-
-.social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
+.footer-section a:hover {
+  color: #ffcc00;
 }
 
 .social-icons a {
-  color: #a0aec0;
-  font-size: 1.5rem;
+  margin-right: 15px;
+  font-size: 22px;
+  color: #cccccc;
   transition: color 0.3s ease;
 }
 
 .social-icons a:hover {
-  color: white;
+  color: #ffcc00;
 }
 
-.footer-copyright {
-  margin-top: 20px;
-  font-size: 0.8rem;
-  color: #a0aec0;
-  border-top: 1px solid #2d3748;
-  padding-top: 10px;
+.partner-logos {
+  display: flex;
+  margin-top: 10px;
 }
 
-/* Responsive */
-@media (min-width: 768px) {
-  .footer-container {
-    grid-template-columns: repeat(3, 1fr);
-    text-align: left;
-  }
-  .social-icons {
-    justify-content: flex-start;
-  }
+.partner-logos img {
+  width: 100px;
+  margin-right: 15px;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+
+.partner-logos a:hover img {
+  transform: scale(1.1);
+}
+
+.footer-logo {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid #333;
+  padding-top: 15px;
+  margin-top: 30px;
+  font-size: 14px;
+  color: #999;
 }

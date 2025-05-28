@@ -65,8 +65,8 @@ class UserData(models.Model):
     sister_marrige = models.IntegerField(null=True,blank=True)
     ref = models.IntegerField(null=True,blank=True)
 
-    # def __str__(self):
-    #     return self.username
+    def __str__(self):
+        return self.username
     
 class User_Caste(models.Model):
     religion = models.CharField(max_length=20,null=True,blank=True)
