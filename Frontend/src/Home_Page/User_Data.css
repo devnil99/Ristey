@@ -1,5 +1,3 @@
-/* UserProfileCard.css */
-
 /* Reset some defaults */
 * {
   box-sizing: border-box;
@@ -24,7 +22,7 @@
 
 /* To avoid content hidden behind fixed header */
 .content-padding {
-  padding: 90px 20px 20px; /* top padding increased to header height */
+  padding: 90px 20px 20px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -34,7 +32,7 @@
 .header-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #4B0082; /* Indigo/Purple */
+  color: #4B0082;
   cursor: pointer;
   margin: 0;
   user-select: none;
@@ -64,11 +62,11 @@
 }
 
 .header-auth-link.signup {
-  background-color: #d8b4fe; /* light purple */
+  background-color: #d8b4fe;
 }
 
 .header-auth-link.login {
-  background-color: #a78bfa; /* medium purple */
+  background-color: #a78bfa;
   color: white;
 }
 
@@ -84,19 +82,16 @@
 .user-card {
   background-color: white;
   border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   max-width: 900px;
   width: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 25px;
-  position: relative;
+  padding-bottom: 40px;
+  margin: 20px auto 0;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin: 0 auto;
-  /* padding-top: 20px; */
-  margin-top:20px ;
 }
 
 .user-card:hover {
@@ -107,79 +102,41 @@
 /* Cover image */
 .user-cover-image {
   width: 100%;
-  height: 160px; /* Increased height for better visibility */
-  object-fit: cover;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  transition: height 0.3s ease;
-}
-
-.user-card {
-  position: relative; /* Important for absolute inside */
-  max-width: 900px;
-  width: 100%;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  padding-bottom: 40px; /* some bottom padding for content below profile pic */
-}
-
-.user-cover-image {
-  width: 100%;
-  height: 180px;  /* Taller cover */
+  height: 180px;
   object-fit: cover;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   display: block;
 }
 
-/* Profile Pic overlaps bottom of cover image */
+/* Profile Pic below cover image */
 .user-profile-pic-container {
-  position: absolute; /* Positioned relative to .user-card */
-  top: 510px; /* This places its top edge at the bottom of the 280px high cover image */
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%); /* Centers horizontally and pulls up by half its height for overlap */
-  /* width: 210px;
-  height: 210px; */
-  border-radius: 50%;
-  border: 6px solid white;
-  background-color: #eee;
-  box-shadow: 0 6px 12px rgba(124, 58, 237, 0.25);
-  overflow: hidden;
-  transition: all 0.3s ease;
-  z-index: 10;
+  margin-top: -75px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  z-index: 5;
+
 }
 
-/* The profile picture itself */
 .user-profile-pic {
   width: 150px;
   height: 150px;
-  object-fit: cover; /* ensure image covers without distortion */
+  object-fit: cover;
   border-radius: 50%;
+  border: 6px solid white;
+  box-shadow: 0 6px 12px rgba(124, 58, 237, 0.25);
   transition: transform 0.3s ease;
-  border: 1px solid #3498db; /* blue border around the profile pic */
-  box-sizing: border-box; /* include border in size */
+  /* margin-bottom: 30px; */
 }
 
-.user-profile-pic-container:hover .user-profile-pic {
+.user-profile-pic:hover {
   transform: scale(1.05);
 }
 
-/* Username placed below profile pic */
-.user-username {
-  margin-top: 120px; /* leave space for profile pic height minus overlap */
-  text-align: center;
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #4B0082;
-  letter-spacing: 1px;
-}
-
-
 /* Username */
 .user-username {
-  margin-top: 110px; /* Adjusted to leave space below profile pic */
+  margin-top: 25px;
   font-size: 1.5rem;
   font-weight: 700;
   color: #4B0082;
@@ -217,9 +174,8 @@
   color: #1DA1F2;
 }
 
-/* Contact Button Container */
+/* Contact Button */
 .contact-button-container {
-  /* margin-top: 20px; */
   text-align: center;
 }
 
@@ -258,7 +214,7 @@
   user-select: none;
 }
 
-/* Tab Buttons Container */
+/* Tab Buttons */
 .tab-buttons-container {
   display: flex;
   flex-wrap: wrap;
@@ -286,21 +242,10 @@
   box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
 }
 
-.tab-button.family {
-  background-color: #c4b5fd;
-}
-
-.tab-button.address {
-  background-color: #d8b4fe;
-}
-
-.tab-button.contact {
-  background-color: #a5b4fc;
-}
-
-.tab-button.education {
-  background-color: #c7d2fe;
-}
+.tab-button.family { background-color: #c4b5fd; }
+.tab-button.address { background-color: #d8b4fe; }
+.tab-button.contact { background-color: #a5b4fc; }
+.tab-button.education { background-color: #c7d2fe; }
 
 /* Details Containers */
 .profile-details-container,
@@ -316,14 +261,12 @@
   font-size: 1rem;
 }
 
-/* Make profile-details-container 3-column layout on larger screens */
 .profile-details-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px 30px;
 }
 
-/* On smaller screens, stack the columns */
 @media (max-width: 1024px) {
   .profile-details-container {
     display: flex;
@@ -331,7 +274,6 @@
   }
 }
 
-/* Label and Value */
 .detail-label-column {
   font-weight: 700;
   color: #7c3aed;
@@ -342,7 +284,6 @@
   color: #3c1361;
 }
 
-/* Profile details item container for consistent column layout */
 .profile-details-item {
   display: flex;
   flex-direction: column;
@@ -405,9 +346,7 @@
 /* Responsive Breakpoints */
 @media (max-width: 768px) {
   .user-card {
-    max-width: 100%;
     width: 90%;
-    margin: 0 auto;
   }
 
   .profile-details-container,
@@ -418,25 +357,47 @@
     flex-direction: column;
   }
 
-  .detail-label-column, 
-  .detail-value-column, 
-  .profile-details-right-column {
-    flex-basis: 100%;
-  }
+  /* Container for cover and profile image */
+.cover-profile-wrapper {
+  position: relative;
+  width: 100%;
+}
 
-  .tab-buttons-container {
-    justify-content: space-around;
-  }
+/* Cover image */
+.user-cover-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  display: block;
+}
 
-  /* Adjust profile pic for tablet */
-  .user-profile-pic-container {
-    width: 150px;
-    height: 150px;
-    top: 110px;
-  }
+/* Profile picture container with absolute positioning */
+.user-profile-pic-container {
+  position: absolute;
+  bottom: -75px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+/* Profile picture styling */
+.user-profile-pic {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 6px solid white;
+  box-shadow: 0 6px 12px rgba(124, 58, 237, 0.25);
+  background-color: white;
+  transition: transform 0.3s ease;
+}
+
 
   .user-username {
-    margin-top: 90px;
+    margin-top: 20px;
+    font-size: 1.3rem;
   }
 }
 
@@ -456,19 +417,20 @@
     font-size: 1.5rem;
   }
 
-  /* Profile pic smaller on mobile */
+  .user-profile-pic {
+    width: 110px;
+    height: 110px;
+  }
+
   .user-profile-pic-container {
-    width: 120px;
-    height: 120px;
-    top: 100px;
+    margin-top: -55px;
   }
 
   .user-username {
-    margin-top: 70px;
-    font-size: 1.3rem;
+    margin-top: 18px;
+    font-size: 1.2rem;
   }
 
-  /* Cover image height reduced on mobile */
   .user-cover-image {
     height: 120px;
   }

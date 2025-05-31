@@ -18,7 +18,7 @@ import Staff_Transactions from "../Staff_Panel/Staff_Transactions"
 import { VscGraph } from "react-icons/vsc";
 import User_Reg from "../../Authentication/User/User_Reg";
 import Test from "../../Test";
-
+import "../User_Panel/User_Panel.css"
 function User_Panel() {
   const baseurl = 'http://127.0.0.1:8000/'
   const Navigate = useNavigate();
@@ -248,193 +248,148 @@ function User_Panel() {
   };
 
 
-  const btnStyle = {
-  width: '150px',
-  justifyContent: 'flex-start',
-  textAlign: 'left',
-  // backgroundColor: '#076E94',
-  color: 'black',
-  padding: '10px 15px',
-  borderRadius: '6px',
-  fontSize: '14px'
-};
-
-const cardStyle = {
-  width: '250px',
-  height: '150px',
-  backgroundColor: 'white',
-  boxShadow: '0px 2px 5px rgba(0,0,0,0.2)',
-  borderRadius: '10px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  cursor: 'pointer'
-};
-
-const iconStyle = {
-  fontSize: '30px',
-  color: '#076E94',
-  marginBottom: '10px'
-};
-
-const countStyle = {
-  fontSize: '20px',
-  margin: 0,
-  color: '#333'
-};
 
 
   return (
   <div>
-  {/* Top Navbar */}
-  <div style={{
-    width: '100%',
-    height: '50px',
-    backgroundColor: 'rgba(7, 110, 148,1)',
-    position: 'fixed',
-    zIndex: '999',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0 20px',
-    justifyContent: 'space-between'
-  }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-      {/* Toggle Button */}
-      <Button onClick={toggleSidebar} style={{ background: 'white', color: '#076E94' }}>
-        ☰
-      </Button>
-      <Link to='/Home_Page_wLog'>
-        <p style={{ fontSize: '24px', color: 'white', margin: 0 }}>Ristey</p>
-      </Link>
-    </div>
-
-    {intid ? (
-      <Link to='/User_Panel'>
-        <p style={{ fontSize: '15px', color: 'white' }}>Profile</p>
-      </Link>
-    ) : (
-      <div style={{ display: 'flex', gap: '20px' }}>
-        <Link to='/User_Reg/885695'><p style={{ fontSize: '15px', color: 'white' }}>Sign Up</p></Link>
-        <Link to='/User_Login'><p style={{ fontSize: '15px', color: 'white' }}>Login</p></Link>
-      </div>
-    )}
-  </div>
-
-  {/* Sidebar */}
-  <div style={{
-    width: sidebarOpen ? "180px" : "50px",
-    height: '100vh',
-    backgroundColor: 'white',
-    position: 'fixed',
-    top: '50px',
-    left: 0,
-    overflowY: 'auto',
-    transition: 'width 0.3s ease',
-    padding: '10px',
-    zIndex: 998
-  }}>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-      <Link to='/User_Panel'><Button style={btnStyle}>{sidebarOpen ? "Dashboard" : "D"}</Button></Link>
-      <Link to='/User_Added_User'><Button style={btnStyle}>{sidebarOpen ? "User" : "U"}</Button></Link>
-      <Link to='/User_Recharge'><Button style={btnStyle}>{sidebarOpen ? "Recharge" : "R"}</Button></Link>
-      <Link to='/User_Transaction_User'><Button style={btnStyle}>{sidebarOpen ? "Transaction" : "T"}</Button></Link>
-      <Link to='/User_Withdrawal_User'><Button style={btnStyle}>{sidebarOpen ? "Withdrawal" : "W"}</Button></Link>
-      <Button style={btnStyle} onClick={log_out}>{sidebarOpen ? "Log Out" : "L"}</Button>
-    </div>
-  </div>
-
-  {/* Main Content */}
-  <div style={{
-    marginLeft: sidebarOpen ? '200px' : '70px',
-    paddingTop: '70px',
-    paddingRight: '20px',
-    display: "flex",
-    flexWrap: 'wrap',
-    gap: '20px',
-    transition: 'margin 0.3s ease'
-  }}>
-    {/* Profile Box */}
-    <div style={{
-      width: "300px",
-      minHeight: "500px",
-      borderRadius: '10px',
-      backgroundColor: 'white',
-      boxShadow: "1px 0.5px 4px gray",
-      padding: '10px'
-    }}>
-      <div style={{ textAlign: "center" }}>
-        {staff.map(i => (
-          <img key={i.id}
-            style={{
-              border: '2px solid',
-              width: '176px',
-              height: '147px',
-              borderRadius: '18px'
-            }}
-            src={`${baseurl}${i.pic}`}
-            alt="Profile"
-          />
-        ))}
-      </div>
-      <br />
-      <Form form={form} onFinish={updatestaff} style={{ marginLeft: '10px' }}>
-        <Form.Item name="username" label='Name'>
-          <Input />
-        </Form.Item>
-        <Form.Item name="password" label='Password'>
-          <Input />
-        </Form.Item>
-        <Form.Item name="balance" label='Balance'>
-          <Input readOnly />
-        </Form.Item>
-        <div style={{ display: "flex", columnGap: "10px", justifyContent: 'center' }}>
-          <Form.Item><Button htmlType="submit">Save</Button></Form.Item>
-          <Form.Item><Link to='/User_Profile_User'><Button>Profile</Button></Link></Form.Item>
+      {/* Top Navbar */}
+      <div className="top-navbar">
+        <div className="top-navbar-left">
+          {/* Toggle Button */}
+          <Button onClick={toggleSidebar} className="sidebar-toggle-button">
+            ☰
+          </Button>
+          <Link to="/Home_Page_wLog">
+            <p className="navbar-title">Ristey</p>
+          </Link>
         </div>
-      </Form>
-    </div>
 
-    {/* Cards Section */}
-    <Link to='/Staff_Added_User'>
-      <div style={cardStyle}>
-        <p style={iconStyle}><FaUser /></p>
-        <p style={countStyle}>{userref.length}</p>
+        {int_id ? (
+          <Link to="/User_Panel" className="navbar-link">
+            Profile
+          </Link>
+        ) : (
+          <div className="navbar-auth-links">
+            <Link to="/User_Reg/885695" className="navbar-link">
+              Sign Up
+            </Link>
+            <Link to="/User_Login" className="navbar-link">
+              Login
+            </Link>
+          </div>
+        )}
       </div>
-    </Link>
 
-    <div style={cardStyle}>
-      <p style={iconStyle}><FaRupeeSign /></p>
-      <p style={countStyle}>{current_month[0]?.amount || "0"}</p>
-      <p style={countStyle}>{current_month[0]?.month || ""}</p>
-    </div>
+      {/* Sidebar */}
+      <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+        <div className="sidebar-buttons">
+          <Link to="/User_Panel">
+            <Button className="sidebar-button">
+              {sidebarOpen ? "Dashboard" : "D"}
+            </Button>
+          </Link>
+          <Link to="/User_Added_User">
+            <Button className="sidebar-button">
+              {sidebarOpen ? "User" : "U"}
+            </Button>
+          </Link>
+          <Link to="/User_Recharge">
+            <Button className="sidebar-button">
+              {sidebarOpen ? "Recharge" : "R"}
+            </Button>
+          </Link>
+          <Link to="/User_Transaction_User">
+            <Button className="sidebar-button">
+              {sidebarOpen ? "Transaction" : "T"}
+            </Button>
+          </Link>
+          <Link to="/User_Withdrawal_User">
+            <Button className="sidebar-button">
+              {sidebarOpen ? "Withdrawal" : "W"}
+            </Button>
+          </Link>
+          <Button className="sidebar-button" onClick={log_out}>
+            {sidebarOpen ? "Log Out" : "L"}
+          </Button>
+        </div>
+      </div>
 
-    <div
-      style={cardStyle}
-      onClick={() => setPop(pop === null ? 'pop' : null)}
-    >
-      <p style={iconStyle}>{pop === null ? <GrTransaction /> : <VscGraph />}</p>
-    </div>
-  </div>
+      {/* Main Content */}
+      <div className={`main-content ${sidebarOpen ? "sidebar-open" : ""}`}>
+        {/* Profile Box */}
+        <div className="profile-box">
+          <div className="profile-image-container">
+            {staff.map((i) => (
+              <img
+                key={i.id}
+                className="profile-image"
+                src={`${baseurl}${i.pic}`}
+                alt="Profile"
+              />
+            ))}
+          </div>
+          <br />
+          <Form form={form} onFinish={updatestaff} className="profile-form">
+            <Form.Item name="username" label="Name">
+              <Input />
+            </Form.Item>
+            <Form.Item name="password" label="Password">
+              <Input.Password /> {/* Use Input.Password for password fields */}
+            </Form.Item>
+            <Form.Item name="balance" label="Balance">
+              <Input readOnly />
+            </Form.Item>
+            <div className="form-buttons">
+              <Form.Item>
+                <Button htmlType="submit">Save</Button>
+              </Form.Item>
+              <Form.Item>
+                <Link to="/User_Profile_User">
+                  <Button>Profile</Button>
+                </Link>
+              </Form.Item>
+            </div>
+          </Form>
+        </div>
 
-  {/* Chart Section */}
-  {pop === null && (
-    <div style={{ width: '100%', marginLeft: sidebarOpen ? '200px' : '70px', padding: '20px' }}>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={cmonth_revenue} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
-          <XAxis dataKey="month" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="amount" fill="#8884d8">
-            <LabelList dataKey="amount" position="top" style={{ fontSize: '12px', fill: '#000' }} />
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+        {/* Cards Section */}
+        <Link to="/Staff_Added_User" className="info-card">
+          <p className="card-icon">
+            <FaUser />
+          </p>
+          <p className="card-count">{userref.length}</p>
+        </Link>
+
+        <div className="info-card">
+          <p className="card-icon">
+            <FaRupeeSign />
+          </p>
+          <p className="card-count">{current_month[0]?.amount || "0"}</p>
+          <p className="card-count">{current_month[0]?.month || ""}</p>
+        </div>
+
+        <div className="info-card" onClick={() => setPop(pop === null ? "pop" : null)}>
+          <p className="card-icon">{pop === null ? <GrTransaction /> : <VscGraph />}</p>
+        </div>
+      </div>
+
+      {/* Chart Section */}
+      {pop === null && (
+        <div className={`chart-container ${sidebarOpen ? "sidebar-open" : ""}`}>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={cmonth_revenue} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="amount" fill="#8884d8">
+                <LabelList dataKey="amount" position="top" className="chart-label-list" />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
-  )}
-</div>
 
 
   );

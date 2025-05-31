@@ -1,0 +1,296 @@
+/* UserPanel.css */
+
+/* Top Navbar */
+.top-navbar {
+  width: 100%;
+  height: 50px;
+  background-color: rgba(7, 110, 148, 1);
+  position: fixed;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  justify-content: space-between;
+  box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+.top-navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar-title {
+  font-size: 24px;
+  color: white;
+  margin: 0;
+}
+
+.navbar-link {
+  font-size: 15px;
+  color: white;
+  text-decoration: none; /* Remove underline from links */
+}
+
+.navbar-auth-links {
+  display: flex;
+  gap: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  height: 100vh;
+  background-color: white;
+  position: fixed;
+  top: 50px; /* Below the navbar */
+  left: 0;
+  overflow-y: auto;
+  transition: width 0.3s ease;
+  padding: 10px;
+  z-index: 998;
+  box-sizing: border-box;
+  width: 50px; /* Default collapsed width */
+}
+
+.sidebar.open {
+  width: 180px; /* Expanded width */
+}
+
+.sidebar-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-button {
+  width: 100%; /* Fill sidebar width */
+  height: 40px; /* Consistent button height */
+  border-radius: 5px;
+  border: 1px solid #d9d9d9;
+  background-color: #f0f2f5;
+  color: #333;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none; /* Remove underline from links */
+  box-sizing: border-box;
+}
+
+.sidebar-button:hover {
+  background-color: #e6e6e6;
+}
+
+/* Main Content Area */
+.main-content {
+  padding-top: 70px; /* Space for the fixed navbar */
+  padding-right: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  transition: margin-left 0.3s ease;
+  margin-left: 70px; /* Default margin for collapsed sidebar */
+}
+
+.main-content.sidebar-open {
+  margin-left: 200px; /* Margin for expanded sidebar */
+}
+
+/* Profile Box */
+.profile-box {
+  width: 300px;
+  min-height: 500px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 1px 0.5px 4px gray;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.profile-image-container {
+  text-align: center;
+}
+
+.profile-image {
+  border: 2px solid;
+  width: 176px;
+  height: 176px;
+  border-radius: 50%;
+  object-fit: cover; /* Ensure image fills its space */
+}
+
+.profile-form {
+  margin-left: 10px;
+}
+
+.form-buttons {
+  display: flex;
+  column-gap: 10px;
+  justify-content: center;
+}
+
+/* Cards Section */
+.info-card {
+  width: 200px; /* Adjusted for responsiveness */
+  height: 150px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 1px 0.5px 4px gray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.card-icon {
+  font-size: 40px;
+  color: rgba(7, 110, 148, 1);
+  margin-bottom: 5px;
+}
+
+.card-count {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+/* Chart Section */
+.chart-container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease;
+  margin-left: 70px; /* Default margin for collapsed sidebar */
+}
+
+.chart-container.sidebar-open {
+  margin-left: 200px; /* Margin for expanded sidebar */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .top-navbar {
+    padding: 0 10px;
+  }
+
+  .top-navbar-left {
+    gap: 10px;
+  }
+
+  .navbar-title {
+    font-size: 20px;
+  }
+
+  .navbar-link {
+    font-size: 13px;
+  }
+
+  .navbar-auth-links {
+    gap: 10px;
+  }
+
+  .sidebar.open {
+    width: 150px; /* Slightly smaller on small screens */
+  }
+
+  .main-content,
+  .chart-container {
+    margin-left: 60px; /* Adjust for smaller collapsed sidebar */
+    padding-right: 10px;
+    padding-left: 10px; /* Add padding for content on small screens */
+  }
+
+  .main-content.sidebar-open,
+  .chart-container.sidebar-open {
+    margin-left: 170px; /* Adjust for smaller expanded sidebar */
+  }
+
+  .profile-box {
+    width: 100%; /* Full width on smaller screens */
+    max-width: 300px; /* Max width to prevent excessive stretching */
+    margin-left: auto;
+    margin-right: auto; /* Center profile box if it's the only element */
+  }
+
+  .info-card {
+    width: calc(50% - 15px); /* Two cards per row, accounting for gap */
+    height: 120px; /* Adjust height */
+    margin: 0 auto; /* Center cards if needed */
+  }
+
+  .card-icon {
+    font-size: 30px;
+  }
+
+  .card-count {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-navbar {
+    height: 45px;
+  }
+
+  .navbar-title {
+    font-size: 18px;
+  }
+
+  .top-navbar-left button {
+    padding: 5px 8px; /* Smaller button */
+  }
+
+  .navbar-link {
+    font-size: 12px;
+  }
+
+  .sidebar {
+    width: 0; /* Fully collapse sidebar by default on very small screens */
+    padding: 0;
+  }
+
+  .sidebar.open {
+    width: 130px; /* Smaller expanded width */
+  }
+
+  .main-content,
+  .chart-container {
+    margin-left: 10px; /* Minimal margin */
+    padding-top: 60px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .main-content.sidebar-open,
+  .chart-container.sidebar-open {
+    margin-left: 140px; /* Adjust for very small expanded sidebar */
+  }
+
+  .profile-box {
+    padding: 5px;
+  }
+
+  .profile-image {
+    width: 120px;
+    height: 100px;
+  }
+
+  .info-card {
+    width: 100%; /* One card per row */
+    height: 100px;
+  }
+
+  .card-icon {
+    font-size: 25px;
+  }
+
+  .card-count {
+    font-size: 18px;
+  }
+}

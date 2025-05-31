@@ -14,7 +14,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 const User_Recharge = () => {
   const navigate = useNavigate();
-      const id = localStorage.getItem('user_id')
+  const id = localStorage.getItem("user_id");
+  const int_id = String(id);
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [user, setUser] = useState(null);
@@ -168,286 +169,76 @@ const User_Recharge = () => {
     localStorage.removeItem("user_id");
     navigate("/User_Login");
   };
-   // Sidebar width changes based on open state
-    const sidebarWidth = sidebarOpen ? 180 : 60;
+  // Sidebar width changes based on open state
+  const sidebarWidth = sidebarOpen ? 180 : 60;
 
-
-  const [showSidebar, setShowSidebar] = useState(true);
-
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
   return (
     <>
       <div>
-        <style>{`
-        /* Top nav: allow wrapping and spacing on small screens */
-        div[style*="position: fixed"][style*="height: 50px"] {
-          flex-wrap: wrap !important;
-          justify-content: space-between !important;
-          padding: 0 10px;
-        }
-
-        /* First word "Ristey" never cut off */
-        div[style*="position: fixed"][style*="height: 50px"] p:first-child {
-          white-space: nowrap;
-          overflow: visible;
-          text-overflow: clip;
-        }
-
-        /* Show toggle icon on small screens */
-        @media (max-width: 768px) {
-          .menu-toggle {
-            display: block !important;
-          }
-        }
-
-        /* Adjust profile/signup/login margin on smaller screens */
-        @media (max-width: 768px) {
-          div[style*="position: fixed"][style*="height: 50px"] p {
-            margin-left: 0 !important;
-            margin-top: 10px !important;
-            font-size: 14px !important;
-          }
-          div[style*="position: fixed"][style*="height: 50px"] > div {
-            margin-left: 0 !important;
-            gap: 10px !important;
-          }
-        }
-
-        /* Sidebar responsiveness */
-        @media (max-width: 768px) {
-          div[style*="width: 180px"][style*="position: fixed"] {
-            position: relative !important;
-            width: 100% !important;
-            height: auto !important;
-            display: flex !important;
-            flex-wrap: wrap !important;
-            margin-top: 0 !important;
-          }
-          div[style*="width: 180px"][style*="position: fixed"] button {
-            flex: 1 1 45% !important;
-            margin: 5px !important;
-          }
-        }
-
-        /* Membership Plans title */
-        h3 {
-          white-space: nowrap;
-          overflow-wrap: normal;
-        }
-        @media (max-width: 600px) {
-          h3 {
-            font-size: 1.8rem !important;
-            white-space: normal;
-          }
-        }
-
-        /* Cards scale nicely on small screens */
-        @media (max-width: 600px) {
-          .MuiGrid-item {
-            max-width: 90% !important;
-            margin: auto !important;
-          }
-        }
-      `}</style>
-        {/* Topbar */}
-        <div style={topBarStyle}>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            {/* Sidebar toggle button */}
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              style={toggleButtonStyle}
-              aria-label="Toggle Sidebar"
-            >
-              {sidebarOpen ? "☰" : "☰"}
-            </button>
-
+        {/* Top Navbar */}
+        <div className="top-navbar">
+          <div className="top-navbar-left">
+            {/* Toggle Button */}
+            <Button onClick={toggleSidebar} className="sidebar-toggle-button">
+              ☰
+            </Button>
             <Link to="/Home_Page_wLog">
-              <p style={logoStyle}>Ristey</p>
+              <p className="navbar-title">Ristey</p>
             </Link>
           </div>
 
-          <div style={authContainerStyle}>
-            {id ? (
-              <Link to="/User_Panel" style={{ color: "white" }}>
-                Profile
-              </Link>
-            ) : (
-              <>
-                <Link to="/User_Reg/885695" style={{ color: "white" }}>
-                  Sign Up
-                </Link>
-                <Link to="/User_Login" style={{ color: "white" }}>
-                  Login
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div
-          style={{
-            width: "100%",
-            height: "50px",
-            backgroundColor: "rgba(7, 110, 148,1)",
-            position: "fixed",
-            zIndex: "999",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "0 10px",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <Link to="/Home_Page_wLog">
-              <p
-                style={{
-                  fontSize: "30px",
-                  color: "white",
-                  margin: 0,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Ristey
-              </p>
-            </Link>
-
-            <div
-              style={{
-                marginLeft: "10px",
-                display: "none",
-                cursor: "pointer",
-                color: "white",
-              }}
-              className="menu-toggle"
-              onClick={() => setShowSidebar(!showSidebar)}
-            >
-              <MenuIcon />
-            </div>
-          </div>
-
-          {user_id ? (
-            <Link to="/User_Panel">
-              <p
-                style={{
-                  fontSize: "15px",
-                  color: "white",
-                  marginTop: "13px",
-                  marginLeft: "auto",
-                }}
-              >
-                Profile
-              </p>
+          {int_id ? (
+            <Link to="/User_Panel" className="navbar-link">
+              Profile
             </Link>
           ) : (
-            <div style={{ display: "flex", gap: "20px", marginLeft: "auto" }}>
-              <Link to="/User_Reg/885695">
-                <p
-                  style={{
-                    fontSize: "15px",
-                    color: "white",
-                    marginTop: "13px",
-                  }}
-                >
-                  Sign Up
-                </p>
+            <div className="navbar-auth-links">
+              <Link to="/User_Reg/885695" className="navbar-link">
+                Sign Up
               </Link>
-              <Link to="/User_Login">
-                <p
-                  style={{
-                    fontSize: "15px",
-                    color: "white",
-                    marginTop: "13px",
-                  }}
-                >
-                  Login
-                </p>
+              <Link to="/User_Login" className="navbar-link">
+                Login
               </Link>
             </div>
           )}
         </div>
 
-        {showSidebar && (
-          <div
-            style={{
-              width: "180px",
-              height: "680px",
-              backgroundColor: "white",
-              position: "fixed",
-              marginTop: "50px",
-            }}
-          >
+        {/* Sidebar */}
+        <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+          <div className="sidebar-buttons">
             <Link to="/User_Panel">
-              <Button
-                style={{
-                  textAlign: "center",
-                  color: "black",
-                  borderRadius: "0px",
-                  width: "100%",
-                }}
-              >
-                Dashboard
+              <Button className="sidebar-button">
+                {sidebarOpen ? "Dashboard" : "D"}
               </Button>
             </Link>
             <Link to="/User_Added_User">
-              <Button
-                style={{
-                  textAlign: "center",
-                  color: "black",
-                  borderRadius: "0px",
-                  width: "100%",
-                }}
-              >
-                User
+              <Button className="sidebar-button">
+                {sidebarOpen ? "User" : "U"}
               </Button>
             </Link>
             <Link to="/User_Recharge">
-              <Button
-                style={{
-                  textAlign: "center",
-                  color: "black",
-                  borderRadius: "0px",
-                  width: "100%",
-                }}
-              >
-                Recharge
+              <Button className="sidebar-button">
+                {sidebarOpen ? "Recharge" : "R"}
               </Button>
             </Link>
             <Link to="/User_Transaction_User">
-              <Button
-                style={{
-                  textAlign: "center",
-                  color: "black",
-                  borderRadius: "0px",
-                  width: "100%",
-                }}
-              >
-                Transaction
+              <Button className="sidebar-button">
+                {sidebarOpen ? "Transaction" : "T"}
               </Button>
             </Link>
             <Link to="/User_Withdrawal_User">
-              <Button
-                style={{
-                  textAlign: "center",
-                  color: "black",
-                  borderRadius: "0px",
-                  width: "100%",
-                }}
-              >
-                Withdrawal
+              <Button className="sidebar-button">
+                {sidebarOpen ? "Withdrawal" : "W"}
               </Button>
             </Link>
-            <Button
-              style={{
-                textAlign: "center",
-                color: "black",
-                borderRadius: "0px",
-                width: "100%",
-              }}
-              onClick={log_out}
-            >
-              Log Out
+            <Button className="sidebar-button" onClick={log_out}>
+              {sidebarOpen ? "Log Out" : "L"}
             </Button>
           </div>
-        )}
+        </div>
 
         <Box
           sx={{
@@ -463,7 +254,7 @@ const User_Recharge = () => {
             fontWeight="bold"
             gutterBottom
             sx={{ mb: 5, color: "#222" }}
-          >
+          > <br />
             Membership Plans
           </Typography>
 

@@ -1,6 +1,21 @@
-
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Card, Select, Row, Col, Image, message, Upload } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Card,
+  Select,
+  Row,
+  Col,
+  Image,
+  message,
+  Upload,
+   Layout,
+  Dropdown,
+  Menu,
+} from "antd";
+import { MenuOutlined } from "@ant-design/icons";
+
 import {
   FaFacebook,
   FaIndianRupeeSign,
@@ -8,26 +23,37 @@ import {
   FaTwitter,
   FaWhatsapp,
 } from "react-icons/fa6";
-import { UserGet, UserUpdate, UserDataGet, UserDataUpdate, UserImagesGet, UserImagesUpdate } from "../../Api/CoreApi";
+import {
+  UserGet,
+  UserUpdate,
+  UserDataGet,
+  UserDataUpdate,
+  UserImagesGet,
+  UserImagesUpdate,
+} from "../../Api/CoreApi";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { IoCall } from "react-icons/io5";
 import user_image from "../../Assets/wedding1.jpg";
 import { SiGmail } from "react-icons/si";
 import { UploadOutlined } from "@ant-design/icons";
+import "../User_Panel/User_Profile_User.css";
+
+const { Option } = Select; // Destructure Option from Select
+const { Header, Content } = Layout;
 
 function User_Profile_User() {
-  const Navigate = useNavigate()
+  const Navigate = useNavigate();
   const [form] = Form.useForm();
 
   const baseurl = "http://127.0.0.1:8000/";
-  const id = localStorage.getItem('user_id')
+  const id = localStorage.getItem("user_id");
   // const id = useParams();
-  const int_id = (String(id));
+  const int_id = String(id);
   // console.log(int_id,'**** int_id')
 
   const [activeTab, setActiveTab] = useState(null);
   const [file, setFile] = useState(null); // Store file object
-  console.log(file, '******** file *********')
+  console.log(file, "******** file *********");
 
   const [User, setUser] = useState([]);
   const [obj, setObj] = useState([]);
@@ -42,23 +68,27 @@ function User_Profile_User() {
     setObj(filter[0]);
     const response1 = await UserDataGet();
     const filter_data = response1.filter((i) => i.User_id === int_id);
-    console.log(filter_data, '******* filter_data ******')
+    console.log(filter_data, "******* filter_data ******");
 
-    const user_name = filter.map(i => i.username).join(", ")
-    const user_password = filter.map(i => i.password).join(", ")
-    const user_balance = filter.map(i => i.balance).join(", ")
+    const user_name = filter.map((i) => i.username).join(", ");
+    const user_password = filter.map((i) => i.password).join(", ");
+    const user_balance = filter.map((i) => i.balance).join(", ");
 
-    const data_id = filter_data.map(i => i.User_id).join(", ")
+    const data_id = filter_data.map((i) => i.User_id).join(", ");
 
     // const merged = { ...filter, ...filter_data };
     // const user_combine_get = { "username": user_name, "password": user_password }
 
-    const add = { ...filter_data[0], "User_id": data_id, "username": user_name, "password": user_password, "balance": user_balance }
+    const add = {
+      ...filter_data[0],
+      User_id: data_id,
+      username: user_name,
+      password: user_password,
+      balance: user_balance,
+    };
     form.setFieldsValue(add);
 
-    console.log(add, '******* data_id ******')
-
-
+    console.log(add, "******* data_id ******");
   };
 
   const get_user_image = async () => {
@@ -73,18 +103,18 @@ function User_Profile_User() {
   }, []);
 
   const submit = async (value) => {
-    const response = await UserUpdate(id, value)
-    const response1 = await UserDataUpdate(id, value)
-    message.success("Success")
+    const response = await UserUpdate(id, value);
+    const response1 = await UserDataUpdate(id, value);
+    message.success("Success");
     get_user();
     // console.log(value, "**** value ******");
   };
 
   const Login_update = async (value) => {
-    const response = await UserUpdate(id, value)
-    message.success("Success")
+    const response = await UserUpdate(id, value);
+    message.success("Success");
     get_user();
-  }
+  };
 
   const img_update = async (value) => {
     const formData = new FormData();
@@ -93,934 +123,572 @@ function User_Profile_User() {
       formData.append(key, val);
     });
 
-    const response = await UserUpdate(id, formData)
-    setImage(response)
+    const response = await UserUpdate(id, formData);
+    setImage(response);
     // console.log(response, '********** formData *************')
-    message.success("Success")
+    message.success("Success");
     get_user();
-  }
+  };
 
-  const log_out = () => {
-    localStorage.removeItem('user_id')
-    Navigate('/User_Login')
-  }
+  const handleLogout = () => {
+    localStorage.removeItem("user_id");
+    Navigate("/User_Login");
+  };
 
-  // useEffect(() => {
-  //   img_update()
-  // }, [file])
+
+  const menu = (
+    <Menu>
+      
+
+      <Menu.Item key="3">
+        <Link to="/" onClick={handleLogout}>
+          Logout
+        </Link>
+      </Menu.Item>
+    </Menu>
+  );
+
 
   return (
     <>
-    <div>
-      <div style={{ width: '100%', height: '50px', backgroundColor: 'rgba(7, 110, 148,1)', position: 'fixed', zIndex: '999', display: 'flex',marginTop:'-10px' }}>
-        <Link to='/Home_Page_wLog'>
-          <p style={{ fontSize: '30px', color: 'white', marginLeft: '20px', marginTop: '-1px' }}>Ristey</p>
-        </Link>
-
-        {id ? (
-          <Link to='/User_Panel'>
-            <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '1300px' }}>Profile</p>
-          </Link>
-        ) : (
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Link to='/User_Reg/885695'>
-              <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '1200px' }}>Sign Up</p>
-            </Link>
-            <Link to='/User_Login'>
-              <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '30px' }}>Login</p>
-            </Link>
-          </div>
-        )}
-      </div>
-      <div style={{ width: "180px", height: '680px', backgroundColor: 'white', position: 'fixed', marginTop: '40px' }}>
-        <Link to='/User_Panel'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-
-          >
-            Dashboard
-          </Button>
-        </Link>
-        <Link to='/User_Added_User'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            User
-          </Button>
-        </Link>
-        <Link to='/User_Recharge'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Recharge
-          </Button>
-        </Link>
-        <Link to='/User_Transaction_User'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Transaction
-          </Button>
-        </Link>
-        <Link to='/User_Withdrawal_User'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Withdrawal
-          </Button>
-        </Link>
-        <Button
+     <Layout
           style={{
-            textAlign: "center",
-            color: "black",
-            borderRadius: "0px",
-            width: "100%",
+            paddingTop: "65px",
+            overflow: "hidden",
           }}
-          onClick={log_out}
         >
-          Log Out
-        </Button>
-      </div>
-      {User.map((i) => (
-        <Card
-          style={{ marginLeft: "400px", width: "1000px", marginTop: "10px" }}
-        >
-          {/* <img
-            style={{ height: "280px", width: "100%" }}
-            src="https://photosgreet.com/wp-content/uploads/ddd5e16d0fa25d3c110b9d95c2530224.jpg"
-          /> */}
-
-          <Image style={{ height: "280px", width: "940px" }} src={user_image} />
-
-          {/* <Card style={{ marginTop:'-100px',marginLeft: '30px', width: '300px', display: 'flex',height:'100px',borderRadius:'50px' }}>
-                    <p><img style={{ width: '100px', height: '100px', borderRadius: '50px' }} src='https://photosgreet.com/wp-content/uploads/ddd5e16d0fa25d3c110b9d95c2530224.jpg' /></p>
-                    <h2 style={{ marginTop: '30px',marginLeft:'10px' }}>Naincy Garg</h2>
-                </Card> */}
-
-          <Card
+          {/* Fixed Header */}
+          <Header
             style={{
-              // border: "2px solid",
-              width: "200px",
-              height: "200px",
-              marginLeft: "100px",
-              marginTop: "-80px",
-              borderRadius: "50%",
-              overflow: "hidden", // ensure image stays within the circle
-              zIndex: "998",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              width: "100%",
+              zIndex: 1000,
+              backgroundColor: "#2c2c2c",
+              padding: "0 24px",
               display: "flex",
+              justifyContent: "space-between",
               alignItems: "center",
-              justifyContent: "center",
-              paddingTop: '8px'
             }}
           >
-            <img
-              style={{
-                // border:'2px solid',
-                width: "190px",
-                height: "190px",
-                objectFit: "cover",
-                borderRadius: "50%",
-              }}
-              src={`${baseurl}${i.pic}`}
-              alt="profile"
-            />
-          </Card>
-
-          <Form>
-            <Form.Item style={{ marginLeft: '250px', marginTop: '-20px', }}>
-              <Upload
-                beforeUpload={(file) => {
-                  img_update({ pic: file }); // ✅ Send the actual file
-                  return false; // Prevent auto upload
-                }}
-                showUploadList={false}
-              >
-                <Button style={{ width: '50px' }} icon={<UploadOutlined style={{ fontSize: '22px' }} />}></Button>
-              </Upload>
-            </Form.Item>
-
-
-            {/* <Form.Item label="Profile Picture" required>
-              <Upload
-                beforeUpload={(file) => {
-                  setFile({ pic: file.name });
-                  // form.setFieldsValue({ pic: file.name }); // Set filename in input
-                  return false; // Prevent automatic upload
-                }}
-                showUploadList={false}
-              >
-                <Button icon={<UploadOutlined />}>Choose File</Button>
-              </Upload> */}
-
-            {/* 👉 This input holds the filename, with name="pic" */}
-            {/* <Form.Item name="pic" noStyle>
-                <Input
-                  style={{ marginTop: 8 }}
-                  disabled
-                  placeholder="No file selected"
+            <div>
+                <img
+                  src="https://t4.ftcdn.net/jpg/00/58/22/83/360_F_58228356_NenuGRgFZq3uGvRuXxqp4MWvreKMPCCc.jpg"
+                  alt="logo"
+                  style={{ height: "70px", width: "100px", paddingTop: "25px" }}
                 />
-              </Form.Item> */}
-            {/* </Form.Item> */}
-          </Form>
-
-          <h2
-            style={{
-              marginTop: "-110px",
-              marginLeft: "340px",
-              fontSize: "30px",
-              // fontStyle: "italic",
-            }}
-          >
-            {i.first_name}
-            <br />
-            {/* <h4 style={{ marginTop: "10px", fontWeight: "normal", fontSize: "15px" }}>
-              Age: 23, 5ft 7 inch - 172 cm, Software Developer, Raipur, India
-            </h4> */}
-          </h2>
-          <div
-            style={{
-              display: "flex",
-              marginLeft: "330px",
-              columnGap: "20px",
-              marginTop: "10px",
-            }}
-          >
-
-
-            {/* <p
-                        style={{ ...iconStyle, color: "black" }}
-                        onMouseEnter={(e) => (e.target.style.color = "#25D366")}
-                        onMouseLeave={(e) => (e.target.style.color = "black")}
-                      >
-                        <FaWhatsapp />
-                      </p>
-                      <p
-                        style={{ ...iconStyle, color: "black" }}
-                        onMouseEnter={(e) => (e.target.style.color = "#1877F2")}
-                        onMouseLeave={(e) => (e.target.style.color = "black")}
-                      >
-                        <FaFacebook />
-                      </p>
-                      <p
-                        style={{ ...iconStyle, color: "black" }}
-                        onMouseEnter={(e) => (e.target.style.color = "#E4405F")}
-                        onMouseLeave={(e) => (e.target.style.color = "black")}
-                      >
-                        <FaInstagram />
-                      </p>
-                      <p
-                        style={{ ...iconStyle, color: "black" }}
-                        onMouseEnter={(e) => (e.target.style.color = "#1DA1F2")}
-                        onMouseLeave={(e) => (e.target.style.color = "black")}
-                      >
-                        <FaTwitter />
-                      </p> */}
-
-            <a
-              href={`https://wa.me/?text=${encodeURIComponent(`http://localhost:3000/${i.id}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                fontSize: "28px",
-                marginRight: "20px",
-                cursor: "pointer",
-                color: "black",
-              }}
-              onMouseEnter={(e) => (e.target.style.color = "#25D366")}
-              onMouseLeave={(e) => (e.target.style.color = "black")}
+              </div>
+            <Dropdown
+              overlay={menu}
+              placement="bottomRight"
+              trigger={["click"]}
             >
-              <FaWhatsapp />
-            </a>
+              <MenuOutlined
+                style={{ fontSize: "22px", color: "white", cursor: "pointer" }}
+              />
+            </Dropdown>
+          </Header>
 
-            {/* Facebook */}
-            <a
-              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`http://localhost:3000/${i.id}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                fontSize: "28px",
-                marginRight: "20px",
-                cursor: "pointer",
-                color: "black",
-              }}
-              onMouseEnter={(e) => (e.target.style.color = "#1877F2")}
-              onMouseLeave={(e) => (e.target.style.color = "black")}
-            >
-              <FaFacebook />
-            </a>
+          {/* Scrollable Content */}
+        </Layout>
+      <div className="user-profile-container">
+        {User.map((i) => (
+          <Card className="profile-card" key={i.id}>
+            <Image className="cover-image" src={user_image} />
 
-            {/* Instagram (No direct share, just profile or post link) */}
-            <a
-              href={`${i.instagram}/`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                fontSize: "28px",
-                marginRight: "20px",
-                cursor: "pointer",
-                color: "black",
-              }}
-              onMouseEnter={(e) => (e.target.style.color = "#E4405F")}
-              onMouseLeave={(e) => (e.target.style.color = "black")}
-            >
-              <FaInstagram />
-            </a>
+            <Card className="profile-picture-card">
+              <img
+                className="profile-picture"
+                src={`${baseurl}${i.pic}`}
+                alt="profile"
+              />
+            </Card>
 
-            {/* Twitter */}
-            <a
-              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`http://localhost:3000/${i.id}`)}&text=Check%20this%20out!`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                fontSize: "28px",
-                marginRight: "20px",
-                cursor: "pointer",
-                color: "black",
-              }}
-              onMouseEnter={(e) => (e.target.style.color = "#1DA1F2")}
-              onMouseLeave={(e) => (e.target.style.color = "black")}
-            >
-              <FaTwitter />
-            </a>
+            <Form>
+              <Form.Item className="upload-button-container">
+                <Upload
+                  beforeUpload={(file) => {
+                    img_update({ pic: file }); // ✅ Send the actual file
+                    return false; // Prevent auto upload
+                  }}
+                  showUploadList={false}
+                >
+                  <Button
+                    className="upload-button"
+                    icon={<UploadOutlined className="upload-icon" />}
+                  />
+                </Upload>
+              </Form.Item>
+            </Form>
 
+            <h2 className="user-name">
+              {i.first_name}
+              <br />
+            </h2>
+            <div className="social-icons">
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  `http://localhost:3000/${i.id}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon whatsapp"
+              >
+                <FaWhatsapp />
+              </a>
 
-          </div>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                  `http://localhost:3000/${i.id}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon facebook"
+              >
+                <FaFacebook />
+              </a>
 
-          <Card style={{ marginTop: "40px" }}>
-            <div
-              style={{ columnGap: "20px", display: "flex", marginTop: "-25px" }}
-            >
-              <p>
-                <Button
-                  style={{ width: "100px", height: "40px", fontSize: "18px" }}
-                  onClick={() => setActiveTab(null)}
-                >
-                  Gallary
-                </Button>
-              </p>
+              <a
+                href={`${i.instagram}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon instagram"
+              >
+                <FaInstagram />
+              </a>
 
-              <p>
-                <Button
-                  style={{ width: "100px", height: "40px", fontSize: "18px" }}
-                  onClick={() => setActiveTab("profile")}
-                >
-                  Profile
-                </Button>
-              </p>
-              <p>
-                <Button
-                  style={{ width: "135px", height: "40px", fontSize: "18px" }}
-                  onClick={() => setActiveTab("Login_Details")}
-                >
-                  Login Details
-                </Button>
-              </p>
-              <p>
-                <Button
-                  style={{ width: "135px", height: "40px", fontSize: "18px" }}
-                  onClick={() => setActiveTab("family")}
-                >
-                  Family Details
-                </Button>
-              </p>
-              <p>
-                <Button
-                  style={{ width: "135px", height: "40px", fontSize: "18px" }}
-                  onClick={() => setActiveTab("address")}
-                >
-                  Address Detail
-                </Button>
-              </p>
-              {/* <p>
-                <Button
-                  style={{ width: "100px", height: "40px", fontSize: "18px" }}
-                  onClick={() => setActiveTab("kundli")}
-                >
-                  Kundli
-                </Button>
-              </p> */}
-              <p>
-                <Button
-                  style={{ width: "110px", height: "40px", fontSize: "18px" }}
-                  onClick={() => setActiveTab("education")}
-                >
-                  Educations
-                </Button>
-              </p>
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                  `http://localhost:3000/${i.id}`
+                )}&text=Check%20this%20out!`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon twitter"
+              >
+                <FaTwitter />
+              </a>
             </div>
-            {activeTab === null && (
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  columnGap: "10px",
-                  rowGap: "10px",
-                  paddingTop: "10px",
-                }}
-              >
-                {image.map((i, index) => (
-                  <div key={index} style={{ width: "calc(25% - 8px)" }}>
-                    <p>
-                      <img
-                        style={{
-                          height: "180px",
-                          width: "100%",
-                          objectFit: "cover",
-                        }}
-                        src={`${baseurl}${i.images}`}
-                        alt="Image"
-                      />
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
 
-            {/* profile :---------- */}
-
-            {activeTab === "profile" && (
-              <div
-                style={{ marginTop: "20px", marginLeft: "20px", width: "80%" }}
-              >
-                <Form onFinish={submit} form={form} initialValues={form} layout="vertical">
-                  <Row gutter={24}>
-                    {/* Left Column */}
-                    <Col xs={24} sm={12}>
-                      {/* Name */}
-                      <Form.Item label="Full Name" name="firstname">
-                        <Input />
-                      </Form.Item>
-
-
-
-
-
-                      <Form.Item name="dob">
-                        <Input type="date" />
-                      </Form.Item>
-
-                      <Form.Item label="Age" name="age">
-                        <Input type="number" min="18" max="100" />
-                      </Form.Item>
-
-                      {/* Gender */}
-                      <Form.Item label="Gender" name="gender">
-                        <Input />
-                      </Form.Item>
-
-                      {/* Caste */}
-                      <Form.Item label="Caste" name="caste">
-                        <Input />
-                      </Form.Item>
-
-                      {/* Religion */}
-                      <Form.Item label="Religion" name="religion">
-                        <Input />
-
-                        {/* <Select>
-                          <Select.Option value="hindu">Hindu</Select.Option>
-                          <Select.Option value="muslim">Muslim</Select.Option>
-                          <Select.Option value="christian">
-                            Christian
-                          </Select.Option>
-                          <Select.Option value="sikh">Sikh</Select.Option>
-                          <Select.Option value="jain">Jain</Select.Option>
-                          <Select.Option value="buddhist">
-                            Buddhist
-                          </Select.Option>
-                          <Select.Option value="other">Other</Select.Option>
-                        </Select> */}
-                      </Form.Item>
-
-                      {/* Marital Status */}
-                      <Form.Item label="Marrige Status" name="marrige_status">
-                        <Select placeholder="marrige_status">
-                          <Select.Option value="Unmarried">Unmarried</Select.Option>
-                          <Select.Option value="Married">Married</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-
-                    <Col xs={24} sm={12}>
-                      <Form.Item label="Contact Number" name="contact">
-                        <Input type="tel" maxLength={10} />
-                      </Form.Item>
-
-                      <Form.Item label="Email Address" name="email">
-                        <Input type="email" />
-                      </Form.Item>
-
-                      <Form.Item label="Job Title" name="job_title">
-                        <Input />
-                      </Form.Item>
-
-                      <Form.Item name="job_type" label="Job Type">
-                        <Select placeholder="Select Job Type">
-                          <Select.Option value="government">Government</Select.Option>
-                          <Select.Option value="private">Private</Select.Option>
-                          <Select.Option value="unemployed">Unemployed</Select.Option>
-                        </Select>
-                      </Form.Item>
-
-
-                      <Form.Item name="salary" label='Salary'>
-                        <Input type="number" placeholder='Salary' />
-                      </Form.Item>
-
-                    </Col>
-                  </Row>
-
-                  {/* Submit Button */}
-                  <Row>
-                    <Col
-                      span={24}
-                      style={{ textAlign: "center", marginTop: "10px" }}
-                    >
-                      <Button type="primary" htmlType="submit">
-                        Save
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            )}
-
-
-            {activeTab === "Login_Details" && (
-              <div
-                style={{ marginTop: "20px", marginLeft: "20px", width: "80%" }}
-              >
-                <Form onFinish={Login_update} form={form} initialValues={form} layout="vertical">
-                  <Row gutter={24}>
-                    <Col xs={24} sm={12}>
-                      <Form.Item label="Username" name="username">
-                        <Input />
-                      </Form.Item>
-
-                      <Form.Item label="Password" name="password">
-                        <Input />
-                      </Form.Item>
-                    </Col>
-
-                    {/* <Col xs={24} sm={12}>
-                      <Form.Item label="Country" name="country">
-                        <Input />
-                      </Form.Item>
-
-                      <Form.Item label="Gender" name="gender">
-                        <Select>
-                          <Select.Option value="male">Male</Select.Option>
-                          <Select.Option value="female">Female</Select.Option>
-                          <Select.Option value="other">Other</Select.Option>
-                        </Select>
-                      </Form.Item>
-
-                      <Form.Item label="Time Zone" name="time_zone">
-                        <Input />
-                      </Form.Item>
-
-                      <Form.Item label="Ayanamsa" name="ayanamsa">
-                        <Select>
-                          <Select.Option value="lahiri">Lahiri</Select.Option>
-                          <Select.Option value="raman">Raman</Select.Option>
-                          <Select.Option value="kp">KP</Select.Option>
-                        </Select>
-                      </Form.Item>
-
-                      <Form.Item label="Full Address" name="full_address">
-                        <Input />
-                      </Form.Item>
-                    </Col> */}
-                  </Row>
-
-                  <Row>
-                    <Col
-                      span={24}
-                      style={{ textAlign: "center", marginTop: "10px" }}
-                    >
-                      <Button type="primary" htmlType="submit">
-                        Save
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            )}
-
-
-            {/* family :---------- */}
-
-            {activeTab === "family" && (
-              <div
-                style={{ marginTop: "20px", marginLeft: "20px", width: "80%" }}
-              >
-                <Form onFinish={submit} form={form} initialValues={form} layout="vertical">
-                  <Row gutter={24}>
-                    {/* Left Column */}
-                    <Col xs={24} sm={12}>
-                      {/* Mother's Name */}
-                      <Form.Item label="Mother's Name" name="mother_name">
-                        <Input />
-                      </Form.Item>
-
-
-                      {/* Father's Name */}
-                      <Form.Item label="Father's Name" name="father_name">
-                        <Input />
-                      </Form.Item>
-                    </Col>
-
-                    {/* Right Column */}
-                    <Col xs={24} sm={12}>
-                      {/* Number of Brothers */}
-                      <Form.Item
-                        label="Number of Brothers"
-                        name="brother"
-                      >
-                        <Input type="number" min="0" />
-                      </Form.Item>
-
-                      <Form.Item
-                        label="Number of Married Brothers"
-                        name="brother_marrige"
-                      >
-                        <Input type="number" min="0" />
-                      </Form.Item>
-
-                      {/* Number of Sisters */}
-                      <Form.Item
-                        label="Number of Sisters"
-                        name="sister"
-                      >
-                        <Input type="number" min="0" />
-                      </Form.Item>
-
-                      <Form.Item
-                        label="Number of Married Sisters"
-                        name="sister_marrige"
-                      >
-                        <Input type="number" min="0" />
-                      </Form.Item>
-
-                      {/* Family Income */}
-
-                    </Col>
-                  </Row>
-
-                  {/* Submit Button */}
-                  <Row>
-                    <Col
-                      span={24}
-                      style={{ textAlign: "center", marginTop: "10px" }}
-                    >
-                      <Button type="primary" htmlType="submit">
-                        Save
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            )}
-
-            {/* address :---------- */}
-            {/* {activeTab === "address" && (
-              <div style={{ marginTop: "20px", marginLeft: "20px" }}>
-                <Form onFinish={submit} initialValues={obj}>
-                  <Form.Item
-                    label="City/Village"
-                    name="city"
-                    style={{ width: "500px", height: "5px" }}
-                    // initialValue={User[0].city}
+            <Card className="tabs-container">
+              <div className="tab-buttons">
+                <p>
+                  <Button
+                    className="tab-button"
+                    onClick={() => setActiveTab(null)}
                   >
-                    <Input style={{}} />
-                  </Form.Item>
-                  <br></br>
-                  <Form.Item
-                    label="disttrict"
-                    name="disttrict"
-                    style={{ width: "500px", height: "5px" }}
-                    // initialValue={User[0].disttrict}
-                  >
-                    <Input style={{}} />
-                  </Form.Item>
-                  <br></br>
-
-                  <Form.Item
-                    label="state"
-                    name="state"
-                    style={{ width: "500px", height: "5px" }}
-                    // initialValue={User[0].state}
-                  >
-                    <Input style={{}} />
-                  </Form.Item>
-                  <br></br>
-
-                  <Form.Item
-                    label="country"
-                    name="country"
-                    style={{ width: "500px", height: "5px" }}
-                    // initialValue={User[0].country}
-                  >
-                    <Input style={{}} />
-                  </Form.Item>
-                  <br></br>
-
-                  <Form.Item
-                    label="full_address"
-                    name="full_address"
-                    style={{ width: "500px", height: "5px" }}
-                    // initialValue={User[0].full_address}
-                  >
-                    <Input style={{}} />
-                  </Form.Item>
-                  <br />
-                  <Button htmlType="submit" style={{ marginLeft: "35%" }}>
-                    Save
+                    Gallery
                   </Button>
-                </Form>
+                </p>
+
+                <p>
+                  <Button
+                    className="tab-button"
+                    onClick={() => setActiveTab("profile")}
+                  >
+                    Profile
+                  </Button>
+                </p>
+                <p>
+                  <Button
+                    className="tab-button"
+                    onClick={() => setActiveTab("Login_Details")}
+                  >
+                    Login Details
+                  </Button>
+                </p>
+                <p>
+                  <Button
+                    className="tab-button"
+                    onClick={() => setActiveTab("family")}
+                  >
+                    Family Details
+                  </Button>
+                </p>
+                <p>
+                  <Button
+                    className="tab-button"
+                    onClick={() => setActiveTab("address")}
+                  >
+                    Address Detail
+                  </Button>
+                </p>
+                <p>
+                  <Button
+                    className="tab-button"
+                    onClick={() => setActiveTab("education")}
+                  >
+                    Educations
+                  </Button>
+                </p>
               </div>
-            )} */}
+              {activeTab === null && (
+                <div className="gallery-grid">
+                  {image.map((img, index) => (
+                    <div key={index} className="gallery-item">
+                      <p>
+                        <img
+                          className="gallery-image"
+                          src={`${baseurl}${img.images}`}
+                          alt="Gallery"
+                        />
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
 
-            {activeTab === "address" && (
-              <div
-                style={{ marginTop: "20px", marginLeft: "20px", width: "80%" }}
-              >
-                <Form onFinish={submit} form={form} initialValues={form} layout="vertical">
-                  <Row gutter={24}>
-                    {/* Left Column */}
-                    <Col xs={24} sm={12}>
-                      {/* House/Flat Number */}
-                      <Form.Item label="Country" name="country">
-                        <Input />
-                      </Form.Item>
+              {/* Profile Tab */}
+              {activeTab === "profile" && (
+                <div className="form-section">
+                  <Form
+                    onFinish={submit}
+                    form={form}
+                    initialValues={form}
+                    layout="vertical"
+                  >
+                    <Row gutter={[24, 24]}>
+                      <Col xs={24} sm={12}>
+                        <Form.Item label="Full Name" name="firstname">
+                          <Input />
+                        </Form.Item>
 
-                      {/* Street Address */}
-                      <Form.Item label="State" name="state">
-                        <Input />
-                      </Form.Item>
+                        <Form.Item label="Date of Birth" name="dob">
+                          <Input type="date" />
+                        </Form.Item>
 
-                      {/* District */}
-                      <Form.Item label="District" name="disttrict">
-                        <Input />
-                      </Form.Item>
+                        <Form.Item label="Age" name="age">
+                          <Input type="number" min={18} max={100} />
+                        </Form.Item>
 
-                      {/* State */}
-                      <Form.Item label="City" name="city">
-                        <Input />
-                      </Form.Item>
-                    </Col>
+                        <Form.Item label="Gender" name="gender">
+                          <Input />
+                        </Form.Item>
 
-                    {/* Right Column */}
-                    {/* <Col xs={24} sm={12}>
-                      <Form.Item label="Country" name="country">
-                        <Input />
-                      </Form.Item>
+                        <Form.Item label="Caste" name="caste">
+                          <Input />
+                        </Form.Item>
 
-                      <Form.Item label="Pincode / ZIP Code" name="pincode">
-                        <Input type="number" />
-                      </Form.Item>
+                        <Form.Item label="Religion" name="religion">
+                          <Select placeholder="Select Religion">
+                            <Option value="hindu">Hindu</Option>
+                            <Option value="muslim">Muslim</Option>
+                            <Option value="christian">Christian</Option>
+                            <Option value="sikh">Sikh</Option>
+                            <Option value="jain">Jain</Option>
+                            <Option value="buddhist">Buddhist</Option>
+                            <Option value="other">Other</Option>
+                          </Select>
+                        </Form.Item>
 
-                      <Form.Item label="Landmark (Optional)" name="landmark">
-                        <Input />
-                      </Form.Item>
+                        <Form.Item label="Marital Status" name="marital_status">
+                          <Select placeholder="Select Marital Status">
+                            <Option value="unmarried">Unmarried</Option>
+                            <Option value="married">Married</Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
 
-                      <Form.Item label="Full Address" name="full_address">
-                        <Input.TextArea rows={2} />
-                      </Form.Item>
-                    </Col> */}
-                  </Row>
+                      <Col xs={24} sm={12}>
+                        <Form.Item label="Contact Number" name="contact">
+                          <Input type="tel" maxLength={10} />
+                        </Form.Item>
 
-                  {/* Submit Button */}
-                  <Row>
-                    <Col
-                      span={24}
-                      style={{ textAlign: "center", marginTop: "10px" }}
-                    >
-                      <Button type="primary" htmlType="submit">
-                        Save
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            )}
+                        <Form.Item label="Email Address" name="email">
+                          <Input type="email" />
+                        </Form.Item>
 
-            {/* Kundi :---------- */}
-            {/* {activeTab === "kundli" && (
-              <div
-                style={{ marginTop: "20px", marginLeft: "20px", width: "80%" }}
-              >
-                <Form onFinish={submit} initialValues={obj} layout="vertical">
-                  <Row gutter={24}>
-                    <Col xs={24} sm={12}>
-                      <Form.Item label="Full Name" name="name">
-                        <Input />
-                      </Form.Item>
+                        <Form.Item name="job_type" label="Job Type">
+                          <Select placeholder="Select Job Type">
+                            <Option value="government">Government</Option>
+                            <Option value="private">Private</Option>
+                            <Option value="unemployed">Unemployed</Option>
+                          </Select>
+                        </Form.Item>
 
-                      <Form.Item label="Date of Birth" name="date_of_birth">
-                        <Input type="date" />
-                      </Form.Item>
+                        <Form.Item name="salary" label="Salary">
+                          <Input type="number" placeholder="Salary" />
+                        </Form.Item>
 
-                      <Form.Item label="Time of Birth" name="time_of_birth">
-                        <Input type="time" />
-                      </Form.Item>
+                        <Form.Item
+                          label="About Me (Profile Description)"
+                          name="description"
+                        >
+                          <Input.TextArea
+                            rows={4}
+                            placeholder="Write something about yourself..."
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
 
-                      <Form.Item label="Place of Birth" name="place_of_birth">
-                        <Input />
-                      </Form.Item>
+                    <Row>
+                      <Col span={24} className="form-submit-button-container">
+                        <Button type="primary" htmlType="submit">
+                          Save
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+              )}
 
-                      <Form.Item label="District" name="district">
-                        <Input />
-                      </Form.Item>
+              {/* Login Details Tab */}
+              {activeTab === "Login_Details" && (
+                <div className="form-section">
+                  <Form
+                    onFinish={Login_update}
+                    form={form}
+                    initialValues={form}
+                    layout="vertical"
+                  >
+                    <Row gutter={[24, 24]}>
+                      <Col xs={24} sm={12}>
+                        <Form.Item label="Username" name="username">
+                          <Input />
+                        </Form.Item>
 
-                      <Form.Item label="State" name="state">
-                        <Input />
-                      </Form.Item>
-                    </Col>
+                        <Form.Item label="Password" name="password">
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                    </Row>
 
-                    <Col xs={24} sm={12}>
-                      <Form.Item label="Country" name="country">
-                        <Input />
-                      </Form.Item>
+                    <Row>
+                      <Col span={24} className="form-submit-button-container">
+                        <Button type="primary" htmlType="submit">
+                          Save
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+              )}
 
-                      <Form.Item label="Gender" name="gender">
-                        <Select>
-                          <Select.Option value="male">Male</Select.Option>
-                          <Select.Option value="female">Female</Select.Option>
-                          <Select.Option value="other">Other</Select.Option>
-                        </Select>
-                      </Form.Item>
+              {/* Family Details Tab */}
+              {activeTab === "family" && (
+                <div className="form-section">
+                  <Form
+                    onFinish={submit}
+                    form={form}
+                    initialValues={form}
+                    layout="vertical"
+                  >
+                    <Row gutter={[24, 24]}>
+                      <Col xs={24} sm={12}>
+                        <Form.Item label="Mother's Name" name="mother_name">
+                          <Input />
+                        </Form.Item>
 
-                      <Form.Item label="Time Zone" name="time_zone">
-                        <Input />
-                      </Form.Item>
+                        <Form.Item
+                          label="Mother's Occupation"
+                          name="mother_occupation"
+                        >
+                          <Input />
+                        </Form.Item>
 
-                      <Form.Item label="Ayanamsa" name="ayanamsa">
-                        <Select>
-                          <Select.Option value="lahiri">Lahiri</Select.Option>
-                          <Select.Option value="raman">Raman</Select.Option>
-                          <Select.Option value="kp">KP</Select.Option>
-                        </Select>
-                      </Form.Item>
+                        <Form.Item label="Father's Name" name="father_name">
+                          <Input />
+                        </Form.Item>
 
-                      <Form.Item label="Full Address" name="full_address">
-                        <Input />
-                      </Form.Item>
-                    </Col>
-                  </Row>
+                        <Form.Item
+                          label="Father's Occupation"
+                          name="father_occupation"
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
 
-                  <Row>
-                    <Col
-                      span={24}
-                      style={{ textAlign: "center", marginTop: "10px" }}
-                    >
-                      <Button type="primary" htmlType="submit">
-                        Save
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            )} */}
+                      <Col xs={24} sm={12}>
+                        <Form.Item label="Number of Brothers" name="brother">
+                          <Input type="number" min="0" />
+                        </Form.Item>
 
-            {/* education :---------- */}
+                        <Form.Item
+                          label="Number of Married Brothers"
+                          name="brother_marrige"
+                        >
+                          <Input type="number" min="0" />
+                        </Form.Item>
 
-            {activeTab === "education" && (
-              <div
-                style={{ marginTop: "20px", marginLeft: "20px", width: "80%" }}
-              >
-                <Form onFinish={submit} form={form} initialValues={form} layout="vertical">
-                  <Row gutter={24}>
-                    <Col xs={24} sm={12}>
-                      {/* Highest Qualification */}
-                      <Form.Item
-                        label="University/Collage/School"
-                        name="university"
-                      >
-                        <Input />
-                      </Form.Item>
+                        <Form.Item label="Number of Sisters" name="sister">
+                          <Input type="number" min="0" />
+                        </Form.Item>
 
-                      <Form.Item label="Course / Qualifications" name="course">
-                        <Input />
-                      </Form.Item>
+                        <Form.Item
+                          label="Number of Married Sisters"
+                          name="sister_marrige"
+                        >
+                          <Input type="number" min="0" />
+                        </Form.Item>
+                      </Col>
+                    </Row>
 
+                    <Row>
+                      <Col span={24} className="form-submit-button-container">
+                        <Button type="primary" htmlType="submit">
+                          Save
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+              )}
 
-                      {/* <Form.Item
-                        label="University/Board Name"
-                        name="university_board"
-                      >
-                        <Input />
-                      </Form.Item>
+              {/* Address Details Tab */}
+              {activeTab === "address" && (
+                <div className="form-section">
+                  <Form
+                    onFinish={submit}
+                    form={form}
+                    initialValues={form}
+                    layout="vertical"
+                  >
+                    <Row gutter={[24, 24]}>
+                      <Col xs={24} sm={12}>
+                        <Form.Item label="Country" name="country">
+                          <Input />
+                        </Form.Item>
 
-                      <Form.Item label="Passing Year" name="passing_year">
-                        <Input type="number" min="1900" max="2025" />
-                      </Form.Item> */}
-                    </Col>
+                        <Form.Item label="State" name="state">
+                          <Input />
+                        </Form.Item>
 
-                    {/* <Col xs={24} sm={12}>
-              
-                      <Form.Item label="District" name="district">
-                        <Input />
-                      </Form.Item>
+                        <Form.Item label="District" name="disttrict">
+                          <Input />
+                        </Form.Item>
 
-                      <Form.Item label="State" name="state">
-                        <Input />
-                      </Form.Item>
+                        <Form.Item label="City" name="city">
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                    </Row>
 
-                      <Form.Item label="Country" name="country">
-                        <Input />
-                      </Form.Item>
+                    <Row>
+                      <Col span={24} className="form-submit-button-container">
+                        <Button type="primary" htmlType="submit">
+                          Save
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+              )}
 
-                      <Form.Item label="Full Address" name="full_address">
-                        <Input />
-                      </Form.Item>
-                    </Col> */}
+              {/* Education Details Tab */}
+              {activeTab === "education" && (
+                <div className="form-section">
+                  <Form
+                    onFinish={submit}
+                    form={form}
+                    initialValues={form}
+                    layout="vertical"
+                  >
+                    <Row gutter={[24, 24]}>
+                      <Col xs={24} sm={12}>
+                        <Form.Item
+                          label="University/College/School"
+                          name="university"
+                        >
+                          <Input />
+                        </Form.Item>
 
-                  </Row>
+                        <Form.Item label="Course / Qualification" name="course">
+                          <Input />
+                        </Form.Item>
 
-                  <Row>
-                    <Col
-                      span={24}
-                      style={{ textAlign: "center", marginTop: "10px" }}
-                    >
-                      <Button type="primary" htmlType="submit">
-                        Save
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            )}
+                        <Form.Item
+                          label="Education Level"
+                          name="education_level"
+                        >
+                          <Select placeholder="Select your education level">
+                            <Option value="high_school">High School</Option>
+                            <Option value="bachelor">Bachelor’s Degree</Option>
+                            <Option value="master">Master’s Degree</Option>
+                            <Option value="phd">Ph.D.</Option>
+                          </Select>
+                        </Form.Item>
+
+                        <Form.Item label="Field of Study" name="field_of_study">
+                          <Select placeholder="Select your field of study">
+                            <Option value="government">Government</Option>
+                            <Option value="private">Private</Option>
+                          </Select>
+                        </Form.Item>
+
+                        <Form.Item label="Job Title" name="job_title">
+                          <Input placeholder="E.g. Software Engineer, Teacher, etc." />
+                        </Form.Item>
+                      </Col>
+
+                      <Col xs={24} sm={12}>
+                        <Form.Item label="Job Type" name="job_type">
+                          <Select placeholder="Select your job type">
+                            <Option value="full_time">Full-time</Option>
+                            <Option value="part_time">Part-time</Option>
+                            <Option value="freelance">Freelance</Option>
+                            <Option value="unemployed">Unemployed</Option>
+                            <Option value="student">Student</Option>
+                          </Select>
+                        </Form.Item>
+
+                        <Form.Item label="Income Range" name="income_range">
+                          <Select placeholder="Select your income range">
+                            <Option value="0-1L">0 - 1 Lakh</Option>
+                            <Option value="1L-5L">1 Lakh - 5 Lakh</Option>
+                            <Option value="5L-10L">5 Lakh - 10 Lakh</Option>
+                            <Option value="10L+">10 Lakh & Above</Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
+
+                      <Col span={24} className="form-submit-button-container">
+                        <Button type="primary" htmlType="submit">
+                          Save
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+              )}
+            </Card>
           </Card>
-        </Card>
-      ))}
-    </div>
+        ))}
+      </div>
 
+       {/* footer section after login */}
+      <footer
+      style={{
+        backgroundColor: "#2c2c2c",
+        padding: "15px 10px",
+        textAlign: "center",
+        // position: "fixed",
+        bottom: 0,
+        left: 0,
+        width: "100%",
+      }}
+    >
+      <p
+        style={{
+          color: "#fff",
+          fontSize: "14px",
+          margin: 0,
+        }}
+      >
+        All Rights Reserved -{" "}
+        <a
+          href="#"
+          style={{
+            color: "#88b0f4",
+            textDecoration: "none",
+          }}
+        >
+          MatrimonialsIndia
+        </a>{" "}
+        (2025-2026)
+      </p>
+    </footer>
     </>
   );
 }

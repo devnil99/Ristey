@@ -1,0 +1,333 @@
+/* UserProfile.css (Your External CSS File) */
+
+.user-profile-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 10px;
+  margin-left: 0; /* Remove fixed left margin */
+}
+
+.cover-image {
+  /* min-height: 200px; */
+  height: auto;
+  width: 100%;
+  object-fit: cover;
+}
+
+
+.profile-picture-card {
+  width: 200px;
+  height: 200px;
+  margin-left: 100px;
+  margin-top: -80px;
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 8px;
+  border: 2px solid #fff; /* Added a subtle white border for better visibility */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added a subtle shadow */
+}
+
+.profile-picture {
+  width: 190px;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.upload-button-container {
+  margin-left: 250px;
+  margin-top: -10px;
+}
+
+.upload-button {
+  width: 50px;
+}
+
+.upload-icon {
+  font-size: 22px;
+}
+
+.user-name {
+  margin-top: -110px;
+  margin-left: 340px;
+  font-size: 30px;
+  font-weight: bold; /* Added bold for emphasis */
+}
+
+.social-icons {
+  display: flex;
+  margin-left: 330px;
+  column-gap: 20px;
+  margin-top: 10px;
+}
+
+.social-icon {
+  font-size: 28px;
+  margin-right: 20px;
+  cursor: pointer;
+  /* color: black; */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.social-icon.whatsapp:hover {
+  color: #25d366;
+}
+
+.social-icon.facebook:hover {
+  color: #1877f2;
+}
+
+.social-icon.instagram:hover {
+  color: #e4405f;
+}
+
+.social-icon.twitter:hover {
+  color: #1da1f2;
+}
+
+.tabs-container {
+  margin-top: 40px;
+}
+
+.tab-buttons {
+  display: flex;
+  flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
+  column-gap: 10px; /* Reduced column gap for better fitting on smaller screens */
+  row-gap: 10px;
+  margin-top: -25px;
+  justify-content: center; /* Center the tab buttons */
+}
+
+.tab-button {
+  width: 120px; /* Adjusted width for better responsiveness */
+  height: 40px;
+  font-size: 16px; /* Adjusted font size */
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.gallery-grid {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 10px;
+  row-gap: 10px;
+  padding-top: 10px;
+  justify-content: flex-start; /* Align items to the start */
+}
+
+.gallery-item {
+  width: calc(25% - 8px); /* 4 items per row with gap */
+}
+
+.gallery-image {
+  height: 180px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 4px; /* Slightly rounded corners for images */
+}
+
+.form-section {
+  margin-top: 20px;
+  margin-left: 20px;
+  width: calc(100% - 40px); /* Adjust width to account for margins */
+}
+
+.form-submit-button-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .profile-card {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .profile-picture-card {
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .upload-button-container {
+    margin-left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .user-name {
+    margin-left: 0;
+    text-align: center;
+    margin-top: -70px; /* Adjust as needed */
+  }
+
+  .social-icons {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .tab-buttons {
+    column-gap: 8px;
+    row-gap: 8px;
+    justify-content: center;
+  }
+
+  .tab-button {
+    width: 100px;
+    font-size: 14px;
+  }
+
+  .gallery-item {
+    width: calc(33.33% - 7px); /* 3 items per row on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-card {
+    margin-top: 5px;
+  }
+
+  .profile-picture-card {
+    width: 150px;
+    height: 150px;
+    padding-top: 6px;
+    margin-top: -60px;
+  }
+
+  .profile-picture {
+    width: 140px;
+    height: 140px;
+  }
+
+  .cover-image {
+    height: 200px;
+  }
+
+  .user-name {
+    font-size: 24px;
+    margin-top: -20px;
+  }
+
+  .social-icon {
+    font-size: 24px;
+    margin-right: 15px;
+  }
+
+  .tab-buttons {
+    flex-direction: column; /* Stack buttons vertically on small screens */
+    align-items: center; /* Center stacked buttons */
+  }
+
+  .tab-button {
+    width: 80%; /* Full width for stacked buttons */
+    margin-bottom: 5px;
+    font-size: 16px;
+  }
+
+  .gallery-item {
+    width: calc(50% - 5px); /* 2 items per row on small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .cover-image {
+    height: 150px;
+  }
+
+  .profile-picture-card {
+    width: 120px;
+    height: 120px;
+    padding-top: 5px;
+    margin-top: -50px;
+  }
+
+  .profile-picture {
+    width: 110px;
+    height: 110px;
+  }
+
+  .user-name {
+    font-size: 20px;
+    margin-top: -30px;
+  }
+
+  .social-icon {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+
+  .tab-button {
+    font-size: 14px;
+  }
+
+  .gallery-item {
+    width: 100%; /* 1 item per row on extra small screens */
+  }
+
+  .form-section {
+    margin-left: 10px;
+    width: calc(100% - 20px);
+  }
+}
+
+
+/* Add or update this section within existing code */
+
+/* --- Increased cover image height on medium screens --- */
+@media (min-width: 768px) and (max-width: 992px) {
+  .cover-image {
+    height: 320px;
+  }
+}
+
+/* --- Redesigned Profile Upload Button --- */
+.upload-button-container {
+  position: relative;
+  /* margin-left: 250px; */
+  margin-top: -30px;
+  z-index: 999;
+}
+
+.upload-button {
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+  background-color: #f5f5f5;
+}
+
+.upload-icon {
+  font-size: 20px;
+  color: #555;
+}
+
+/* Optional hidden input for file upload */
+.file-input {
+  display: none;
+}
+
+
+
+/*  */
+
+
+

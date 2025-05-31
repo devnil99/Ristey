@@ -1041,7 +1041,6 @@
 //                 </div>
 //               )}
 
-             
 //               {activeTab === "education" && (
 //                 <div
 //                   style={{
@@ -1073,16 +1072,12 @@
 //         ))}
 //       </div>
 //     </div>
-   
+
 //    </>
 //   );
 // }
 
 // export default User_data;
-
-
-
-
 
 ////////////////////////////////////////////////////////////
 import { IoSend } from "react-icons/io5";
@@ -1115,7 +1110,7 @@ import {
 } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
 import user_image from "../Assets/wedding1.jpg";
-import "../Home_Page/User_Data.css"
+import "../Home_Page/User_Data.css";
 
 function User_data() {
   const id_param = useParams();
@@ -1548,284 +1543,350 @@ function User_data() {
   const shareUrl = `http://127.0.0.1:8000/${ref_id}`;
 
   return (
-   <>
-    <div>
-      <div className="header">
-        <Link to="/Home_Page_wLog">
-          <p className="header-title">Ristey</p>
-        </Link>
-
-        {id ? (
-          <Link to="/User_panel">
-            <p className="header-profile-link">Profile</p>
+    <>
+      <div>
+        <div className="header">
+          <Link to="/Home_Page_wLog">
+            <p className="header-title">Ristey</p>
           </Link>
-        ) : (
-          <div className="header-auth-links">
-            <Link to="/User_Reg/885695">
-              <p className="header-auth-link signup">Sign Up</p>
+
+          {id ? (
+            <Link to="/User_panel">
+              <p className="header-profile-link">Profile</p>
             </Link>
-            <Link to="/User_Login">
-              <p className="header-auth-link login">Login</p>
-            </Link>
-          </div>
-        )}
-      </div>
-      <div className="content-padding">
-        {data.map((i) => (
-          <Card className="user-card" key={i.User_id}>
-            <Image className="user-cover-image" src={user_image} />
-
-            <Card className="user-profile-pic-container">
-              <img className="user-profile-pic" src={`${baseurl}${i.pic}`} alt="profile" />
-            </Card>
-            <h2 className="user-username">{i.username}</h2>
-
-            <div className="social-links">
-              {/* WhatsApp */}
-              <a
-                href={`https://wa.me/?text=${encodeURIComponent(
-                  `http://localhost:3000/User_data/${i.User_id}`
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon-link whatsapp"
-              >
-                <FaWhatsapp />
-              </a>
-
-              {/* Facebook */}
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                  `http://localhost:3000/User_data/${i.User_id}`
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon-link facebook"
-              >
-                <FaFacebook />
-              </a>
-
-              {/* Instagram (No direct share, just profile or post link) */}
-              <a
-                href={`${i.instagram}/`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon-link instagram"
-              >
-                <FaInstagram />
-              </a>
-
-              {/* Twitter */}
-              <a
-                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                  `http://localhost:3000/User_data/${i.User_id}`
-                )}&text=Check%20this%20out!`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon-link twitter"
-              >
-                <FaTwitter />
-              </a>
-
-               {i.user_apply?.some((u) => u.suser_id === id) ? (
-              <p className="contact-button-container">
-                <Button onClick={() => (window.location.href = `tel:${i.contact}`)} className="contact-button">
-                  <IoCall className="call-icon" />
-                </Button>
-              </p>
-            ) : (
-              <p className="contact-button-container">
-                <Button className="contact-button">
-                  <IoSend className="send-icon" onClick={() => alert_popup(i)} />
-                </Button>
-              </p>
-            )}
+          ) : (
+            <div className="header-auth-links">
+              <Link to="/User_Reg/885695">
+                <p className="header-auth-link signup">Sign Up</p>
+              </Link>
+              <Link to="/User_Login">
+                <p className="header-auth-link login">Login</p>
+              </Link>
             </div>
+          )}
+        </div>
+        <div className="content-padding">
+          {data.map((i) => (
+            <Card className="user-card" key={i.User_id}>
+              <Image className="user-cover-image" src={user_image} />
 
-           
+              {/* <Card className="user-profile-pic-container"> */}
+              <div className="user-profile-pic-container">
+                <img
+                  className="user-profile-pic"
+                  src={`${baseurl}${i.pic}`}
+                  alt="profile"
+                />
 
-            <Card className="tab-card">
-              <div className="tab-buttons-container">
-                <p>
-                  <Button className="tab-button" onClick={() => setActiveTab(null)}>
-                    Gallary
-                  </Button>
-                </p>
-                <p>
-                  <Button className="tab-button" onClick={() => setActiveTab("profile")}>
-                    Profile
-                  </Button>
-                </p>
-                <p>
-                  <Button className="tab-button family" onClick={() => setActiveTab("family")}>
-                    Family Details
-                  </Button>
-                </p>
-                <p>
-                  <Button className="tab-button address" onClick={() => setActiveTab("address")}>
-                    Address
-                  </Button>
-                </p>
-                <p>
-                  <Button className="tab-button contact" onClick={() => setActiveTab("contact")}>
-                    Contact
-                  </Button>
-                </p>
-                <p>
-                  <Button className="tab-button education" onClick={() => setActiveTab("education")}>
-                    Educations
-                  </Button>
-                </p>
+                </div>
+              {/* </Card> */}
+
+              <h2 className="user-username">{i.username}</h2>
+
+              <div className="social-links">
+                {/* WhatsApp */}
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(
+                    `http://localhost:3000/User_data/${i.User_id}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-link whatsapp"
+                >
+                  <FaWhatsapp />
+                </a>
+
+                {/* Facebook */}
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                    `http://localhost:3000/User_data/${i.User_id}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-link facebook"
+                >
+                  <FaFacebook />
+                </a>
+
+                {/* Instagram (No direct share, just profile or post link) */}
+                <a
+                  href={`${i.instagram}/`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-link instagram"
+                >
+                  <FaInstagram />
+                </a>
+
+                {/* Twitter */}
+                <a
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                    `http://localhost:3000/User_data/${i.User_id}`
+                  )}&text=Check%20this%20out!`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-link twitter"
+                >
+                  <FaTwitter />
+                </a>
+
+                {i.user_apply?.some((u) => u.suser_id === id) ? (
+                  <p className="contact-button-container">
+                    <Button
+                      onClick={() =>
+                        (window.location.href = `tel:${i.contact}`)
+                      }
+                      className="contact-button"
+                    >
+                      <IoCall className="call-icon" />
+                    </Button>
+                  </p>
+                ) : (
+                  <p className="contact-button-container">
+                    <Button className="contact-button">
+                      <IoSend
+                        className="send-icon"
+                        onClick={() => alert_popup(i)}
+                      />
+                    </Button>
+                  </p>
+                )}
               </div>
-              {activeTab === null && (
-                <div>
-                  {/* Image Grid */}
-                  <div className="image-grid">
-                    {image.map((img, index) => (
-                      <div
-                        key={index}
-                        className="image-grid-item"
-                        onClick={() => setPreviewImage(`${baseurl}${img.images}`)}
-                      >
-                        <p>
-                          <img src={`${baseurl}${img.images}`} alt="Image" />
-                        </p>
-                      </div>
-                    ))}
-                  </div>
 
-                  {/* Image Preview Modal */}
-                  {previewImage && (
-                    <div className="image-preview-modal">
-                      <button className="image-preview-modal-close-button" onClick={() => setPreviewImage(null)}>
-                        ✖
-                      </button>
-                      <img src={previewImage} alt="Preview" />
+              <Card className="tab-card">
+                <div className="tab-buttons-container">
+                  <p>
+                    <Button
+                      className="tab-button"
+                      onClick={() => setActiveTab(null)}
+                    >
+                      Gallary
+                    </Button>
+                  </p>
+                  <p>
+                    <Button
+                      className="tab-button"
+                      onClick={() => setActiveTab("profile")}
+                    >
+                      Profile
+                    </Button>
+                  </p>
+                  <p>
+                    <Button
+                      className="tab-button family"
+                      onClick={() => setActiveTab("family")}
+                    >
+                      Family Details
+                    </Button>
+                  </p>
+                  <p>
+                    <Button
+                      className="tab-button address"
+                      onClick={() => setActiveTab("address")}
+                    >
+                      Address
+                    </Button>
+                  </p>
+                  <p>
+                    <Button
+                      className="tab-button contact"
+                      onClick={() => setActiveTab("contact")}
+                    >
+                      Contact
+                    </Button>
+                  </p>
+                  <p>
+                    <Button
+                      className="tab-button education"
+                      onClick={() => setActiveTab("education")}
+                    >
+                      Educations
+                    </Button>
+                  </p>
+                </div>
+                {activeTab === null && (
+                  <div>
+                    {/* Image Grid */}
+                    <div className="image-grid">
+                      {image.map((img, index) => (
+                        <div
+                          key={index}
+                          className="image-grid-item"
+                          onClick={() =>
+                            setPreviewImage(`${baseurl}${img.images}`)
+                          }
+                        >
+                          <p>
+                            <img src={`${baseurl}${img.images}`} alt="Image" />
+                          </p>
+                        </div>
+                      ))}
                     </div>
-                  )}
-                </div>
-              )}
 
-              {activeTab === "profile" && (
-                <div className="profile-details-container">
-                  <div>
-                    <p className="detail-label-column">Name : </p>
-                    <p className="detail-value-column">{i.username}</p>
-                    <p className="detail-label-column">Caste : </p>
-                    <p className="detail-value-column">{i.caste}</p>
-                    <p className="detail-label-column">Religion : </p>
-                    <p className="detail-value-column">{i.religion}</p>
-                    <p className="detail-label-column">Date Of Birth : </p>
-                    <p className="detail-value-column">{i.dob}</p>
-                    <p className="detail-label-column">Gender : </p>
-                    <p className="detail-value-column">{i.gender}</p>
-                    <p className="detail-label-column">Age : </p>
-                    <p className="detail-value-column">{i.age}</p>
-                  </div>
-                  <div className="profile-details-right-column">
-                    <p className="detail-label-column">Marrige Status : </p>
-                    <p className="profile-details-right-value-column">{i.marrige_status}</p>
-                    <p className="detail-label-column">Job : </p>
-                    <p className="profile-details-right-value-column">{i.job_title}</p>
-                    <p className="detail-label-column">Job Type : </p>
-                    <p className="profile-details-right-value-column">{i.job_type}</p>
-                    <p className="detail-label-column">Salary : </p>
-                    <p className="profile-details-right-value-column">{i.salary}</p>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === "family" && (
-                <div className="family-details-container">
-                  <div>
-                    <p className="detail-label-column">Father : </p>
-                    <p className="detail-value-column">{i.father_name}</p>
-                    <p className="detail-label-column">Mother : </p>
-                    <p className="detail-value-column">{i.mother_name}</p>
-                    <p className="detail-label-column">Brothers : </p>
-                    <p className="detail-value-column">{i.brother}</p>
-                    <p className="detail-label-column">Married : </p>
-                    <p className="detail-value-column">{i.brother_marrige}</p>
-                    <p className="detail-label-column">Sisters : </p>
-                    <p className="detail-value-column">{i.sister}</p>
-                    <p className="detail-label-column">Married : </p>
-                    <p className="detail-value-column">{i.sister_marrige}</p>
-                  </div>
-                </div>
-              )}
-              {activeTab === "address" && (
-                <div className="address-details-container">
-                  {i.user_apply?.some((u) => u.suser_id === id) ? (
-                    <>
-                      <div>
-                        <p className="detail-label-column">City/Town : </p>
-                        <p className="detail-value-column">{i.city}</p>
-                        <p className="detail-label-column">District : </p>
-                        <p className="detail-value-column">{i.disttrict}</p>
-                        <p className="detail-label-column">State : </p>
-                        <p className="detail-value-column">{i.state}</p>
-                        <p className="detail-label-column">Country : </p>
-                        <p className="detail-value-column">{i.country}</p>
+                    {/* Image Preview Modal */}
+                    {previewImage && (
+                      <div className="image-preview-modal">
+                        <button
+                          className="image-preview-modal-close-button"
+                          onClick={() => setPreviewImage(null)}
+                        >
+                          ✖
+                        </button>
+                        <img src={previewImage} alt="Preview" />
                       </div>
-                    </>
-                  ) : (
-                    <p>Need to apply</p>
-                  )}
-                </div>
-              )}
-
-              {activeTab === "contact" && (
-                <div className="contact-details-container">
-                  {i.user_apply?.some((u) => u.suser_id === id) ? (
-                    <>
-                      <div>
-                        <p className="detail-label-column">Phone : </p>
-                        <p className="detail-value-column">{i.contact}</p>
-                        <p className="detail-label-column">Email : </p>
-                        <p className="detail-value-column">{i.email}</p>
-                        <p className="detail-label-column">Instagram : </p>
-                        <p className="detail-value-column">----</p>
-                        <p className="detail-label-column">Facebook : </p>
-                        <p className="detail-value-column">----</p>
-                        <p className="detail-label-column">Twitter : </p>
-                        <p className="detail-value-column">----</p>
-                      </div>
-                    </>
-                  ) : (
-                    <p>Need to apply</p>
-                  )}
-                </div>
-              )}
-
-              {activeTab === "education" && (
-                <div className="education-details-container">
-                  <div>
-                    <p className="detail-label-column">Course : </p>
-                    <p className="detail-value-column">{i.course}</p>
-                    <p className="detail-label-column">University : </p>
-                    <p className="detail-value-column">{i.university}</p>
+                    )}
                   </div>
-                </div>
-              )}
+                )}
+
+                {activeTab === "profile" && (
+                  <div className="profile-details-container">
+                    <div>
+                      <p className="detail-label-column">Name : </p>
+                      <p className="detail-value-column">{i.username}</p>
+                      <p className="detail-label-column">Caste : </p>
+                      <p className="detail-value-column">{i.caste}</p>
+                      <p className="detail-label-column">Religion : </p>
+                      <p className="detail-value-column">{i.religion}</p>
+                      <p className="detail-label-column">Date Of Birth : </p>
+                      <p className="detail-value-column">{i.dob}</p>
+                      <p className="detail-label-column">Gender : </p>
+                      <p className="detail-value-column">{i.gender}</p>
+                      <p className="detail-label-column">Age : </p>
+                      <p className="detail-value-column">{i.age}</p>
+                    </div>
+                    <div className="profile-details-right-column">
+                      <p className="detail-label-column">Marrige Status : </p>
+                      <p className="profile-details-right-value-column">
+                        {i.marrige_status}
+                      </p>
+                      <p className="detail-label-column">Job : </p>
+                      <p className="profile-details-right-value-column">
+                        {i.job_title}
+                      </p>
+                      <p className="detail-label-column">Job Type : </p>
+                      <p className="profile-details-right-value-column">
+                        {i.job_type}
+                      </p>
+                      <p className="detail-label-column">Salary : </p>
+                      <p className="profile-details-right-value-column">
+                        {i.salary}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "family" && (
+                  <div className="family-details-container">
+                    <div>
+                      <p className="detail-label-column">Father : </p>
+                      <p className="detail-value-column">{i.father_name}</p>
+                      <p className="detail-label-column">Mother : </p>
+                      <p className="detail-value-column">{i.mother_name}</p>
+                      <p className="detail-label-column">Brothers : </p>
+                      <p className="detail-value-column">{i.brother}</p>
+                      <p className="detail-label-column">Married : </p>
+                      <p className="detail-value-column">{i.brother_marrige}</p>
+                      <p className="detail-label-column">Sisters : </p>
+                      <p className="detail-value-column">{i.sister}</p>
+                      <p className="detail-label-column">Married : </p>
+                      <p className="detail-value-column">{i.sister_marrige}</p>
+                    </div>
+                  </div>
+                )}
+                {activeTab === "address" && (
+                  <div className="address-details-container">
+                    {i.user_apply?.some((u) => u.suser_id === id) ? (
+                      <>
+                        <div>
+                          <p className="detail-label-column">City/Town : </p>
+                          <p className="detail-value-column">{i.city}</p>
+                          <p className="detail-label-column">District : </p>
+                          <p className="detail-value-column">{i.disttrict}</p>
+                          <p className="detail-label-column">State : </p>
+                          <p className="detail-value-column">{i.state}</p>
+                          <p className="detail-label-column">Country : </p>
+                          <p className="detail-value-column">{i.country}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <p>Need to apply</p>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === "contact" && (
+                  <div className="contact-details-container">
+                    {i.user_apply?.some((u) => u.suser_id === id) ? (
+                      <>
+                        <div>
+                          <p className="detail-label-column">Phone : </p>
+                          <p className="detail-value-column">{i.contact}</p>
+                          <p className="detail-label-column">Email : </p>
+                          <p className="detail-value-column">{i.email}</p>
+                          <p className="detail-label-column">Instagram : </p>
+                          <p className="detail-value-column">----</p>
+                          <p className="detail-label-column">Facebook : </p>
+                          <p className="detail-value-column">----</p>
+                          <p className="detail-label-column">Twitter : </p>
+                          <p className="detail-value-column">----</p>
+                        </div>
+                      </>
+                    ) : (
+                      <p>Need to apply</p>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === "education" && (
+                  <div className="education-details-container">
+                    <div>
+                      <p className="detail-label-column">Course : </p>
+                      <p className="detail-value-column">{i.course}</p>
+                      <p className="detail-label-column">University : </p>
+                      <p className="detail-value-column">{i.university}</p>
+                    </div>
+                  </div>
+                )}
+              </Card>
             </Card>
-          </Card>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-   
-   </>
+
+      {/* footer section after login */}
+      <footer
+        style={{
+          backgroundColor: "#2c2c2c",
+          padding: "15px 10px",
+          textAlign: "center",
+          // position: "fixed",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+        }}
+      >
+        <p
+          style={{
+            color: "#fff",
+            fontSize: "14px",
+            margin: 0,
+          }}
+        >
+          All Rights Reserved -{" "}
+          <a
+            href="#"
+            style={{
+              color: "#88b0f4",
+              textDecoration: "none",
+            }}
+          >
+            MatrimonialsIndia
+          </a>{" "}
+          (2025-2026)
+        </p>
+      </footer>
+    </>
   );
 }
 
 export default User_data;
-
-
-
-
-
-
-
-
-
-
-

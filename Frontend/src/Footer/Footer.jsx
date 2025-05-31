@@ -40,9 +40,8 @@ const Footer = () => {
         <div className="footer-section partners">
           <h2>Our Partners</h2>
           <div>
-            <Link to="#">Our Staff</Link>
+            <Link to="/Staff_Login">Our Staff</Link>
           </div>
-         
         </div>
       </div>
 
