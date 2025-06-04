@@ -1,7 +1,10 @@
 import React from 'react'
 import { Form, Button, Input, Card, message } from 'antd'
 import { UserLogin } from '../../Api/CoreApi'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import './LoginForm.css';
+import Stufflogo from './stuff_logo-removebg-preview.png';
+
 
 function Staff_Login() {
   const Navigate = useNavigate()
@@ -23,25 +26,39 @@ function Staff_Login() {
   }
 
   return (
-    <div style={{ height: '748px', width: '100%', paddingTop: '10%' }}>
-      <Card style={{ width: '40%', marginLeft: '35%' }}>
-        <Form onFinish={submit}>
-          <Form.Item label="Username" name="username" rules={[{ required: true, message: 'Please enter your username!' }]}>
-            <Input style={{ width: '90%' }} />
-          </Form.Item>
-
-          <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please enter your password!' }]}>
-            <Input type="password" style={{ width: '90%' }} />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ display: 'block', margin: '0 auto' }}>
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
-    </div>
+     <div className="login-container">
+         <Card className="login-card">
+   
+           <div className="logo-container">
+             <img src={Stufflogo} alt="Stuff Logo" className="stuff-logo" />
+             <h3>Staff Login</h3>
+           </div>
+   
+           <Form className="login-form" onFinish={submit}>
+             <Form.Item
+               label="Username"
+               name="username"
+               rules={[{ required: true, message: 'Please enter your username!' }]}
+             >
+               <Input />
+             </Form.Item>
+   
+             <Form.Item
+               label="Password"
+               name="password"
+               rules={[{ required: true, message: 'Please enter your password!' }]}
+             >
+               <Input type="password" />
+             </Form.Item>
+   
+             <Form.Item>
+               <Button type="primary" htmlType="submit">
+                 Submit
+               </Button>
+             </Form.Item>
+           </Form>
+         </Card>
+       </div>
   )
 }
 

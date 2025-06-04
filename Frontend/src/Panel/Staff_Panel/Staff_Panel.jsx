@@ -17,7 +17,7 @@ import { GrTransaction } from "react-icons/gr";
 import Staff_Transactions from "../Staff_Panel/Staff_Transactions"
 import { VscGraph } from "react-icons/vsc";
 import User_Reg from "../../Authentication/User/User_Reg";
-
+import './Staff_Panel.css';
 
 function Staff_Panel() {
   const baseurl = 'http://127.0.0.1:8000/'
@@ -27,6 +27,8 @@ function Staff_Panel() {
   const int_id = String(intid)
   // const int_id = (id);
   // console.log( int_id, "********* int_id ********");
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [staff, setStaff] = useState([]);
   const [cmonth_revenue, setCMonth_revenue] = useState([]);
@@ -241,227 +243,154 @@ function Staff_Panel() {
     Navigate('/Staff_Login')
   }
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
-    <div>
-      <div style={{ width: '100%', height: '50px', backgroundColor: 'rgba(7, 110, 148,1)', position: 'fixed', zIndex: '999', display: 'flex' }}>
-        <Link to='/Home_Page_wLog'>
-          <p style={{ fontSize: '30px', color: 'white', marginLeft: '20px', marginTop: '-1px' }}>Ristey</p>
-        </Link>
+    <div className="staff-panel-container">
+    <div className="app-header">
+      <Link to='/Home_Page_wLog' className="header-logo-link">
+        <p className="header-logo-text">Ristey</p>
+      </Link>
 
+      <div className="header-nav">
         {intid ? (
-          <Link to='/Staff_Panel'>
-            <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '1300px' }}>Profile</p>
+          <Link to='/Staff_Panel' className="header-nav-link">
+            <p>Profile</p>
           </Link>
         ) : (
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Link to='/User_Reg/885695'>
-              <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '1200px' }}>Sign Up</p>
+          <div className="header-auth-links">
+            <Link to='/User_Reg/885695' className="header-nav-link">
+              <p>Sign Up</p>
             </Link>
-            <Link to='/User_Login'>
-              <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '30px' }}>Login</p>
+            <Link to='/User_Login' className="header-nav-link">
+              <p>Login</p>
             </Link>
           </div>
         )}
       </div>
-      <div style={{ width: "180px", height: '680px', backgroundColor: 'white', position: 'fixed', marginTop: '50px' }}>
-        <Link to='/Staff_Panel'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-
-          >
-            Dashboard
-          </Button>
-        </Link>
-        <Link to='/Staff_Added_User'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            User
-          </Button>
-        </Link>
-        <Link to='/Staff_Transactions'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Transaction
-          </Button>
-        </Link>
-        <Link to='/Staff_Withdrawals'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Withdrawal
-          </Button>
-        </Link>
-        <Button
-          style={{
-            textAlign: "center",
-            color: "black",
-            borderRadius: "0px",
-            width: "100%",
-          }}
-          onClick={log_out}
-        >
-          Log Out
-        </Button>
-      </div>
-      <div style={{ display: "flex", marginLeft: '200px', paddingTop: '70px' }}>
-        <div style={{ width: "300px", height: "500px", borderRadius: '10px', backgroundColor: 'white', boxShadow: "1px 0.5px 4px gray" }}>
-          <div>
-            <div
-              style={{
-                // border: "2px solid",
-                width: "60%",
-                textAlign: "center",
-                marginLeft: "20%",
-                height: "150px",
-                borderRadius: "20px",
-                marginTop: '10px'
-              }}
-            >
-              {/* <p style={{ textAlign: 'center', fontSize: '120px' }}><FaUser /></p> */}
-              <p style={{ textAlign: 'center', fontSize: '120px' }}>{staff.map(i => (
-                <img style={{ border: '2px solid', width: '176px', height: '147px', marginLeft: '-3px', marginTop: '-3px', borderRadius: '18px' }} src={`${baseurl}${i.pic}`} />
-              ))}</p>
-              {/* {staff.map(i => (
-                <img style={{ textAlign: 'center', fontSize: '50px' }} src={`${baseurl}${i.pic}`} />
-              ))} */}
-
-            </div><br />
-            <Form form={form} onFinish={updatestaff} style={{ marginLeft: '10px' }}>
-              <Form.Item style={{ marginTop: "10px" }} name="username" label='Name'>
-                <Input style={{ border: "none", marginLeft: '23px', width: '210px' }} />
-              </Form.Item>
-              <Form.Item style={{ marginTop: "-20px" }} name="password" label='Password'>
-                <Input style={{ border: "none", marginLeft: '-1px', width: '210px' }} />
-              </Form.Item>
-              <Form.Item style={{ marginTop: "-20px" }} name="balance" label='Balance'>
-                <Input style={{ border: "none", marginLeft: '12px', width: '210px' }} readOnly />
-              </Form.Item>
-              {/* <Form.Item style={{ marginTop: "-20px" }} name="disttrict" label='Disttrict'>
-                <Input style={{ border: "none", marginLeft: '16px', width: '210px' }} />
-              </Form.Item> */}
-              <div
-                style={{
-                  display: "flex",
-                  columnGap: "30px",
-                  marginLeft: "38%",
-
-                }}
-              >
-                <Form.Item>
-                  <Button htmlType="submit">Save</Button>
-                </Form.Item>
-              </div>
-              {/* <p style={{fontSize:'22px',marginTop:'30px',marginLeft:'10px',color:'black'}}>Name : {i.username}</p>
-                    <p style={{fontSize:'22px',marginTop:'10px',marginLeft:'10px',color:'black'}}>Balance : {i.balance}</p>
-                    <p style={{fontSize:'22px',marginTop:'10px',marginLeft:'10px',color:'black'}}>Disttrict : {i.disttrict}</p>
-                    <p style={{fontSize:'22px',marginTop:'10px',marginLeft:'10px',color:'black'}}>password : {i.password}</p> */}
-            </Form>
-          </div>
-        </div>
-        <Link to='/Staff_Added_User'><div
-          style={{
-            // border: "2px solid",
-            width: "280px",
-            height: "170px",
-            marginLeft: "50px",
-            borderRadius: '5px',
-            backgroundColor: 'white',
-            boxShadow: "1px 0.5px 4px gray"
-          }}
-        >
-          <p style={{ textAlign: 'center', fontSize: '40px' }}><FaUser /></p>
-          <p style={{ textAlign: 'center', fontSize: '30px' }}>{userref.length}</p>
-        </div></Link>
-        <div
-          style={{
-            // border: "2px solid",
-            width: "280px",
-            height: "170px",
-            marginLeft: "50px",
-            borderRadius: '5px',
-            backgroundColor: 'white',
-            boxShadow: "1px 0.5px 4px gray"
-          }}
-        >
-          <p style={{ textAlign: 'center', fontSize: '40px' }}><FaRupeeSign /></p>
-          <p style={{ textAlign: 'center', fontSize: '30px' }}>{current_month[0]?.amount || ""}</p>
-          <p style={{ textAlign: 'center', fontSize: '30px' }}>{current_month[0]?.month || ""}</p>
-        </div>
-        {pop === null && (
-          <div
-            style={{
-              // border: "2px solid",
-              width: "280px",
-              height: "170px",
-              marginLeft: "50px",
-              borderRadius: '5px',
-              backgroundColor: 'white',
-              boxShadow: "1px 0.5px 4px gray"
-            }}
-            onClick={() => setPop('pop')}
-          >
-            <p style={{ textAlign: 'center', fontSize: '40px', marginTop: '50px' }}><GrTransaction /></p>
-          </div>
-        )}
-
-        {pop === 'pop' && (
-          <div
-            style={{
-              // border: "2px solid",
-              width: "280px",
-              height: "170px",
-              marginLeft: "50px",
-              borderRadius: '5px',
-              backgroundColor: 'white',
-              boxShadow: "1px 0.5px 4px gray"
-            }}
-            onClick={() => setPop(null)}
-          >
-            <p style={{ textAlign: 'center', fontSize: '40px', marginTop: '50px' }}><VscGraph /></p>
-          </div>
-        )}
-
-      </div>
-      {pop === null && (
-        <ResponsiveContainer width="68%" height={300} style={{ marginTop: '-250px', marginLeft: '500px' }}>
-          <BarChart data={cmonth_revenue} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="amount" fill="#8884d8">
-              <LabelList dataKey="amount" position="top" style={{ fontSize: '12px', fill: '#000' }} />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      )}
-      {/* {pop === 'pop' && (
-        <p style={{ marginTop: '-300px', marginLeft: '520px' }}><Staff_Transactions /></p>
-      )} */}
+      <Button className="sidebar-toggle-btn" onClick={toggleSidebar}>
+        ☰
+      </Button>
     </div>
+
+    <div className={`app-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+      <Link to='/Staff_Panel'>
+        <Button className="sidebar-btn">Dashboard</Button>
+      </Link>
+      <Link to='/Staff_Added_User'>
+        <Button className="sidebar-btn">User</Button>
+      </Link>
+      <Link to='/Staff_Transactions'>
+        <Button className="sidebar-btn">Transaction</Button>
+      </Link>
+      <Link to='/Staff_Withdrawals'>
+        <Button className="sidebar-btn">Withdrawal</Button>
+      </Link>
+      <Button className="sidebar-btn" onClick={log_out}>
+        Log Out
+      </Button>
+    </div>
+
+    <div className="main-content">
+      <div className="profile-section">
+        <div className="profile-card">
+          <div className="profile-pic-container">
+            {staff.length > 0 && staff[0].pic ? (
+              <img className="profile-pic" src={`${baseurl}${staff[0].pic}`} alt="Staff" />
+            ) : (
+              <div className="profile-pic-placeholder">
+                <FaUser size={80} />
+              </div>
+            )}
+          </div>
+          <Form form={form} onFinish={updatestaff} layout="vertical" className="profile-form">
+            <Form.Item name="username" label='Name'>
+              <Input />
+            </Form.Item>
+            <Form.Item name="password" label='Password'>
+              <Input type="password" />
+            </Form.Item>
+            <Form.Item name="balance" label='Balance'>
+              <Input readOnly />
+            </Form.Item>
+            {/* <Form.Item name="disttrict" label='District'>
+              <Input />
+            </Form.Item> */}
+            <Form.Item className="profile-form-actions">
+              <Button type="primary" htmlType="submit">Save</Button>
+            </Form.Item>
+          </Form>
+        </div>
+      </div>
+
+      <div className="stats-section">
+        <Link to='/Staff_Added_User' className="stat-card-link">
+          <div className="stat-card">
+            <FaUser className="stat-icon" />
+            <p className="stat-value">{userref.length}</p>
+            <p className="stat-label">Total Users</p>
+          </div>
+        </Link>
+
+        <div className="stat-card">
+          <FaRupeeSign className="stat-icon" />
+          <p className="stat-value">{current_month[0]?.amount || "N/A"}</p>
+          <p className="stat-label">Revenue ({current_month[0]?.month || "Current Month"})</p>
+        </div>
+
+        {pop === null ? (
+          <div className="stat-card clickable-card" onClick={() => setPop('pop')}>
+            <GrTransaction className="stat-icon large-icon" />
+            <p className="stat-label">View Transactions Graph</p>
+          </div>
+        ) : (
+          <div className="stat-card clickable-card" onClick={() => setPop(null)}>
+            <VscGraph className="stat-icon large-icon" />
+            <p className="stat-label">View Revenue Chart</p>
+          </div>
+        )}
+      </div>
+
+      {pop === null && cmonth_revenue.length > 0 && (
+        <div className="chart-container">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={cmonth_revenue} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="amount" fill="#8884d8">
+                <LabelList dataKey="amount" position="top" style={{ fontSize: '12px', fill: '#000' }} />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {pop === 'pop' && (
+        <div className="transactions-placeholder">
+          {/* <p>Transaction Details / Graph would show here</p> */}
+          {/* For example, you could render the <Staff_Transactions /> component here */}
+          {/* <Staff_Transactions /> */}
+          <ResponsiveContainer width="100%" height={300}>
+            {/* Replace with actual transaction graph/data if you have one */}
+            <BarChart data={[{name: "Mock Tx", value: 100}]} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="value" fill="#82ca9d">
+                <LabelList dataKey="value" position="top" style={{ fontSize: '12px', fill: '#000' }} />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+          <p style={{ textAlign: 'center', marginTop: '20px' }}>Transaction View (Placeholder)</p>
+        </div>
+      )}
+    </div>
+  </div>
   );
 }
 

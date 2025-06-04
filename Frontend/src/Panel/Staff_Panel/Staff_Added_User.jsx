@@ -1,404 +1,283 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { Form, Input, Button, Table, Select, message } from "antd";
 import {
   UserGet,
-  UserPost,
+  // UserPost, // Not used in the provided adduser function
   UserUpdate,
   UserRemove,
-} from "../../Api/CoreApi";
-import User_Reg from "../../Authentication/User/User_Reg";
+} from "../../Api/CoreApi"; // Make sure path is correct
+import User_Reg from "../../Authentication/User/User_Reg"; // Make sure path is correct
+import './Staff_Added_User.css'; // Import the CSS file
+
 const { Option } = Select;
 
 function Staff_Added_User() {
   const Navigate = useNavigate();
+  const [updateUserForm] = Form.useForm(); // Form instance for update form
 
   const [user, setuser] = useState([]);
-  const [staff, setStaff] = useState([])
-  const [user_form, setuser_form] = useState(null);
-  const [updateform, setUpdateform] = useState([]);
+  const [staff, setStaff] = useState([]); // This will hold the current staff member's data
+  const [user_form, setuser_form] = useState(null); // 'add', 'update_button', or null
+  // updateform state is used to hold data for the update form,
+  // but AntD Form's initialValues or setFieldsValue is preferred for pre-filling.
+  // const [updateform, setUpdateform] = useState({}); // We'll use updateUserForm.setFieldsValue
 
-  const id = localStorage.getItem('user_id')
-  console.log(staff, "****** id ****");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // For mobile sidebar
 
-  // const id = ((staffid))
+  // This 'id' is for the currently logged-in *staff* member
+  const staffId = localStorage.getItem('user_id'); // Renamed for clarity
+
   const get = async () => {
-    const staff_response = await UserGet();
-    const current_staff = staff_response.filter(i => i.id === id)
-    setStaff(current_staff)
-    // console.log(current_staff, "****** current_staff ****");
-    const userdata = staff_response.filter(i => i.ref === current_staff[0].refer)
-    // console.log(userdata, '****** user_response ********')
-    setuser(userdata);
+    if (!staffId) {
+      message.error("Staff ID not found. Please log in.");
+      Navigate('/Staff_Login'); // Or appropriate login page
+      return;
+    }
+    try {
+      const allUsersAndStaff = await UserGet(); // Assuming UserGet fetches all users/staff
+      const currentStaffMember = allUsersAndStaff.find(i => i.id === staffId); // Find current staff
+
+      if (currentStaffMember) {
+        setStaff([currentStaffMember]); // Set staff (expecting an array for map in original code)
+        // Assuming currentStaffMember has a 'refer' property to link to users they manage
+        if (currentStaffMember.refer) {
+          const managedUsers = allUsersAndStaff.filter(i => i.ref === currentStaffMember.refer);
+          setuser(managedUsers);
+        } else {
+          setuser([]); // No referral code, so no users under this staff
+          console.warn("Current staff member does not have a 'refer' property.");
+        }
+      } else {
+        message.error("Staff member not found.");
+        setStaff([]);
+        setuser([]);
+      }
+    } catch (error) {
+      message.error("Failed to fetch data.");
+      console.error("Error in get():", error);
+    }
   };
 
   useEffect(() => {
     get();
-  }, []);
+  }, [staffId]); // Re-fetch if staffId changes (though it's from localStorage)
 
   // const adduser = async (value) => {
+  //   // This function seems to be intended for the User_Reg component to call.
+  //   // User_Reg would need to be modified to accept an onSubmit prop.
   //   try {
-  //     const response = await UserPost(value)
-  //     const userdata = response.filter(i => i.ref === staff[0].refer)
-  //     setuser(userdata)
-  //     // console.log(value, "******* value *****");
+  //     // Assuming UserPost adds the user and returns the updated list or the new user.
+  //     // The current User_Reg might handle its own submission.
+  //     // const response = await UserPost(value);
+  //     // If UserPost returns all users:
+  //     // const userdata = response.filter(i => i.ref === staff[0]?.refer);
+  //     // setuser(userdata);
+  //     message.success('User addition process initiated (simulated from Staff_Added_User)');
   //     setuser_form(null);
-  //     message.success('success')
+  //     get(); // Re-fetch all users to include the new one
   //   } catch (error) {
-  //     message.error('Failed');
+  //     message.error('Failed to add user (simulated)');
   //   }
   // };
 
-  const update_pass = (i) => {
-    console.log(i, "update pass");
-    setUpdateform(i);
+  const handleUserRegSubmit = async () => {
+    // This function would be passed to User_Reg if it needs a callback
+    // after its internal submission is complete.
+    message.success("User registration successful (from User_Reg component). Refreshing list.");
+    setuser_form(null); // Close the form view
+    get(); // Refresh the user list
+  };
+
+  const update_pass = (record) => {
+    updateUserForm.setFieldsValue(record); // Pre-fill the form
     setuser_form("update_button");
   };
-  const updateuser = async (i) => {
+
+  const updateuser = async (values) => {
     try {
-      const id = i.id
-      const response = await UserUpdate(id, i)
-      const userdata = response.filter(i => i.ref === staff[0].refer)
-      setuser(userdata)
+      const userIdToUpdate = values.id; // ID comes from the form values (set by setFieldsValue)
+      await UserUpdate(userIdToUpdate, values); // API should handle response
+      message.success('User updated successfully');
       setuser_form(null);
-      message.success('success')
+      get(); // Re-fetch users
     } catch (error) {
-      message.error('Failed');
+      message.error('Failed to update user');
+      console.error("Error in updateuser():", error);
     }
   };
 
-  const delete_user = async (i) => {
+  const delete_user = async (record) => {
     try {
-      const id = i.id
-      const response = await UserRemove(id)
-      setuser(response)
-      message.success('success')
+      await UserRemove(record.id); // API should handle response
+      message.success('User deleted successfully');
+      // Optimistically update UI or re-fetch
+      setuser(prevUsers => prevUsers.filter(u => u.id !== record.id));
+      // Or call get(); if UserRemove doesn't return the updated list
     } catch (error) {
-      message.error('Failed');
+      message.error('Failed to delete user');
+      console.error("Error in delete_user():", error);
     }
   };
 
   const log_out = () => {
-    localStorage.removeItem('user_id')
-    Navigate('/Staff_Login')
-  }
-  return (
-    <div>
-      <div style={{ width: '100%', height: '50px', backgroundColor: 'rgba(7, 110, 148,1)', position: 'fixed', zIndex: '999', display: 'flex' }}>
-        <Link to='/Home_Page_wLog'>
-          <p style={{ fontSize: '30px', color: 'white', marginLeft: '20px', marginTop: '-1px' }}>Ristey</p>
-        </Link>
+    localStorage.removeItem('user_id');
+    Navigate('/Staff_Login'); // Ensure this route is correct
+  };
 
-        {id ? (
-          <Link to='/Staff_Panel'>
-            <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '1300px' }}>Profile</p>
-          </Link>
-        ) : (
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Link to='/User_Reg/885695'>
-              <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '1200px' }}>Sign Up</p>
-            </Link>
-            <Link to='/User_Login'>
-              <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '30px' }}>Login</p>
-            </Link>
-          </div>
-        )}
-      </div>
-      <div style={{ width: "180px", height: '680px', backgroundColor: 'white', position: 'fixed', marginTop: '50px' }}>
-        <Link to='/Staff_Panel'>
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const columns = [
+    { title: "ID", dataIndex: "id", key: "id", fixed: 'left', width: 80 },
+    { title: "Username", dataIndex: "username", key: "username", width: 150 },
+    { title: "Password", dataIndex: "password", key: "password", width: 150, render: () => '******' },
+    { title: "Balance", dataIndex: "balance", key: "balance", width: 100 },
+    { title: "District", dataIndex: "disttrict", key: "disttrict", width: 120 },
+    {
+      title: "Actions",
+      key: "actions",
+      fixed: 'right',
+      width: 180, // Adjusted width
+      render: (_, record) => (
+        <div className="action-buttons">
           <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-
+            type="primary"
+            ghost
+            onClick={() => update_pass(record)}
           >
-            Dashboard
+            Update
           </Button>
+          <Button danger onClick={() => delete_user(record)}>
+            Delete
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className="staff-layout-container">
+      <div className="app-header">
+        <Link to='/Home_Page_wLog' className="header-logo-link">
+          <p className="header-logo-text">Ristey</p>
+        </Link>
+        <div className="header-nav-wrapper"> {/* Wrapper for nav items */}
+          {staffId ? (
+            <Link to='/Staff_Panel' className="header-nav-link profile-link">
+              <p>Profile</p>
+            </Link>
+          ) : (
+            <div className="header-auth-links">
+              <Link to='/User_Reg/885695' className="header-nav-link">
+                <p>Sign Up</p>
+              </Link>
+              <Link to='/User_Login' className="header-nav-link">
+                <p>Login</p>
+              </Link>
+            </div>
+          )}
+        </div>
+        <Button className="sidebar-toggle-btn" onClick={toggleSidebar}>
+          ☰
+        </Button>
+      </div>
+
+      <div className={`app-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <Link to='/Staff_Panel'>
+          <Button className="sidebar-btn">Dashboard</Button>
         </Link>
         <Link to='/Staff_Added_User'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            User
-          </Button>
+          <Button className="sidebar-btn">User</Button>
         </Link>
         <Link to='/Staff_Transactions'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Transaction
-          </Button>
+          <Button className="sidebar-btn">Transaction</Button>
         </Link>
         <Link to='/Staff_Withdrawals'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Withdrawal
-          </Button>
+          <Button className="sidebar-btn">Withdrawal</Button>
         </Link>
-        <Button
-          style={{
-            textAlign: "center",
-            color: "black",
-            borderRadius: "0px",
-            width: "100%",
-          }}
-          onClick={log_out}
-        >
+        <Button className="sidebar-btn" onClick={log_out}>
           Log Out
         </Button>
       </div>
 
-      <div style={{ marginLeft: '200px', paddingTop: '50px' }}>
-        {user_form === null && (
-          <Button
-            style={{ marginLeft: "90%", width: "100px" }}
-            onClick={() => setuser_form("add")}
-          >
-            Add user
-          </Button>
-        )}
+      <div className="main-content staff-added-user-content">
+        <div className="content-actions">
+          {user_form === null && (
+            <Button
+              type="primary"
+              onClick={() => setuser_form("add")}
+            >
+              Add User
+            </Button>
+          )}
+           {(user_form === "add" || user_form === "update_button") && (
+             <Button onClick={() => setuser_form(null)}>
+              Cancel
+            </Button>
+           )}
+        </div>
+
         {user_form === "add" && (
-          // <Form onFinish={adduser}>
-          //   <div style={{ display: "flex" }} >
-          //     <Form.Item style={{ width: "400px" }} name="username">
-          //       <Input placeholder="Username" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "400px" }} name="caste">
-          //       <Input placeholder="caste" />
-          //     </Form.Item>
-          //     <Form.Item
-          //       name="gender"
-          //       style={{ width: "300px" }}
-          //       rules={[{ required: true, message: "Please select gender" }]}
-          //     >
-          //       <Select placeholder="Select Gender">
-          //         <Option value="Male">Male</Option>
-          //         <Option value="Female">Female</Option>
-          //         <Option value="Other">Other</Option>
-          //       </Select>
-          //     </Form.Item>
-
-          //     <Form.Item style={{ width: "300px" }} name="dob">
-          //       <Input type="date" placeholder="dob" />
-          //     </Form.Item>
-          //     <Form.Item
-          //       name="religion"
-          //       style={{ width: "300px" }}
-          //       rules={[{ required: true, message: "Please select religion" }]}
-          //     >
-          //       <Select placeholder="Select Religion">
-          //         <Option value="Hindu">Hindu</Option>
-          //         <Option value="Muslim">Muslim</Option>
-          //         <Option value="Christian">Christian</Option>
-          //         <Option value="Sikh">Sikh</Option>
-          //         <Option value="Buddhist">Buddhist</Option>
-          //         <Option value="Jain">Jain</Option>
-          //         <Option value="Other">Other</Option>
-          //       </Select>
-          //     </Form.Item>
-          //   </div>
-          //   <div style={{ display: "flex", marginTop: '-18px' }} >
-          //     <Form.Item style={{ width: "300px" }} name="age">
-          //       <Input type="number" placeholder="age" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "400px" }} name="contact">
-          //       <Input type="number" placeholder="contact" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "400px" }} name="password">
-          //       <Input placeholder="password" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="aadhar">
-          //       <Input type="number" placeholder="aadhar" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="email">
-          //       <Input type="email" placeholder="email" />
-          //     </Form.Item>
-          //   </div>
-          //   <div style={{ display: "flex", marginTop: '-18px' }} >
-          //     <Form.Item style={{ width: "400px" }} name="state">
-          //       <Input placeholder="state" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "400px" }} name="city">
-          //       <Input placeholder="city" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="country">
-          //       <Input placeholder="country" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="disttrict">
-          //       <Input placeholder="Disttrict" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "400px" }} name="address">
-          //       <Input placeholder="address" />
-          //     </Form.Item>
-          //   </div>
-          //   <div style={{ display: "flex", marginTop: '-18px' }} >
-          //     <Form.Item style={{ width: "400px" }} name="university">
-          //       <Input placeholder="university" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="course">
-          //       <Input placeholder="course" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="job_title">
-          //       <Input placeholder="job_title" />
-          //     </Form.Item>
-          //     <Form.Item
-          //       name="job_type"
-          //       style={{ width: "400px" }}
-          //       rules={[{ required: true, message: "Please select job type" }]}
-          //     >
-          //       <Select placeholder="Select Job Type">
-          //         <Option value="Full-Time">Govt</Option>
-          //         <Option value="Part-Time">Semi Govt</Option>
-          //         <Option value="Part-Time">Pvt</Option>
-          //       </Select>
-          //     </Form.Item>
-          //   </div>
-          //   <div style={{ display: "flex", marginTop: '-18px' }} >
-          //     <Form.Item style={{ width: "400px" }} name="salary">
-          //       <Input type="number" placeholder="salary" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="father_name">
-          //       <Input placeholder="father_name" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="mother_name">
-          //       <Input placeholder="mother_name" />
-          //     </Form.Item>
-
-          //     <Form.Item style={{ width: "400px" }} name="brother">
-          //       <Input type="number" placeholder="brother" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="brother_marrige">
-          //       <Input type="number" placeholder="brother_marrige" />
-          //     </Form.Item>
-          //   </div>
-          //   <div style={{ display: "flex", marginTop: '-18px' }} >
-          //     <Form.Item style={{ width: "300px" }} name="sister">
-          //       <Input type="number" placeholder="sister" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="sister_marrige">
-          //       <Input type="number" placeholder="sister_marrige" />
-          //     </Form.Item>
-          //     <Form.Item>
-          //       <Button
-          //         style={{ width: "150px", marginLeft: "10px" }}
-          //         htmlType="submit"
-          //       >
-          //         add
-          //       </Button>
-          //     </Form.Item>
-          //   </div>
-          // </Form>
-          <User_Reg />
+          <div className="form-container add-user-form-container">
+            <h2>Add New User</h2>
+            {/* User_Reg component handles its own form and submission.
+                Pass a callback if this parent component needs to react to submission. */}
+            <User_Reg onSuccessfulSubmit={handleUserRegSubmit} staffReferralCode={staff[0]?.refer} />
+          </div>
         )}
 
         {user_form === "update_button" && (
-          <Form
-            style={{ display: "flex" }}
-            initialValues={updateform}
-            onFinish={updateuser}
-          >
-            <Form.Item style={{ width: "400px" }} name="id">
-              <Input placeholder="Id" readOnly />
-            </Form.Item>
-            <Form.Item style={{ width: "400px" }} name="username">
-              <Input placeholder="Username" />
-            </Form.Item>
-            <Form.Item style={{ width: "400px" }} name="password">
-              <Input placeholder="password" />
-            </Form.Item>
-            <Form.Item style={{ width: "300px" }} name="balance">
-              <Input placeholder="Balance" />
-            </Form.Item>
-            <Form.Item style={{ width: "300px" }} name="disttrict">
-              <Input placeholder="Disttrict" />
-            </Form.Item>
-            <Form.Item>
-              <Button
-                style={{ width: "150px", marginLeft: "10px" }}
-                htmlType="submit"
-              >
-                update
-              </Button>
-            </Form.Item>
-          </Form>
+          <div className="form-container update-user-form-container">
+            <h2>Update User Details</h2>
+            <Form
+              form={updateUserForm} // Use the form instance
+              // initialValues prop is not strictly needed if setFieldsValue is used effectively
+              onFinish={updateuser}
+              layout="vertical" // vertical layout is often good for responsiveness
+              className="user-update-form" // Class for styling
+            >
+              <Form.Item label="ID" name="id" rules={[{ required: true }]}>
+                <Input readOnly />
+              </Form.Item>
+              <Form.Item label="Username" name="username" rules={[{ required: true }]}>
+                <Input placeholder="Username" />
+              </Form.Item>
+              <Form.Item label="Password" name="password">
+                <Input placeholder="Enter new password (optional)" type="password" />
+              </Form.Item>
+              <Form.Item label="Balance" name="balance" rules={[{ type: 'number', transform: value => Number(value) }]}>
+                <Input type="number" placeholder="Balance" />
+              </Form.Item>
+              <Form.Item label="District" name="disttrict">
+                <Input placeholder="District" />
+              </Form.Item>
+              <Form.Item className="submit-update-btn-item">
+                <Button type="primary" htmlType="submit" className="submit-update-btn">
+                  Update User
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
         )}
 
-        <Table
-          columns={[
-            { title: "ID", dataIndex: "id", key: "id" },
-            { title: "Username", dataIndex: "username", key: "username" },
-            { title: "Password", dataIndex: "password", key: "password" },
-            { title: "Balance", dataIndex: "balance", key: "balance" },
-            {
-              title: "District",
-              dataIndex: "disttrict",
-              key: "disttrict",
-            },
-            {
-              title: "Actions",
-              key: "actions",
-              render: (
-                _,
-                record // Corrected to pass row data
-              ) => (
-                <>
-                  <Button
-                    style={{ marginRight: 8 }}
-                    onClick={() => update_pass(record)}
-                  >
-                    Update
-                  </Button>
-                  <Button danger onClick={() => delete_user(record)}>
-                    Delete
-                  </Button>
-                  {/* <Link to={`/User_Charts/${record.id}`}><Button danger>
-                    details
-                  </Button></Link> */}
-                </>
-              ),
-            },
-          ]}
-          dataSource={user}
-          rowKey="id"
-          bordered
-          scroll={{ x: true }} // Makes it responsive
-        />
+        <div className="user-table-container">
+          <h2>Managed Users</h2>
+          <Table
+            columns={columns}
+            dataSource={user}
+            rowKey="id"
+            bordered
+            scroll={{ x: 'max-content' }}
+            className="user-data-table"
+          />
+        </div>
       </div>
     </div>
   );
 }
 
-export default Staff_Added_User
-
-
-
-// import React from 'react'
-
-// function Staff_Added_User() {
-//   return (
-//     <div>Staff_Added_User</div>
-//   )
-// }
-
-// export default Staff_Added_User
+export default Staff_Added_User;

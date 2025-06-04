@@ -1,81 +1,149 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { UserGet, UserUpdate, UserTransactionsGet, UserTransactionsUpdate } from '../../Api/CoreApi'
-import { Link, useNavigate } from 'react-router-dom'
-import {Button, Table, message } from "antd";
+import React, { useState, useEffect } from 'react';
+import { UserGet, UserUpdate, UserTransactionsGet, UserTransactionsUpdate } from '../../Api/CoreApi';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button, Table, message } from "antd";
 import { FaUser } from "react-icons/fa6";
-
-
 
 function User_Withdrawal() {
     const Navigate = useNavigate();
-
-    const [staff, setStaff] = useState([])
-    const [data, setData] = useState([])
-
-    console.log(data, '***** v ******')
+    const [staff, setStaff] = useState([]);
+    const [data, setData] = useState([]);
 
     const get = async () => {
-        const staff_response = await UserGet()
-        setStaff(staff_response)
+        try {
+            const staff_response = await UserGet();
+            setStaff(staff_response);
 
-        const response1 = await UserTransactionsGet()
-        const filter_user = response1.filter(i => i.status === 'pending')
-        setData(filter_user)
-    }
+            const response = await UserTransactionsGet();
+            const filter_user = response.filter(i => i.status === 'pending');
+            setData(filter_user);
+        } catch (error) {
+            message.error('Failed to fetch data');
+            console.error('Error fetching data:', error);
+        }
+    };
 
     useEffect(() => {
-        get()
-    }, [])
-
+        get();
+    }, []);
 
     const accept = async (value) => {
-        // console.log(value,'** value **')
         try {
-            const user_id = value.id
-            const values = ({ status: 'accept' })
-            const response = await UserTransactionsUpdate(user_id, values)
-            const user_pendings_filter = response.filter(i => i.status === 'pending')
-            setData(user_pendings_filter)
-            message.success('success')
+            const user_id = value.id;
+            const values = { status: 'accept' };
+            const response = await UserTransactionsUpdate(user_id, values);
+            const user_pendings_filter = response.filter(i => i.status === 'pending');
+            setData(user_pendings_filter);
+            message.success('Withdrawal request accepted');
         } catch (error) {
-            message.error('Failed');
+            message.error('Failed to accept withdrawal');
+            console.error('Error accepting withdrawal:', error);
         }
-    }
+    };
 
     const reject = async (value) => {
         try {
-            console.log(value, '***** value *******')
-            const user_id = value.user_id
-            const transaction_id = value.id
-            const transaction_amount = value.amount
-            // const transaction_amount_data = ({ balance: transaction_amount })
-            const values = ({ status: 'reject' })
-            const response = await UserTransactionsUpdate(transaction_id, values)
-            const user_pendings_filter = response.filter(i => i.status === 'pending')
-            setData(user_pendings_filter)
+            const user_id = value.user_id;
+            const transaction_id = value.id;
+            const transaction_amount = value.amount;
+            const values = { status: 'reject' };
+            
+            const response = await UserTransactionsUpdate(transaction_id, values);
+            const user_pendings_filter = response.filter(i => i.status === 'pending');
+            setData(user_pendings_filter);
 
-            console.log(response, '**** response *****')
             if (values.status === 'reject') {
-                const user_filter = staff.filter(i => i.id === user_id)
-                const user_balance = user_filter.map(i => i.balance)
-                const add = (parseInt(user_balance) + parseInt(transaction_amount))
-                const add_balance = ({ balance: add })
-                console.log(add_balance,'****** add *****')
-                const response = await UserUpdate(user_id, add_balance)
-                const user_pending_filter = response.filter(i => i.id === user_id)
+                const user_filter = staff.filter(i => i.id === user_id);
+                const user_balance = user_filter.map(i => i.balance);
+                const add = (parseInt(user_balance) + parseInt(transaction_amount));
+                const add_balance = { balance: add };
                 
+                await UserUpdate(user_id, add_balance);
             }
-            message.success('success')
+            message.success('Withdrawal request rejected');
         } catch (error) {
-            message.error('Failed');
+            message.error('Failed to reject withdrawal');
+            console.error('Error rejecting withdrawal:', error);
         }
-    }
+    };
 
     const log_out = () => {
-        localStorage.removeItem('user_id')
-        Navigate('/Admin_Login')
-    }
+        localStorage.removeItem('user_id');
+        Navigate('/Admin_Login');
+    };
+
+    const columns = [
+        { 
+            title: "ID", 
+            dataIndex: "id", 
+            key: "id",
+            width: 80 
+        },
+        { 
+            title: "User ID", 
+            dataIndex: "user_id", 
+            key: "user_id",
+            width: 100 
+        },
+        { 
+            title: "Amount", 
+            dataIndex: "amount", 
+            key: "amount",
+            width: 120,
+            render: (amount) => `₹${parseFloat(amount).toFixed(2)}`
+        },
+        { 
+            title: "Date", 
+            dataIndex: "date", 
+            key: "date",
+            width: 150,
+            render: (date) => new Date(date).toLocaleDateString()
+        },
+        {
+            title: "Type",
+            dataIndex: "type",
+            key: "type",
+            width: 100,
+            render: (type) => (
+                <span className="withdrawal-status pending">
+                    {type}
+                </span>
+            )
+        },
+        {
+            title: "Status",
+            dataIndex: "status",
+            key: "status",
+            width: 100,
+            render: (status) => (
+                <span className={`withdrawal-status ${status}`}>
+                    {status}
+                </span>
+            )
+        },
+        {
+            title: "Actions",
+            key: "actions",
+            width: 200,
+            render: (_, record) => (
+                <div className="withdrawal-action-buttons">
+                    <Button
+                        className="withdrawal-action-btn approve"
+                        onClick={() => accept(record)}
+                    >
+                        Accept
+                    </Button>
+                    <Button 
+                        className="withdrawal-action-btn reject"
+                        onClick={() => reject(record)}
+                    >
+                        Reject
+                    </Button>
+                </div>
+            ),
+        },
+    ];
+
     return (
         <div>
             {/* <div style={{ width: "180px", height: '680px', backgroundColor: 'white', position: 'fixed', marginTop: '50px' }}>
@@ -138,7 +206,7 @@ function User_Withdrawal() {
                         }}
                     >
                         Withdrawal
-                    </Button>
+                    </Link>
                 </Link>
                 <Link to='/Post_Commission'>
                     <Button
@@ -165,62 +233,21 @@ function User_Withdrawal() {
                 </Button>
             </div> */}
             <div style={{ marginLeft: '0px', paddingTop: '70px' }}>
-                <p style={{ fontSize: '28px', textAlign: 'center' }}>User Withdrawal</p>
                 <Table
-                    columns={[
-                        { title: "ID", dataIndex: "id", key: "id" },
-                        { title: "user_id", dataIndex: "user_id", key: "user_id" },
-                        { title: "amount", dataIndex: "amount", key: "amount" },
-                        { title: "date", dataIndex: "date", key: "date" },
-                        {
-                            title: "type",
-                            dataIndex: "type",
-                            key: "type",
-                        },
-                        {
-                            title: "status",
-                            dataIndex: "status",
-                            key: "status",
-                        },
-                        {
-                            title: "Actions",
-                            key: "actions",
-                            render: (
-                                _,
-                                record // Corrected to pass row data
-                            ) => (
-                                <>
-                                    <Button
-                                        style={{ marginRight: 8 }}
-                                        onClick={() => accept(record)}
-                                    >
-                                        accept
-                                    </Button>
-                                    <Button danger onClick={() => reject(record)}>
-                                        reject
-                                    </Button>
-                                </>
-                            ),
-                        },
-                    ]}
+                    columns={columns}
                     dataSource={data}
                     rowKey="id"
                     bordered
-                    scroll={{ x: true }} // Makes it responsive
+                    scroll={{ x: 'max-content' }}
+                    pagination={{
+                        pageSize: 10,
+                        position: ['bottomCenter'],
+                        showSizeChanger: false
+                    }}
                 />
             </div>
         </div>
-    )
+    );
 }
 
-// import React from 'react'
-
-// function user_Withdrawal() {
-//   return (
-//     <div>Staff_Withdrawal</div>
-//   )
-// }
-
-// export default Staff_Withdrawal
-
-export default User_Withdrawal
+export default User_Withdrawal;

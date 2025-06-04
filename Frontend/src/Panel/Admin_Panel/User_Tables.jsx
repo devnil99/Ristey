@@ -1,410 +1,288 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Form, Input, Button, Table, Select, message } from "antd";
+// import { MenuOutlined } from '@ant-design/icons'; // Optional: if you want to use icon for toggle
 import {
   UserGet,
   UserPost,
   UserUpdate,
   UserRemove,
-} from "../../Api/CoreApi";
-import User_Reg from "../../Authentication/User/User_Reg";
+} from "../../Api/CoreApi"; // Ensure this path is correct
+import User_Reg from "../../Authentication/User/User_Reg"; // Ensure this path is correct
+import "./User_Tables.css"; // Import the CSS file
 
 const { Option } = Select;
 
 function User_Tables() {
-  const admin_id = localStorage.getItem('user_id')
-  const Navigate = useNavigate();
-  const [user, setuser] = useState([]);
-  const [user_form, setuser_form] = useState(null);
-  const [updateform, setUpdateform] = useState([]);
+  const admin_id = localStorage.getItem('user_id');
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // console.log(user, "****** user ****");
+  const [users, setUsers] = useState([]);
+  const [userFormVisible, setUserFormVisible] = useState(null);
+  const [updateFormInitialValues, setUpdateFormInitialValues] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768); // Default open on desktop, closed on mobile
 
-  const get = async () => {
-    const response = await UserGet();
-    const User_Filter = response.filter(i => i.role === 'user')
-    setuser(User_Filter);
+  const fetchUsers = async () => {
+    try {
+      const response = await UserGet();
+      if (Array.isArray(response)) {
+        const userFilter = response.filter(i => i.role === 'user');
+        setUsers(userFilter);
+      } else {
+        console.error("UserGet did not return an array:", response);
+        setUsers([]);
+        message.error('Failed to load user data: Invalid response.');
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      message.error('Error fetching user data.');
+    }
   };
 
   useEffect(() => {
-    get();
+    if (admin_id) {
+        fetchUsers();
+    } else {
+        // navigate('/Admin_Login'); // Consider redirecting
+        console.warn("Admin ID not found. User data not loaded.");
+    }
+  }, [admin_id]);
+
+  // Sidebar toggle function
+  const toggleSidebar = () => {
+    setIsSidebarOpen(prev => !prev);
+  };
+
+  // Effect to handle initial sidebar state based on window width and resize events
+  useEffect(() => {
+    const handleResize = () => {
+      // Automatically open sidebar on desktop, close on mobile,
+      // but only if the user hasn't manually toggled it for the current session (more advanced)
+      // For simplicity here, we just set based on width.
+      // A more complex logic could involve checking if it was manually closed on desktop.
+      if (window.innerWidth > 768) {
+        // setIsSidebarOpen(true); // You might want this if you want it to always reopen on resize to desktop
+      } else {
+        // setIsSidebarOpen(false); // And always close on resize to mobile
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    // Call handler right away so state is correct on initial load
+    handleResize(); 
+
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const adduser = async (value) => {
+
+  // Effect to close sidebar on navigation (mobile)
+  useEffect(() => {
+    if (isSidebarOpen && window.innerWidth <= 768) {
+      // Only close if navigating away and it's currently open on mobile
+      setIsSidebarOpen(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]); // Dependency: location.pathname
+
+
+  const handleAddUser = async (values) => {
+    const dataWithRole = { ...values, role: 'user' };
     try {
-      const response = await UserPost(value)
-      const User_Filter = response.filter(i => i.role === 'user')
-      setuser(User_Filter);
-      setuser_form(null);
-      message.success('success')
+      await UserPost(dataWithRole);
+      await fetchUsers();
+      setUserFormVisible(null);
+      message.success('User added successfully');
     } catch (error) {
-      message.error('Failed');
+      console.error("Error adding user:", error);
+      message.error('Failed to add user');
     }
   };
 
-  const update_pass = (i) => {
-    console.log(i, "update pass");
-    setUpdateform(i);
-    setuser_form("update_button");
+  const openUpdateForm = (record) => {
+    setUpdateFormInitialValues(record);
+    setUserFormVisible("update_button");
   };
 
-  const updateuser = async (i) => {
+  const handleUpdateUser = async (values) => {
     try {
-      const id = i.id
-      const response = await UserUpdate(id, i)
-      const User_Filter = response.filter(i => i.role === 'user')
-      setuser(User_Filter);
-      setuser_form(null);
-      message.success('success')
-    } catch (error) {
-      message.error('Failed');
+      const id = values.id;
+      await UserUpdate(id, values);
+      await fetchUsers();
+      setUserFormVisible(null);
+      setUpdateFormInitialValues(null);
+      message.success('User updated successfully');
+    } catch (error)      {
+      console.error("Error updating user:", error);
+      message.error('Failed to update user');
     }
   };
 
-  const delete_user = async (i) => {
+  const handleDeleteUser = async (record) => {
     try {
-      const id = i.id
-      const response = await UserRemove(id)
-      const User_Filter = response.filter(i => i.role === 'user')
-      setuser(User_Filter)
-      message.success('success')
+      const id = record.id;
+      await UserRemove(id);
+      await fetchUsers();
+      message.success('User deleted successfully');
     } catch (error) {
-      message.error('Failed');
+      console.error("Error deleting user:", error);
+      message.error('Failed to delete user');
     }
   };
 
-  const log_out = () => {
-    localStorage.removeItem('user_id')
-    Navigate('/Admin_Login')
-  }
+  const handleLogout = () => {
+    localStorage.removeItem('user_id');
+    navigate('/Admin_Login');
+  };
+
+  const columns = [
+    { title: "ID", dataIndex: "id", key: "id", sorter: (a, b) => a.id - b.id },
+    { title: "Username", dataIndex: "username", key: "username", sorter: (a, b) => (a.username || "").localeCompare(b.username || "") },
+    { title: "Password", dataIndex: "password", key: "password", render: () => "********" },
+    { title: "Balance", dataIndex: "balance", key: "balance", sorter: (a, b) => parseFloat(a.balance) - parseFloat(b.balance), render: (text) => text != null ? parseFloat(text).toFixed(2) : 'N/A' },
+    { title: "District", dataIndex: "district", key: "district", sorter: (a, b) => (a.district || "").localeCompare(b.district || "") },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <div className="table-actions">
+          <Button onClick={() => openUpdateForm(record)}>Update</Button>
+          <Button danger onClick={() => handleDeleteUser(record)}>Delete</Button>
+          <Link to={`/User_Charts/${record.id}`}><Button type="default">Details</Button></Link>
+        </div>
+      ),
+    },
+  ];
+
+  const sidebarLinks = [
+    { path: '/Admin_Panel', label: 'Dashboard' },
+    { path: '/Staff_Tables', label: 'Staff' },
+    { path: '/User_Tables', label: 'User' },
+    { path: '/Transaction', label: 'Transaction' },
+    { path: '/Withdrawal', label: 'Withdrawal' },
+    { path: '/Post_Commission', label: 'Commissions' },
+  ];
+
   return (
-    <div>
-      <div style={{ width: '100%', height: '50px', backgroundColor: 'rgba(7, 110, 148,1)', position: 'fixed', zIndex: '999', display: 'flex' }}>
-        <Link to='/Home_Page_wLog'>
-          <p style={{ fontSize: '30px', color: 'white', marginLeft: '20px', marginTop: '-1px' }}>Ristey</p>
-        </Link>
-
-        {admin_id ? (
-          <Link to='/Admin_Panel'>
-            <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '1300px' }}>Profile</p>
+    <div className="user-page-container">
+      <div className="user-header">
+        <div className="header-left-content">
+          <Link to='/Home_Page_wLog' className="header-logo-link">
+            <p className="user-header-logo">Ristey</p>
           </Link>
-        ) : (
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Link to='/User_Reg/885695'>
-              <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '1200px' }}>Sign Up</p>
+        </div>
+        {/* Toggle button is placed before auth links for typical mobile layout (hamburger on left or right end) */}
+        {/* For hamburger on right: move it after auth-links div */}
+        <Button className="sidebar-toggle-btn" onClick={toggleSidebar}>☰</Button> {/* MOVED for better control */}
+        
+        <div className="user-header-auth-links">
+          {admin_id ? (
+            <Link to='/Admin_Panel' className="header-nav-link">
+              <p>Profile</p>
             </Link>
-            <Link to='/User_Login'>
-              <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '30px' }}>Login</p>
-            </Link>
+          ) : (
+            <>
+              <Link to='/User_Reg/885695' className="header-nav-link">
+                <p>Sign Up</p>
+              </Link>
+              <Link to='/User_Login' className="header-nav-link">
+                <p>Login</p>
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Sidebar: class 'open' is added conditionally */}
+      {/* The sidebar is a direct child of user-page-container, and a sibling to user-main-content */}
+      <div className={`user-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        {sidebarLinks.map(link => (
+          <Link key={link.path} to={link.path}>
+            <Button
+              className={`user-sidebar-button ${location.pathname === link.path ? 'active' : ''}`}
+            >
+              {link.label}
+            </Button>
+          </Link>
+        ))}
+        <Button className="user-sidebar-button" onClick={handleLogout}>Log Out</Button>
+      </div>
+      
+      {/* Main Content Area */}
+      {/* The class 'sidebar-open-mobile-push' is for mobile if you want push instead of overlay */}
+      <div className={`user-main-content ${isSidebarOpen && window.innerWidth <= 768 ? 'sidebar-open-mobile-push' : ''}`}>
+        {userFormVisible === null && (
+          <div className="add-user-button-container">
+            <Button
+              type="primary"
+              className="add-user-button"
+              onClick={() => setUserFormVisible("add")}
+            >
+              Add User
+            </Button>
           </div>
         )}
-      </div>
-      <div style={{ width: "180px", height: '680px', backgroundColor: 'white', position: 'fixed', marginTop: '50px' }}>
-        <Link to='/Admin_Panel'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
 
-          >
-            Dashboard
-          </Button>
-        </Link>
-        <Link to='/Staff_Tables'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Staff
-          </Button>
-        </Link>
-        <Link to='/User_Tables'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            User
-          </Button>
-        </Link>
-        <Link to='/Transaction'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Transaction
-          </Button>
-        </Link>
-        <Link to='/Withdrawal'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Withdrawal
-          </Button>
-        </Link>
-        <Link to='/Post_Commission'>
-          <Button
-            style={{
-              textAlign: "center",
-              color: "black",
-              borderRadius: "0px",
-              width: "100%",
-            }}
-          >
-            Commisions
-          </Button>
-        </Link>
-        <Button
-          style={{
-            textAlign: "center",
-            color: "black",
-            borderRadius: "0px",
-            width: "100%",
-          }}
-          onClick={log_out}>
-          Log Out
-        </Button>
-      </div>
-
-      <div style={{ marginLeft: '200px', paddingTop: '50px' }}>
-        {user_form === null && (
-          <Button
-            style={{ marginLeft: "90%", width: "100px" }}
-            onClick={() => setuser_form("add")}
-          >
-            Add user
-          </Button>
-        )}
-        {user_form === "add" && (
-          <User_Reg />
-          // <Form onFinish={adduser}>
-          //   <div style={{ display: "flex" }} >
-          //     <Form.Item style={{ width: "400px" }} name="username">
-          //       <Input placeholder="Username" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "400px" }} name="caste">
-          //       <Input placeholder="caste" />
-          //     </Form.Item>
-          //     <Form.Item
-          //       name="gender"
-          //       style={{ width: "300px" }}
-          //       rules={[{ required: true, message: "Please select gender" }]}
-          //     >
-          //       <Select placeholder="Select Gender">
-          //         <Option value="Male">Male</Option>
-          //         <Option value="Female">Female</Option>
-          //         <Option value="Other">Other</Option>
-          //       </Select>
-          //     </Form.Item>
-
-          //     <Form.Item style={{ width: "300px" }} name="dob">
-          //       <Input type="date" placeholder="dob" />
-          //     </Form.Item>
-          //     <Form.Item
-          //       name="religion"
-          //       style={{ width: "300px" }}
-          //       rules={[{ required: true, message: "Please select religion" }]}
-          //     >
-          //       <Select placeholder="Select Religion">
-          //         <Option value="Hindu">Hindu</Option>
-          //         <Option value="Muslim">Muslim</Option>
-          //         <Option value="Christian">Christian</Option>
-          //         <Option value="Sikh">Sikh</Option>
-          //         <Option value="Buddhist">Buddhist</Option>
-          //         <Option value="Jain">Jain</Option>
-          //         <Option value="Other">Other</Option>
-          //       </Select>
-          //     </Form.Item>
-          //   </div>
-          //   <div style={{ display: "flex", marginTop: '-18px' }} >
-          //     <Form.Item style={{ width: "300px" }} name="age">
-          //       <Input type="number" placeholder="age" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "400px" }} name="contact">
-          //       <Input type="number" placeholder="contact" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "400px" }} name="password">
-          //       <Input placeholder="password" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="aadhar">
-          //       <Input type="number" placeholder="aadhar" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="email">
-          //       <Input type="email" placeholder="email" />
-          //     </Form.Item>
-          //   </div>
-          //   <div style={{ display: "flex", marginTop: '-18px' }} >
-          //     <Form.Item style={{ width: "400px" }} name="state">
-          //       <Input placeholder="state" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "400px" }} name="city">
-          //       <Input placeholder="city" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="country">
-          //       <Input placeholder="country" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="disttrict">
-          //       <Input placeholder="Disttrict" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "400px" }} name="address">
-          //       <Input placeholder="address" />
-          //     </Form.Item>
-          //   </div>
-          //   <div style={{ display: "flex", marginTop: '-18px' }} >
-          //     <Form.Item style={{ width: "400px" }} name="university">
-          //       <Input placeholder="university" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="course">
-          //       <Input placeholder="course" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="job_title">
-          //       <Input placeholder="job_title" />
-          //     </Form.Item>
-          //     <Form.Item
-          //       name="job_type"
-          //       style={{ width: "400px" }}
-          //       rules={[{ required: true, message: "Please select job type" }]}
-          //     >
-          //       <Select placeholder="Select Job Type">
-          //         <Option value="Full-Time">Govt</Option>
-          //         <Option value="Part-Time">Semi Govt</Option>
-          //         <Option value="Part-Time">Pvt</Option>
-          //       </Select>
-          //     </Form.Item>
-          //   </div>
-          //   <div style={{ display: "flex", marginTop: '-18px' }} >
-          //     <Form.Item style={{ width: "400px" }} name="salary">
-          //       <Input type="number" placeholder="salary" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="father_name">
-          //       <Input placeholder="father_name" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="mother_name">
-          //       <Input placeholder="mother_name" />
-          //     </Form.Item>
-
-          //     <Form.Item style={{ width: "400px" }} name="brother">
-          //       <Input type="number" placeholder="brother" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="brother_marrige">
-          //       <Input type="number" placeholder="brother_marrige" />
-          //     </Form.Item>
-          //   </div>
-          //   <div style={{ display: "flex", marginTop: '-18px' }} >
-          //     <Form.Item style={{ width: "300px" }} name="sister">
-          //       <Input type="number" placeholder="sister" />
-          //     </Form.Item>
-          //     <Form.Item style={{ width: "300px" }} name="sister_marrige">
-          //       <Input type="number" placeholder="sister_marrige" />
-          //     </Form.Item>
-          //     <Form.Item>
-          //       <Button
-          //         style={{ width: "150px", marginLeft: "10px" }}
-          //         htmlType="submit"
-          //       >
-          //         add
-          //       </Button>
-          //     </Form.Item>
-          //   </div>
-          // </Form>
-
+        {userFormVisible === "add" && (
+          <div className="form-section">
+            <h3 className="form-title">Add New User</h3>
+            <User_Reg
+              onFinish={handleAddUser}
+              onCancel={() => setUserFormVisible(null)}
+            />
+          </div>
         )}
 
-        {user_form === "update_button" && (
-          <Form
-            style={{ display: "flex" }}
-            initialValues={updateform}
-            onFinish={updateuser}
-          >
-            <Form.Item style={{ width: "400px" }} name="id">
-              <Input placeholder="Id" readOnly />
-            </Form.Item>
-            <Form.Item style={{ width: "400px" }} name="username">
-              <Input placeholder="Username" />
-            </Form.Item>
-            <Form.Item style={{ width: "400px" }} name="password">
-              <Input placeholder="password" />
-            </Form.Item>
-            <Form.Item style={{ width: "300px" }} name="balance">
-              <Input placeholder="Balance" />
-            </Form.Item>
-            <Form.Item style={{ width: "300px" }} name="disttrict">
-              <Input placeholder="Disttrict" />
-            </Form.Item>
-            <Form.Item>
-              <Button
-                style={{ width: "150px", marginLeft: "10px" }}
-                htmlType="submit"
-              >
-                update
-              </Button>
-            </Form.Item>
-          </Form>
+        {userFormVisible === "update_button" && updateFormInitialValues && (
+          <div className="form-section">
+            <h3 className="form-title">Update User</h3>
+            <Form
+              className="user-form"
+              initialValues={updateFormInitialValues}
+              onFinish={handleUpdateUser}
+              layout="vertical"
+            >
+              <Form.Item label="ID" name="id"><Input readOnly /></Form.Item>
+              <Form.Item label="Username" name="username" rules={[{ required: true, message: 'Please input username!' }]}>
+                <Input placeholder="Username" />
+              </Form.Item>
+              <Form.Item label="Password" name="password" rules={[{ message: 'Password can be updated here. Min 6 characters.', min: 6 }]}>
+                <Input.Password placeholder="Enter new password or leave blank" />
+              </Form.Item>
+              <Form.Item label="Balance" name="balance" rules={[{ required: true, message: 'Please input balance!' }, { type: 'number', transform: value => Number(value), message: 'Balance must be a number' }]}>
+                <Input type="number" placeholder="Balance" />
+              </Form.Item>
+              <Form.Item label="District" name="district" rules={[{ required: true, message: 'Please input district!' }]}>
+                <Input placeholder="District" />
+              </Form.Item>
+              <Form.Item>
+                <Button className="user-form-submit-button" type="primary" htmlType="submit">Update</Button>
+                <Button style={{ marginLeft: '8px' }} onClick={() => { setUserFormVisible(null); setUpdateFormInitialValues(null); }}>Cancel</Button>
+              </Form.Item>
+            </Form>
+          </div>
         )}
 
-        <Table
-          columns={[
-            { title: "ID", dataIndex: "id", key: "id" },
-            { title: "Username", dataIndex: "username", key: "username" },
-            { title: "Password", dataIndex: "password", key: "password" },
-            { title: "Balance", dataIndex: "balance", key: "balance" },
-            {
-              title: "District",
-              dataIndex: "disttrict",
-              key: "disttrict",
-            },
-            {
-              title: "Actions",
-              key: "actions",
-              render: (
-                _,
-                record // Corrected to pass row data
-              ) => (
-                <>
-                  <Button
-                    style={{ marginRight: 8 }}
-                    onClick={() => update_pass(record)}
-                  >
-                    Update
-                  </Button>
-                  <Button danger onClick={() => delete_user(record)}>
-                    Delete
-                  </Button>
-                  <Link to={`/User_Charts/${record.id}`}><Button danger>
-                    details
-                  </Button></Link>
-                </>
-              ),
-            },
-          ]}
-          dataSource={user}
-          rowKey="id"
-          bordered
-          scroll={{ x: true }} // Makes it responsive
-        />
+        <div className="user-table-container">
+          <h3 className="table-title">User List</h3>
+          <Table
+            columns={columns}
+            dataSource={users}
+            rowKey="id"
+            bordered
+            scroll={{ x: true }}
+            className="user-table"
+            pagination={{ pageSize: 10, showSizeChanger: true, pageSizeOptions: ['10', '20', '50'] }}
+          />
+        </div>
+        {/* Overlay for mobile: shown when sidebar is open and on mobile */}
+        {isSidebarOpen && window.innerWidth <= 768 && (
+            <div className="mobile-sidebar-overlay active" onClick={toggleSidebar}></div>
+        )}
       </div>
     </div>
   );
 }
 
-export default User_Tables
+export default User_Tables;

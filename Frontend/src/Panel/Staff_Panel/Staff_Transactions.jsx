@@ -1,145 +1,124 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { StaffTransactionsGet, StaffTransactionsUpdate } from '../../Api/CoreApi'
-import { useParams, Link } from 'react-router-dom'
-import { Form, Input, Button, Table } from "antd";
-
-
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { StaffTransactionsGet } from '../../Api/CoreApi'; // StaffTransactionsUpdate is not used
+import { Link } from 'react-router-dom';
+import { Button, Table, message } from "antd"; // Added message for potential feedback
+import './Staff_Transactions.css'; // Import the CSS file
 
 function Staff_Transactions() {
     const Navigate = useNavigate();
 
-    const id = localStorage.getItem('user_id')
-    const int_id = (String(id))
-    const [data, setData] = useState([])
-    // console.log(int_id, '***** v ******')
+    const staffId = localStorage.getItem('user_id'); // Renamed for clarity, assuming this is staff's ID
+    // const int_id = String(staffId); // No longer explicitly needed if API handles string/number comparison well
 
-    const get = async () => {
-        const response = await StaffTransactionsGet()
-        const filter_data = response.filter(i => i.staff_id === int_id)
-        setData(filter_data)
-    }
+    const [data, setData] = useState([]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // For mobile sidebar
+
+    const getTransactions = async () => {
+        if (!staffId) {
+            message.warn("Staff ID not found. Please log in.");
+            // Navigate('/Staff_Login'); // Optional: redirect if no ID
+            return;
+        }
+        try {
+            const response = await StaffTransactionsGet();
+            // Ensure comparison is robust (e.g., both as strings or numbers)
+            const filter_data = response.filter(i => String(i.staff_id) === String(staffId));
+            setData(filter_data);
+        } catch (error) {
+            message.error("Failed to fetch transactions.");
+            console.error("Error fetching transactions:", error);
+        }
+    };
 
     useEffect(() => {
-        get()
-    }, [])
+        getTransactions();
+    }, [staffId]); // Re-fetch if staffId changes (though unlikely from localStorage within component lifecycle)
 
     const log_out = () => {
-        localStorage.removeItem('user_id')
-        Navigate('/Staff_Login')
-    }
+        localStorage.removeItem('user_id');
+        message.success("Logged out successfully.");
+        Navigate('/Staff_Login'); // Or your staff login route
+    };
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
+    const columns = [
+        { title: "ID", dataIndex: "id", key: "id", width: 80, fixed: 'left' },
+        { title: "Staff ID", dataIndex: "staff_id", key: "staff_id", width: 100 },
+        { title: "Amount", dataIndex: "amount", key: "amount", width: 120, render: (amount) => `₹${parseFloat(amount).toFixed(2)}` },
+        { title: "Date", dataIndex: "date", key: "date", width: 150, render: (date) => new Date(date).toLocaleDateString() },
+        { title: "Type", dataIndex: "type", key: "type", width: 100 },
+        { title: "Status", dataIndex: "status", key: "status", width: 100 },
+    ];
+
     return (
-        <div>
-            <div style={{ width: '100%', height: '50px', backgroundColor: 'rgba(7, 110, 148,1)', position: 'fixed', zIndex: '999', display: 'flex' }}>
-                <Link to='/Home_Page_wLog'>
-                    <p style={{ fontSize: '30px', color: 'white', marginLeft: '20px', marginTop: '-1px' }}>Ristey</p>
+        <div className="staff-layout-container"> {/* Use a consistent main layout class */}
+            <div className="app-header">
+                <Link to='/Home_Page_wLog' className="header-logo-link">
+                    <p className="header-logo-text">Ristey</p>
                 </Link>
 
-                {id ? (
-                    <Link to='/Staff_Panel'>
-                        <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '1300px' }}>Profile</p>
-                    </Link>
-                ) : (
-                    <div style={{ display: 'flex', gap: '20px' }}>
-                        <Link to='/User_Reg/885695'>
-                            <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '1200px' }}>Sign Up</p>
-                        </Link>
-                        <Link to='/User_Login'>
-                            <p style={{ fontSize: '15px', color: 'white', marginTop: '13px', marginLeft: '30px' }}>Login</p>
-                        </Link>
+                <div className="header-right-content">
+                    <div className="header-nav-wrapper">
+                        {staffId ? (
+                            <Link to='/Staff_Panel' className="header-nav-link profile-link">
+                                <p>Profile</p>
+                            </Link>
+                        ) : (
+                            <div className="header-auth-links">
+                                <Link to='/User_Reg/885695' className="header-nav-link">
+                                    <p>Sign Up</p>
+                                </Link>
+                                <Link to='/User_Login' className="header-nav-link">
+                                    <p>Login</p>
+                                </Link>
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
-            <div style={{ width: "180px", height: '680px', backgroundColor: 'white', position: 'fixed', marginTop: '50px' }}>
-                <Link to='/Staff_Panel'>
-                    <Button
-                        style={{
-                            textAlign: "center",
-                            color: "black",
-                            borderRadius: "0px",
-                            width: "100%",
-                        }}
-
-                    >
-                        Dashboard
+                    <Button className="sidebar-toggle-btn" onClick={toggleSidebar}>
+                        ☰
                     </Button>
+                </div>
+            </div>
+
+            <div className={`app-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+                <Link to='/Staff_Panel'>
+                    <Button className="sidebar-btn">Dashboard</Button>
                 </Link>
                 <Link to='/Staff_Added_User'>
-                    <Button
-                        style={{
-                            textAlign: "center",
-                            color: "black",
-                            borderRadius: "0px",
-                            width: "100%",
-                        }}
-                    >
-                        User
-                    </Button>
+                    <Button className="sidebar-btn">User</Button>
                 </Link>
                 <Link to='/Staff_Transactions'>
-                    <Button
-                        style={{
-                            textAlign: "center",
-                            color: "black",
-                            borderRadius: "0px",
-                            width: "100%",
-                        }}
-                    >
-                        Transaction
-                    </Button>
+                    <Button className="sidebar-btn active">Transaction</Button> {/* Mark active link */}
                 </Link>
                 <Link to='/Staff_Withdrawals'>
-                    <Button
-                        style={{
-                            textAlign: "center",
-                            color: "black",
-                            borderRadius: "0px",
-                            width: "100%",
-                        }}
-                    >
-                        Withdrawal
-                    </Button>
+                    <Button className="sidebar-btn">Withdrawal</Button>
                 </Link>
-                <Button
-                    style={{
-                        textAlign: "center",
-                        color: "black",
-                        borderRadius: "0px",
-                        width: "100%",
-                    }}
-                    onClick={log_out}
-                >
+                <Button className="sidebar-btn" onClick={log_out}>
                     Log Out
                 </Button>
             </div>
-            <div style={{ marginLeft: '210px', paddingTop: '70px' }}>
-                <p style={{ textAlign: 'center', fontSize: '28px' }}>Staff Transactions</p>
-                <Table
-                    columns={[
-                        { title: "ID", dataIndex: "id", key: "id" },
-                        { title: "staff_id", dataIndex: "staff_id", key: "staff_id" },
-                        { title: "amount", dataIndex: "amount", key: "amount" },
-                        { title: "date", dataIndex: "date", key: "date" },
-                        {
-                            title: "type",
-                            dataIndex: "type",
-                            key: "type",
-                        },
-                        {
-                            title: "status",
-                            dataIndex: "status",
-                            key: "status",
-                        },
-                    ]}
-                    dataSource={data}
-                    rowKey="id"
-                    bordered
-                    scroll={{ x: true }} // Makes it responsive
-                />
+
+            <div className="main-content staff-transactions-content">
+                <h1 className="page-title">Staff Transactions</h1>
+                <div className="transactions-table-container">
+                    <Table
+                        columns={columns}
+                        dataSource={data}
+                        rowKey="id"
+                        bordered
+                        scroll={{ x: 'max-content' }} // Crucial for table responsiveness
+                        className="transactions-data-table"
+                        pagination={{ pageSize: 10 }} // Example pagination
+                    />
+                </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default Staff_Transactions
+export default Staff_Transactions;
