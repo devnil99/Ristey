@@ -353,7 +353,7 @@ function User_Panel() {
         </div>
 
         {/* Cards Section */}
-        <Link to="/Staff_Added_User" className="info-card">
+        <Link to="/User_Profile_User" className="info-card">
           <p className="card-icon">
             <FaUser />
           </p>

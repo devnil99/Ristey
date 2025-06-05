@@ -459,31 +459,7 @@ const Home_Page_WLog = () => {
   };
 
 
-  const handleCardClick = (item) => {
-    Swal.fire({
-      title: "🔒 Login Required!",
-      text: "Login to get access to full profile details!",
-      icon: "info",
-      width: 500,
-      padding: "2em",
-      color: "#ffffff",
-      background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      backdrop: `
-        rgba(0,0,0,0.6)
-        url("https://i.gifer.com/ZZ5H.gif") 
-        center center
-        no-repeat
-      `,
-      showConfirmButton: true,
-      confirmButtonText: "Login Now",
-      confirmButtonColor: "#ff6b6b",
-      cancelButtonColor: "#333",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.location.href = "/User_Login";
-      }
-    });
-  };
+ 
 
   return (
     <div className="home-container">
@@ -632,26 +608,30 @@ const Home_Page_WLog = () => {
       {/* Results Section */}
       <div className="results-section">
         <div className="cards-container">
-          {data.map((item, index) => (
-            <Card
+         {data.map((item, index) => (
+            <Link
+              to={`/User_Data_wl/${item.User_id}`}// 👈 Static link
               key={index}
-              bordered={false}
-              className="user-card"
-              hoverable
-              onClick={() => handleCardClick(item)}
-              data-aos="zoom-out-down"
+              style={{ textDecoration: "none", color: "inherit" }}
             >
-              <div
-                className="user-card-img"
-                style={{ backgroundImage: `url(${baseurl}${item.pic})` }}
-              ></div>
-              <div className="user-card-content">
-                <p className="user-card-name">
-                  Name: {item.username}, Age: {item.age}
-                </p>
-                <p className="user-card-job">Job Type: {item.job_type}</p>
-              </div>
-            </Card>
+              <Card
+                bordered={false}
+                className="user-card"
+                hoverable
+                data-aos="zoom-out-down"
+              >
+                <div
+                  className="user-card-img"
+                  style={{ backgroundImage: `url(${baseurl}${item.pic})` }}
+                ></div>
+                <div className="user-card-content">
+                  <p className="user-card-name">
+                    Name: {item.username}, Age: {item.age}
+                  </p>
+                  <p className="user-card-job">Job Type: {item.job_type}</p>
+                </div>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>

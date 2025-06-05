@@ -166,7 +166,7 @@ function User_Profile_User() {
               right: 0,
               width: "100%",
               zIndex: 1000,
-              backgroundColor: "#2c2c2c",
+              backgroundColor: "#1da1f2",
               padding: "0 24px",
               display: "flex",
               justifyContent: "space-between",
@@ -382,7 +382,7 @@ function User_Profile_User() {
                           </Select>
                         </Form.Item>
 
-                        <Form.Item label="Marital Status" name="marital_status">
+                        <Form.Item label="Marital Status" name="marrige_status">
                           <Select placeholder="Select Marital Status">
                             <Option value="unmarried">Unmarried</Option>
                             <Option value="married">Married</Option>

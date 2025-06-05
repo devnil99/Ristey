@@ -1739,111 +1739,140 @@ function User_data() {
                 )}
 
                 {activeTab === "profile" && (
-                  <div className="profile-details-container">
-                    <div>
-                      <p className="detail-label-column">Name : </p>
-                      <p className="detail-value-column">{i.username}</p>
-                      <p className="detail-label-column">Caste : </p>
-                      <p className="detail-value-column">{i.caste}</p>
-                      <p className="detail-label-column">Religion : </p>
-                      <p className="detail-value-column">{i.religion}</p>
-                      <p className="detail-label-column">Date Of Birth : </p>
-                      <p className="detail-value-column">{i.dob}</p>
-                      <p className="detail-label-column">Gender : </p>
-                      <p className="detail-value-column">{i.gender}</p>
-                      <p className="detail-label-column">Age : </p>
-                      <p className="detail-value-column">{i.age}</p>
+                  <div className="profile-details-grid">
+                    <div className="detail-item">
+                      <p className="detail-label">Name:</p>
+                      <p className="detail-value">{i.username}</p>
                     </div>
-                    <div className="profile-details-right-column">
-                      <p className="detail-label-column">Marrige Status : </p>
-                      <p className="profile-details-right-value-column">
-                        {i.marrige_status}
-                      </p>
-                      <p className="detail-label-column">Job : </p>
-                      <p className="profile-details-right-value-column">
-                        {i.job_title}
-                      </p>
-                      <p className="detail-label-column">Job Type : </p>
-                      <p className="profile-details-right-value-column">
-                        {i.job_type}
-                      </p>
-                      <p className="detail-label-column">Salary : </p>
-                      <p className="profile-details-right-value-column">
-                        {i.salary}
-                      </p>
+                    <div className="detail-item">
+                      <p className="detail-label">Caste:</p>
+                      <p className="detail-value">{i.caste}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Religion:</p>
+                      <p className="detail-value">{i.religion}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Date of Birth:</p>
+                      <p className="detail-value">{i.dob}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Gender:</p>
+                      <p className="detail-value">{i.gender}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Age:</p>
+                      <p className="detail-value">{i.age}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Marital Status:</p>
+                      <p className="detail-value">{i.marrige_status}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Job:</p>
+                      <p className="detail-value">{i.job_title}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Job Type:</p>
+                      <p className="detail-value">{i.job_type}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Salary:</p>
+                      <p className="detail-value">{i.salary}</p>
                     </div>
                   </div>
                 )}
 
                 {activeTab === "family" && (
-                  <div className="family-details-container">
-                    <div>
-                      <p className="detail-label-column">Father : </p>
-                      <p className="detail-value-column">{i.father_name}</p>
-                      <p className="detail-label-column">Mother : </p>
-                      <p className="detail-value-column">{i.mother_name}</p>
-                      <p className="detail-label-column">Brothers : </p>
-                      <p className="detail-value-column">{i.brother}</p>
-                      <p className="detail-label-column">Married : </p>
-                      <p className="detail-value-column">{i.brother_marrige}</p>
-                      <p className="detail-label-column">Sisters : </p>
-                      <p className="detail-value-column">{i.sister}</p>
-                      <p className="detail-label-column">Married : </p>
-                      <p className="detail-value-column">{i.sister_marrige}</p>
+                  <div className="profile-details-grid">
+                    <div className="detail-item">
+                      <p className="detail-label">Father</p>
+                      <p className="detail-value">{i.father_name}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Mother</p>
+                      <p className="detail-value">{i.mother_name}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Brothers</p>
+                      <p className="detail-value">{i.brother}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Married Brothers</p>
+                      <p className="detail-value">{i.brother_marrige}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Sisters</p>
+                      <p className="detail-value">{i.sister}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">Married Sisters</p>
+                      <p className="detail-value">{i.sister_marrige}</p>
                     </div>
                   </div>
                 )}
-                {activeTab === "address" && (
-                  <div className="address-details-container">
-                    {i.user_apply?.some((u) => u.suser_id === id) ? (
-                      <>
-                        <div>
-                          <p className="detail-label-column">City/Town : </p>
-                          <p className="detail-value-column">{i.city}</p>
-                          <p className="detail-label-column">District : </p>
-                          <p className="detail-value-column">{i.disttrict}</p>
-                          <p className="detail-label-column">State : </p>
-                          <p className="detail-value-column">{i.state}</p>
-                          <p className="detail-label-column">Country : </p>
-                          <p className="detail-value-column">{i.country}</p>
-                        </div>
-                      </>
-                    ) : (
-                      <p>Need to apply</p>
-                    )}
-                  </div>
-                )}
 
-                {activeTab === "contact" && (
-                  <div className="contact-details-container">
-                    {i.user_apply?.some((u) => u.suser_id === id) ? (
-                      <>
-                        <div>
-                          <p className="detail-label-column">Phone : </p>
-                          <p className="detail-value-column">{i.contact}</p>
-                          <p className="detail-label-column">Email : </p>
-                          <p className="detail-value-column">{i.email}</p>
-                          <p className="detail-label-column">Instagram : </p>
-                          <p className="detail-value-column">----</p>
-                          <p className="detail-label-column">Facebook : </p>
-                          <p className="detail-value-column">----</p>
-                          <p className="detail-label-column">Twitter : </p>
-                          <p className="detail-value-column">----</p>
-                        </div>
-                      </>
-                    ) : (
-                      <p>Need to apply</p>
-                    )}
-                  </div>
-                )}
+                {activeTab === "address" &&
+                  (i.user_apply?.some((u) => u.suser_id === id) ? (
+                    <div className="profile-details-grid">
+                      <div className="detail-item">
+                        <p className="detail-label">City/Town</p>
+                        <p className="detail-value">{i.city}</p>
+                      </div>
+                      <div className="detail-item">
+                        <p className="detail-label">District</p>
+                        <p className="detail-value">{i.district}</p>
+                      </div>
+                      <div className="detail-item">
+                        <p className="detail-label">State</p>
+                        <p className="detail-value">{i.state}</p>
+                      </div>
+                      <div className="detail-item">
+                        <p className="detail-label">Country</p>
+                        <p className="detail-value">{i.country}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <p>Need to apply</p>
+                  ))}
+
+                {activeTab === "contact" &&
+                  (i.user_apply?.some((u) => u.suser_id === id) ? (
+                    <div className="profile-details-grid">
+                      <div className="detail-item">
+                        <p className="detail-label">Phone</p>
+                        <p className="detail-value">{i.contact}</p>
+                      </div>
+                      <div className="detail-item">
+                        <p className="detail-label">Email</p>
+                        <p className="detail-value">{i.email}</p>
+                      </div>
+                      <div className="detail-item">
+                        <p className="detail-label">Instagram</p>
+                        <p className="detail-value">----</p>
+                      </div>
+                      <div className="detail-item">
+                        <p className="detail-label">Facebook</p>
+                        <p className="detail-value">----</p>
+                      </div>
+                      <div className="detail-item">
+                        <p className="detail-label">Twitter</p>
+                        <p className="detail-value">----</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <p>Need to apply</p>
+                  ))}
 
                 {activeTab === "education" && (
-                  <div className="education-details-container">
-                    <div>
-                      <p className="detail-label-column">Course : </p>
-                      <p className="detail-value-column">{i.course}</p>
-                      <p className="detail-label-column">University : </p>
-                      <p className="detail-value-column">{i.university}</p>
+                  <div className="profile-details-grid">
+                    <div className="detail-item">
+                      <p className="detail-label">Course</p>
+                      <p className="detail-value">{i.course}</p>
+                    </div>
+                    <div className="detail-item">
+                      <p className="detail-label">University</p>
+                      <p className="detail-value">{i.university}</p>
                     </div>
                   </div>
                 )}

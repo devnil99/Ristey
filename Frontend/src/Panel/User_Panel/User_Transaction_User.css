@@ -1,119 +1,56 @@
-/* Top Navbar */
-.top-navbar {
-  width: 100%;
-  height: 50px;
-  background-color: rgba(7, 110, 148, 1);
+/* Layout structure */
+.layout-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
-  position: fixed;
-  top: 0;
-  z-index: 999;
-  flex-wrap: wrap;
-}
-
-.top-navbar-left {
-  display: flex;
-  align-items: center;
-}
-
-.navbar-title {
-  color: white;
-  font-size: 30px;
-  margin: 0 0 0 10px;
-  cursor: pointer;
-}
-
-.navbar-link {
-  color: white;
-  margin-left: 10px;
-  font-size: 15px;
-  text-decoration: none;
-}
-
-.navbar-auth-links {
-  display: flex;
-  gap: 15px;
+  flex-direction: row;
 }
 
 /* Sidebar */
 .sidebar {
-  position: fixed;
-  top: 50px;
-  left: 0;
-  height: calc(100vh - 50px);
   width: 60px;
-  background-color: white;
-  overflow-x: hidden;
-  border-right: 1px solid #ddd;
   transition: width 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  z-index: 100;
 }
-
 .sidebar.open {
-  width: 180px;
+  width: 200px;
 }
 
-.sidebar-buttons {
+/* Top Navbar */
+.top-navbar {
   display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.sidebar-button {
-  width: 100%;
-  border-radius: 0;
-  text-align: center;
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: black;
-  border: none;
-  background: none;
-  padding: 10px 0;
-}
-
-/* Toggle Button */
-.sidebar-toggle-button {
-  background-color: rgba(7, 110, 148, 1);
-  color: white;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 5px 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f5f5f5;
+  flex-wrap: wrap;
 }
 
 /* Main Content */
 .main-content {
-  margin-left: 60px;
-  padding: 70px 20px 20px 20px;
-  transition: margin-left 0.3s ease;
+  flex: 1;
+  padding: 70px 20px;
+  overflow-x: auto;
 }
 
-.sidebar.open ~ .main-content {
-  margin-left: 180px;
+/* Table Styling */
+.responsive-table {
+  min-width: 700px;
+  width: 100%;
 }
 
-/* Responsive Design */
-@media screen and (max-width: 768px) {
+/* Responsive tweaks */
+@media (max-width: 768px) {
   .sidebar {
-    width: 0;
+    position: absolute;
+    z-index: 1000;
+    height: 100vh;
+    background: white;
   }
 
-  .sidebar.open {
-    width: 180px;
+  .top-navbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .main-content {
-    margin-left: 0;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  .sidebar.open ~ .main-content {
-    margin-left: 180px;
+    padding: 20px;
   }
 }

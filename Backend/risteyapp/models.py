@@ -56,6 +56,7 @@ class UserData(models.Model):
     course = models.CharField(max_length=30,null=True,blank=True)
     job_title = models.CharField(max_length=20,null=True,blank=True)
     job_type = models.CharField(max_length=30,null=True,blank=True)
+    description= models.CharField(max_length=300,null=True,blank=True)
     salary = models.IntegerField(null=True,blank=True)
     father_name = models.CharField(max_length=30,null=True,blank=True)
     mother_name = models.CharField(max_length=30,null=True,blank=True)
@@ -63,6 +64,9 @@ class UserData(models.Model):
     brother_marrige = models.IntegerField(null=True,blank=True)
     sister = models.IntegerField(null=True,blank=True)
     sister_marrige = models.IntegerField(null=True,blank=True)
+    income_range=models.CharField(max_length=50,null=True,blank=True)
+    field_of_study=models.CharField(max_length=50,null=True,blank=True)
+    education_level=models.CharField(max_length=50,null=True,blank=True)
     ref = models.IntegerField(null=True,blank=True)
 
     def __str__(self):
