@@ -1,4 +1,3 @@
-
 // import React, { useEffect, useState } from "react";
 // import { Form, Input, Button, Card, Image, Row, Col } from "antd";
 // import {
@@ -11,7 +10,6 @@
 // import { UserDataGetwt, UserImage_wt } from "../Api/CoreApi";
 // import { useParams } from "react-router-dom";
 // import user_image from "../Assets/wedding1.jpg";
-
 
 // function User_Data_wl() {
 //   const baseurl = "http://127.0.0.1:8000/";
@@ -46,18 +44,15 @@
 //     get_user_image();
 //   }, []);
 
-
 //   const submit = (value) => {
 //     // console.log(value, "**** value ******");
 //   };
-
 
 //   const iconStyle = {
 //     fontSize: "25px",
 //     cursor: "pointer",
 //     transition: "color 0.3s ease",
 //   };
-
 
 //   return (
 //     <div style={{ paddingTop: "30px" }}>
@@ -120,7 +115,6 @@
 //             </h4>
 //           </div> */}
 
-
 //           <div
 //             style={{
 //               display: "flex",
@@ -129,7 +123,6 @@
 //               marginTop: "10px",
 //             }}
 //           >
-
 
 //             <p
 //               style={{ ...iconStyle, color: "black" }}
@@ -159,7 +152,6 @@
 //             >
 //               <FaTwitter />
 //             </p>
-
 
 //           </div>
 
@@ -490,7 +482,6 @@
 //               </div>
 //             )} */}
 
-
 //             {activeTab === "education" && (
 //               <div style={{ marginTop: "20px", marginLeft: "20px", width: "80%" }}>
 //                 <div >
@@ -513,8 +504,6 @@
 
 // export default User_Data_wl;
 
-
-
 // // import React from 'react'
 
 // // function User_Data_wl() {
@@ -524,7 +513,6 @@
 // // }
 
 // // export default User_Data_wl
-
 
 // // import React, { useEffect, useState } from "react";
 // // import { Card, message } from "antd";
@@ -1096,20 +1084,13 @@
 
 // export default User_data;
 
-
-
-
 ////////////////////////////////////////////////////////////
-
 
 import { IoSend } from "react-icons/io5";
 import { IoCall } from "react-icons/io5";
 import { formatDistanceToNow, parse } from "date-fns";
 import { Link } from "react-router-dom";
-import {
-  UserDataGetwt,
-  UserImage_wt,
-} from "../Api/CoreApi";
+import { UserDataGetwt, UserImage_wt } from "../Api/CoreApi";
 import "../Home_Page/User_Data_wl.css";
 
 // import { UserDataGetwt, UserImage_wt } from "../Api/CoreApi";
@@ -1130,30 +1111,28 @@ import user_image from "../Assets/wedding1.jpg";
 
 function User_data() {
   const id_param = useParams();
-  const int_id = (String(id_param.id))
+  const int_id = String(id_param.id);
 
   const id = localStorage.getItem("user_id");
   const baseurl = "http://127.0.0.1:8000/";
 
   const [data, setData] = useState([]); // male/Female filterd user
-  console.log(data, '******** data ********')
+  console.log(data, "******** data ********");
 
   const user_get = async () => {
     const response = await UserDataGetwt();
     const filter = response.filter((i) => i.User_id === int_id);
-    setData(filter)
+    setData(filter);
 
     const response_img = await UserImage_wt();
     const filter_img = response_img.filter((i) => i.User_id === int_id);
     setImage(filter_img);
-
   };
 
   const today = new Date();
   const month = String(today.getMonth() + 1).padStart(2, "0"); // Ensure 2-digit month
   const year = today.getFullYear();
   // const formattedDate = `${year}-${month}-01`; // ✅ Corrected format (No extra quotes)
-
 
   const [activeTab, setActiveTab] = useState(null);
   const [image, setImage] = useState([]);
@@ -1163,11 +1142,10 @@ function User_data() {
     user_get();
   }, []);
 
-
   const id_navigate = (value) => {
-    console.log(value, '********* value *********')
-    localStorage.setItem('id_navigate', value)
-  }
+    console.log(value, "********* value *********");
+    localStorage.setItem("id_navigate", value);
+  };
   return (
     // <div>
     //   <div style={{ width: '100%', height: '50px', backgroundColor: 'rgba(7, 110, 148,1)', position: 'fixed', zIndex: '999', display: 'flex' }}>
@@ -1198,7 +1176,6 @@ function User_data() {
     //       >
     //         <Image style={{ height: "280px", width: "940px" }} src={user_image} />
 
-          
     //         <Card
     //           style={{
     //             // border: "2px solid",
@@ -1236,8 +1213,6 @@ function User_data() {
     //         >
     //           {i.username}
     //         </h2>
-           
-
 
     //         <div
     //           style={{
@@ -1248,8 +1223,6 @@ function User_data() {
     //           }}
     //         >
 
-
-            
     //           <a
     //             href={`https://wa.me/?text=${encodeURIComponent(`http://localhost:3000/User_data/${i.refer}`)}`}
     //             target="_blank"
@@ -1317,18 +1290,14 @@ function User_data() {
     //             <FaTwitter />
     //           </a>
 
-
     //         </div>
 
-          
     //         <p style={{ marginTop: "-40px", marginLeft: "585px" }}>
     //           <Link to='/User_Login'><Button style={{ height: "33px", width: "100px" }} onClick={() => id_navigate(i.User_id)}>
     //             Login
     //           </Button></Link>
     //         </p>
     //         {/* )} */}
-
-
 
     //         {/* {"link":'https://www.google.com'} */}
     //         <Card style={{ marginTop: "60px", height: '350px' }}>
@@ -1377,7 +1346,7 @@ function User_data() {
     //               </Button>
     //             </p>
     //             <p>
-                 
+
     //             </p>
     //             <p>
     //               <Button
@@ -1626,7 +1595,6 @@ function User_data() {
     //           </div>
     //         )} */}
 
-
     //           {activeTab === "education" && (
     //             <div style={{ marginTop: "20px", marginLeft: "20px", width: "80%" }}>
     //               <div >
@@ -1662,7 +1630,12 @@ function User_data() {
               <p className="header-auth-link signup">Sign Up</p>
             </Link>
             <Link to="/User_Login">
-              <p className="header-auth-link login">Login</p>
+              {/* <p className="header-auth-link login">Login</p> */}
+              <Button className="header-auth-link login"
+                onClick={(i) => id_navigate(i.User_id)}
+              >
+                Login
+              </Button>
             </Link>
           </div>
         )}
@@ -2036,4 +2009,3 @@ function User_data() {
 }
 
 export default User_data;
-

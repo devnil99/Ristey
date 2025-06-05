@@ -13,7 +13,6 @@
 
 // import success_story_img from './indian-couple-celebrating-propose-day-by-being-romantic-with-each-other (2).jpg'
 
-
 // function Home_Page_WLog() {
 //   const id = localStorage.getItem("user_id");
 
@@ -387,9 +386,6 @@
 
 // export default Home_Page_WLog
 
-
-
-
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { Form, Select, Input, Button, Spin, Card } from "antd";
@@ -397,7 +393,7 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import CardSlider from "../Header/CardSlider";
 import { UserDataGetwt, User_StateGet, User_CasteGet } from "../Api/CoreApi";
-import Footer from "../Footer/Footer"
+import Footer from "../Footer/Footer";
 import "../Home_Page/Home_Page_WLog.css";
 
 const { Option } = Select;
@@ -457,9 +453,6 @@ const Home_Page_WLog = () => {
     setData(filter);
     // console.log(filter, "******** value *******");
   };
-
-
- 
 
   return (
     <div className="home-container">
@@ -561,36 +554,35 @@ const Home_Page_WLog = () => {
               </Select>
             </Form.Item>
 
-          <Form.Item name="caste" label="Caste">
-  <Select
-    placeholder="Select your caste"
-    showSearch
-    allowClear
-    optionFilterProp="children"
-    filterOption={(input, option) =>
-      option?.children?.toLowerCase().includes(input.toLowerCase())
-    }
-  >
-    {Array.isArray(caste) && caste.map ? (
-      caste.some(Boolean) ? (
-        caste.map((caste) => (
-          <Option key={caste} value={caste}>
-            {caste}
-          </Option>
-        ))
-      ) : (
-        <Option disabled value="">
-          No caste available
-        </Option>
-      )
-    ) : (
-      <Option disabled value="">
-        No caste available
-      </Option>
-    )}
-  </Select>
-</Form.Item>
-
+            <Form.Item name="caste" label="Caste">
+              <Select
+                placeholder="Select your caste"
+                showSearch
+                allowClear
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option?.children?.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {Array.isArray(caste) && caste.map ? (
+                  caste.some(Boolean) ? (
+                    caste.map((caste) => (
+                      <Option key={caste} value={caste}>
+                        {caste}
+                      </Option>
+                    ))
+                  ) : (
+                    <Option disabled value="">
+                      No caste available
+                    </Option>
+                  )
+                ) : (
+                  <Option disabled value="">
+                    No caste available
+                  </Option>
+                )}
+              </Select>
+            </Form.Item>
 
             <Form.Item>
               <Button
@@ -608,9 +600,9 @@ const Home_Page_WLog = () => {
       {/* Results Section */}
       <div className="results-section">
         <div className="cards-container">
-         {data.map((item, index) => (
+          {data.map((item, index) => (
             <Link
-              to={`/User_Data_wl/${item.User_id}`}// 👈 Static link
+              to={`/User_Data_wl/${item.User_id}`} // 👈 Static link
               key={index}
               style={{ textDecoration: "none", color: "inherit" }}
             >
@@ -625,10 +617,12 @@ const Home_Page_WLog = () => {
                   style={{ backgroundImage: `url(${baseurl}${item.pic})` }}
                 ></div>
                 <div className="user-card-content">
-                  <p className="user-card-name">
-                    Name: {item.username}, Age: {item.age}
+                  <p className="user-card-job">Name: {item.username}  , 
+                    Age: {item.age}
                   </p>
+                  {/* <p className="user-card-job"> Age: {item.age}</p> */}
                   <p className="user-card-job">Job Type: {item.job_type}</p>
+                  {/* <p className="user-card-job">Job Type: {item.job_type}</p> */}
                 </div>
               </Card>
             </Link>
@@ -639,7 +633,7 @@ const Home_Page_WLog = () => {
       {/* Additional Components */}
       <br />
       <CardSlider />
-       <Footer />
+      <Footer />
       <br />
     </div>
   );

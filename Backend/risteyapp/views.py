@@ -1770,12 +1770,44 @@ class UserStateView(APIView):
         except User_State.DoesNotExist:
             return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
 
+# import random
+# from django.core.cache import cache
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from django.core.mail import send_mail
+# from django.contrib.auth import get_user_model
+
+# User = get_user_model()
+
+# @api_view(['POST'])
+# def send_otp(request):
+#     email = request.data.get('email')
+#     if not email:
+#         return Response({"error": "Email is required"}, status=400)
+
+#     # ✅ If email exists, respond without sending OTP
+#     if User.objects.filter(email=email).exists():
+#         return Response({"message": "Email already exists."}, status=200)
+
+#     otp = str(random.randint(100000, 999999))
+#     cache.set(email, otp, timeout=300)  # Cache for 5 minutes
+
+#     send_mail(
+#         'Your OTP Code',
+#         f'Your OTP is: {otp}',
+#         'your_email@gmail.com',  # Replace with your sender email
+#         [email],
+#         fail_silently=False,
+#     )
+
+#     return Response({"message": "OTP sent to your email."}, status=200)
 import random
 from django.core.cache import cache
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth import get_user_model
+from django.template.loader import render_to_string
 
 User = get_user_model()
 
@@ -1785,20 +1817,20 @@ def send_otp(request):
     if not email:
         return Response({"error": "Email is required"}, status=400)
 
-    # ✅ If email exists, respond without sending OTP
     if User.objects.filter(email=email).exists():
         return Response({"message": "Email already exists."}, status=200)
 
     otp = str(random.randint(100000, 999999))
-    cache.set(email, otp, timeout=300)  # Cache for 5 minutes
+    cache.set(email, otp, timeout=300)  # 5 minutes
 
-    send_mail(
-        'Your OTP Code',
-        f'Your OTP is: {otp}',
-        'your_email@gmail.com',  # Replace with your sender email
-        [email],
-        fail_silently=False,
-    )
+    # Render HTML template with OTP
+    html_content = render_to_string('otp_email_template.html', {'otp': otp})
+    subject = 'Your OTP Code'
+    from_email = 'your_email@gmail.com'  # Replace with your sender email
+
+    msg = EmailMultiAlternatives(subject, f'Your OTP is: {otp}', from_email, [email])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
 
     return Response({"message": "OTP sent to your email."}, status=200)
 

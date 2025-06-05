@@ -158,7 +158,9 @@ function User_Login() {
       localStorage.setItem("ref", response.refer);
       message.success("Login Successful");
 
-      navigate(id_navigate ? `/User_Data/${id_navigate}` : "/Home_Page_Log");
+      // navigate(id_navigate ? `/User_Data/${id_navigate}` : "/Home_Page_Log");
+            navigate( "/Home_Page_Log");
+
     } else {
       message.error("Invalid Credentials");
     }
