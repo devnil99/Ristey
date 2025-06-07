@@ -490,3 +490,41 @@
   color: #333;
   font-size: 16px;
 }
+
+
+
+
+/* Profile Picture Wrapper */
+.profile-picture-wrapper {
+  position: relative;
+  margin-top: -80px; /* Move up to overlap the banner */
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+/* Profile Picture */
+.profile-picture {
+  width: 200px; /* Increased size */
+  height: 200px; /* Increased size */
+  border-radius: 50%;
+  border: 5px solid white; /* Thicker border for better visibility */
+  object-fit: cover;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Added shadow for effect */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-banner {
+      height: 180px; /* Adjusted for smaller screens */
+  }
+
+  .profile-picture-wrapper {
+      margin-top: -60px; /* Adjust spacing for smaller screens */
+  }
+
+  .profile-picture {
+      width: 150px;
+      height: 150px;
+  }
+}

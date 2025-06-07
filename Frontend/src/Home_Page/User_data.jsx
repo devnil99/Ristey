@@ -1568,9 +1568,8 @@ function User_data() {
         <div className="content-padding">
           {data.map((i) => (
             <Card className="user-card" key={i.User_id}>
-              <Image className="user-cover-image" src={user_image} />
+              {/* <Image className="user-cover-image" src={user_image} />
 
-              {/* <Card className="user-profile-pic-container"> */}
               <div className="user-profile-pic-container">
                 <img
                   className="user-profile-pic"
@@ -1578,11 +1577,30 @@ function User_data() {
                   alt="profile"
                 />
 
-                </div>
-              {/* </Card> */}
+                </div> */}
+              <Image
+                className=""
+                src={`${baseurl}${i.cover_img}`}
+                style={{
+                  overflow: "hidden",
+                  width: "100%", // Responsive width
+                  maxWidth: "900px", // Prevents it from exceeding a max size
+                  height: "300px", // Maintain aspect ratio naturally
+                  aspectRatio: "8 / 3", // Keeps similar proportions to 800x300
+                  objectFit: "cover", // Crop nicely
+                  display: "block", // Prevent inline spacing
+                  margin: "0 auto", // Center the image
+                }}
+              />
 
+              <div className="profile-picture-wrapper">
+                <img
+                  className="profile-picture"
+                  src={`${baseurl}${i.pic}`}
+                  alt="Profile"
+                />
+              </div>
               <h2 className="user-username">{i.username}</h2>
-
               <div className="social-links">
                 {/* WhatsApp */}
                 <a
@@ -1652,7 +1670,6 @@ function User_data() {
                   </p>
                 )}
               </div>
-
               <Card className="tab-card">
                 <div className="tab-buttons-container">
                   <p>

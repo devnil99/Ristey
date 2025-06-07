@@ -42,6 +42,7 @@ class UserData(models.Model):
     instagram = models.CharField(max_length=30,null=True,blank=True)
     # aadhar = models.IntegerField(null=True,blank=True)
     email = models.EmailField(null=True,blank=True)
+    cover_img = models.ImageField(upload_to='User_cover_pic',default='User_Pic/profilepic.jpg',blank=True,null=True)
     pic = models.ImageField(upload_to='User_Pic',default='User_Pic/profilepic.jpg',blank=True,null=True)
     disttrict = models.CharField(max_length=20,blank=True)
     state = models.CharField(max_length=20,blank=True)

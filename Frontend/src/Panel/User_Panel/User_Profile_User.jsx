@@ -10,7 +10,7 @@ import {
   Image,
   message,
   Upload,
-   Layout,
+  Layout,
   Dropdown,
   Menu,
 } from "antd";
@@ -37,6 +37,7 @@ import user_image from "../../Assets/wedding1.jpg";
 import { SiGmail } from "react-icons/si";
 import { UploadOutlined } from "@ant-design/icons";
 import "../User_Panel/User_Profile_User.css";
+import { CameraOutlined, WindowsFilled } from "@ant-design/icons";
 
 const { Option } = Select; // Destructure Option from Select
 const { Header, Content } = Layout;
@@ -135,11 +136,8 @@ function User_Profile_User() {
     Navigate("/User_Login");
   };
 
-
   const menu = (
     <Menu>
-      
-
       <Menu.Item key="3">
         <Link to="/" onClick={handleLogout}>
           Logout
@@ -148,55 +146,114 @@ function User_Profile_User() {
     </Menu>
   );
 
+  const handlecoverImage = async (info) => {
+    const file = info.file.originFileObj || info.file;
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("cover_img", file); // ✅ match your Django backend field name
+
+    try {
+      const response = await UserDataUpdate(int_id, formData);
+      const filter = response.filter((i) => i.User_id === int_id);
+      setUser(filter);
+      console.log("✅ Upload success:", response);
+    } catch (err) {
+      console.error("❌ Upload failed:", err);
+    }
+  };
 
   return (
     <>
-     <Layout
+      <Layout
+        style={{
+          paddingTop: "65px",
+          overflow: "hidden",
+        }}
+      >
+        {/* Fixed Header */}
+        <Header
           style={{
-            paddingTop: "65px",
-            overflow: "hidden",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            width: "100%",
+            zIndex: 1000,
+            backgroundColor: "#1da1f2",
+            padding: "0 24px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {/* Fixed Header */}
-          <Header
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              width: "100%",
-              zIndex: 1000,
-              backgroundColor: "#1da1f2",
-              padding: "0 24px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-                <img
-                  src="https://t4.ftcdn.net/jpg/00/58/22/83/360_F_58228356_NenuGRgFZq3uGvRuXxqp4MWvreKMPCCc.jpg"
-                  alt="logo"
-                  style={{ height: "70px", width: "100px", paddingTop: "25px" }}
-                />
-              </div>
-            <Dropdown
-              overlay={menu}
-              placement="bottomRight"
-              trigger={["click"]}
-            >
-              <MenuOutlined
-                style={{ fontSize: "22px", color: "white", cursor: "pointer" }}
-              />
-            </Dropdown>
-          </Header>
+          <div>
+            <img
+              src="https://t4.ftcdn.net/jpg/00/58/22/83/360_F_58228356_NenuGRgFZq3uGvRuXxqp4MWvreKMPCCc.jpg"
+              alt="logo"
+              style={{ height: "70px", width: "100px", paddingTop: "25px" }}
+            />
+          </div>
+          <Dropdown overlay={menu} placement="bottomRight" trigger={["click"]}>
+            <MenuOutlined
+              style={{ fontSize: "22px", color: "white", cursor: "pointer" }}
+            />
+          </Dropdown>
+        </Header>
 
-          {/* Scrollable Content */}
-        </Layout>
+        {/* Scrollable Content */}
+      </Layout>
       <div className="user-profile-container">
         {User.map((i) => (
-          <Card className="profile-card" key={i.id}>
-            <Image className="cover-image" src={user_image} />
+          <Card className="profile-card" key={i.user_id}>
+            {/* <Image className="cover-image" src={user_image} /> */}
+
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                maxWidth: "900px",
+                margin: "0 auto",
+              }}
+            >
+              <Image
+                className=""
+                src={`${baseurl}${i.cover_img}`}
+                style={{
+                  overflow: "hidden",
+                  width: "100%", // Responsive full width
+                  height: "300px", // Allow height to scale with width
+                  aspectRatio: "3 / 1", // Maintain 900x300 proportion
+                  objectFit: "cover", // Crop image nicely
+                  display: "block",
+                }}
+              />
+
+              {/* Upload Icon (Camera) */}
+              <Upload
+                showUploadList={false}
+                beforeUpload={() => false}
+                onChange={handlecoverImage}
+              >
+                <Button
+                  className="camera-icon"
+                  icon={<CameraOutlined />}
+                  style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    right: "10px",
+                    backgroundColor: "#fff",
+                    borderRadius: "50%",
+                    boxShadow: "0px 0px 8px rgba(0,0,0,0.2)",
+                    width: "40px",
+                    height: "40px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                />
+              </Upload>
+            </div>
 
             <Card className="profile-picture-card">
               <img
@@ -224,10 +281,10 @@ function User_Profile_User() {
             </Form>
 
             <h2 className="user-name">
-              {i.first_name}
+              {i.firstname}
               <br />
             </h2>
-            <div className="social-icons">
+            {/* <div className="social-icons">
               <a
                 href={`https://wa.me/?text=${encodeURIComponent(
                   `http://localhost:3000/${i.id}`
@@ -262,6 +319,50 @@ function User_Profile_User() {
               <a
                 href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
                   `http://localhost:3000/${i.id}`
+                )}&text=Check%20this%20out!`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon twitter"
+              >
+                <FaTwitter />
+              </a>
+            </div> */}
+
+            <div className="social-icons">
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  `https://yourdomain.com/${i.id}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon whatsapp"
+              >
+                <FaWhatsapp />
+              </a>
+
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                  `https://yourdomain.com/${i.id}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon facebook"
+              >
+                <FaFacebook />
+              </a>
+
+              <a
+                href={`${i.instagram}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon instagram"
+              >
+                <FaInstagram />
+              </a>
+
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                  `https://yourdomain.com/${i.id}`
                 )}&text=Check%20this%20out!`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -657,38 +758,7 @@ function User_Profile_User() {
         ))}
       </div>
 
-       {/* footer section after login */}
-      <footer
-      style={{
-        backgroundColor: "#2c2c2c",
-        padding: "15px 10px",
-        textAlign: "center",
-        // position: "fixed",
-        bottom: 0,
-        left: 0,
-        width: "100%",
-      }}
-    >
-      <p
-        style={{
-          color: "#fff",
-          fontSize: "14px",
-          margin: 0,
-        }}
-      >
-        All Rights Reserved -{" "}
-        <a
-          href="#"
-          style={{
-            color: "#88b0f4",
-            textDecoration: "none",
-          }}
-        >
-          MatrimonialsIndia
-        </a>{" "}
-        (2025-2026)
-      </p>
-    </footer>
+      {/* footer section after login */}
     </>
   );
 }
