@@ -1080,6 +1080,7 @@
 // export default User_data;
 
 ////////////////////////////////////////////////////////////
+
 import { IoSend } from "react-icons/io5";
 import { IoCall } from "react-icons/io5";
 import { formatDistanceToNow, parse } from "date-fns";
@@ -1590,6 +1591,7 @@ function User_data() {
                   objectFit: "cover", // Crop nicely
                   display: "block", // Prevent inline spacing
                   margin: "0 auto", // Center the image
+                  marginLeft: "35px",
                 }}
               />
 

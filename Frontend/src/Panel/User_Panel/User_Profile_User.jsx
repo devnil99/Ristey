@@ -281,7 +281,7 @@ function User_Profile_User() {
             </Form>
 
             <h2 className="user-name">
-              {i.firstname}
+              {i.username}
               <br />
             </h2>
             {/* <div className="social-icons">

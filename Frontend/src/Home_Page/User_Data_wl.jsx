@@ -1627,33 +1627,48 @@ function User_data() {
         ) : (
           <div className="header-auth-links">
             <Link to="/User_Reg/885695">
-              <p className="header-auth-link signup">Sign Up</p>
+              <p className="header-auth-link-signup">Sign Up</p>
             </Link>
-            <Link to="/User_Login">
-              {/* <p className="header-auth-link login">Login</p> */}
-              <Button className="header-auth-link login"
-                onClick={(i) => id_navigate(i.User_id)}
-              >
-                Login
-              </Button>
-            </Link>
+           
           </div>
         )}
       </div>
       <div className="content-padding">
         {data.map((i) => (
           <Card className="user-card" key={i.User_id}>
-            <Image className="user-cover-image" src={user_image} />
+            {/* <Image className="user-cover-image" src={user_image} />
 
-            {/* <Card className="user-profile-pic-container"> */}
             <div className="user-profile-pic-container">
               <img
                 className="user-profile-pic"
                 src={`${baseurl}${i.pic}`}
                 alt="profile"
               />
+            </div> */}
+
+            <Image
+              className=""
+              src={`${baseurl}${i.cover_img}`}
+              style={{
+                overflow: "hidden",
+                width: "100%", // Responsive width
+                maxWidth: "900px", // Prevents it from exceeding a max size
+                height: "300px", // Maintain aspect ratio naturally
+                aspectRatio: "8 / 3", // Keeps similar proportions to 800x300
+                objectFit: "cover", // Crop nicely
+                display: "block", // Prevent inline spacing
+                margin: "0 auto", // Center the image
+                marginLeft: "35px",
+              }}
+            />
+
+            <div className="profile-picture-wrapper">
+              <img
+                className="profile-picture"
+                src={`${baseurl}${i.pic}`}
+                alt="Profile"
+              />
             </div>
-            {/* </Card> */}
 
             <h2 className="user-username">{i.username}</h2>
 
@@ -1682,9 +1697,9 @@ function User_data() {
                 <FaFacebook />
               </a>
 
-              {/* Instagram (No direct share, just profile or post link) */}
+              {/* Instagram */}
               <a
-                href={`${i.instagram}/`}
+                href={i.instagram || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="social-icon-link instagram"
@@ -1704,38 +1719,17 @@ function User_data() {
                 <FaTwitter />
               </a>
 
+              {/* Call Button or Login Link */}
               {i.user_apply?.some((u) => u.suser_id === id) ? (
-                <p className="contact-button-container">
-                  <Button
-                    onClick={() => (window.location.href = `tel:${i.contact}`)}
-                    className="contact-button"
-                  >
-                    <IoCall className="call-icon" />
-                  </Button>
-                </p>
+                <Button
+                  onClick={() => (window.location.href = `tel:${i.contact}`)}
+                  className="contact-button"
+                >
+                  <IoCall className="call-icon" />
+                </Button>
               ) : (
-                // <p className="contact-button-container">
-                //   <Button className="contact-button">
-                //     <IoSend
-                //       className="send-icon"
-                //       onClick={() => alert_popup(i)}
-                //     />
-                //   </Button>
-                // </p>
-
-                <Link to="/User_Login">
-                  //{" "}
-                  <p
-                    style={{
-                      fontSize: "15px",
-                      color: "white",
-                      marginTop: "13px",
-                      marginLeft: "30px",
-                    }}
-                  >
-                    Login
-                  </p>
-                  //{" "}
+                <Link to="/User_Login" className="login-link">
+                  Login
                 </Link>
               )}
             </div>
