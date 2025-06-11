@@ -87,6 +87,7 @@ class UserImages(models.Model):
     id = models.CharField(primary_key=True,max_length=22,default=secure_short_uuid,editable=False)
     user_id = models.CharField(max_length=22,null=True,blank=True)
     images = models.ImageField(upload_to='User_images',blank=True)
+    cover_img = models.ImageField(upload_to='User_cover_pic',default='User_Pic/profilepic.jpg',blank=True,null=True)
     
     
 class PostCharges(models.Model):

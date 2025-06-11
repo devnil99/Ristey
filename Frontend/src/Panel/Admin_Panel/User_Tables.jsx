@@ -11,7 +11,6 @@ import {
 } from "../../Api/CoreApi"; // Ensure this path is correct
 import User_Reg from "../../Authentication/User/User_Reg"; // Ensure this path is correct
 import "./User_Tables.css"; // Import the CSS file
-
 const { Option } = Select;
 
 function User_Tables() {
