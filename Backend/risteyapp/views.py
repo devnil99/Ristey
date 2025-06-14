@@ -1770,37 +1770,17 @@ class UserStateView(APIView):
         except User_State.DoesNotExist:
             return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
 
-# import random
-# from django.core.cache import cache
-# from rest_framework.decorators import api_view
-# from rest_framework.response import Response
-# from django.core.mail import send_mail
-# from django.contrib.auth import get_user_model
 
-# User = get_user_model()
+# views.py
+class SubscriberView(APIView):
+    def post(self, request):
+        serializer = SubscriberSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Subscribed successfully!"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
-# @api_view(['POST'])
-# def send_otp(request):
-#     email = request.data.get('email')
-#     if not email:
-#         return Response({"error": "Email is required"}, status=400)
-
-#     # ✅ If email exists, respond without sending OTP
-#     if User.objects.filter(email=email).exists():
-#         return Response({"message": "Email already exists."}, status=200)
-
-#     otp = str(random.randint(100000, 999999))
-#     cache.set(email, otp, timeout=300)  # Cache for 5 minutes
-
-#     send_mail(
-#         'Your OTP Code',
-#         f'Your OTP is: {otp}',
-#         'your_email@gmail.com',  # Replace with your sender email
-#         [email],
-#         fail_silently=False,
-#     )
-
-#     return Response({"message": "OTP sent to your email."}, status=200)
 import random
 from django.core.cache import cache
 from rest_framework.decorators import api_view
@@ -1863,3 +1843,5 @@ def verify_otp(request):
 
     cache.delete(email)  # remove used OTP
     return Response({"message": "OTP verified", "email": user.email,"user_id": user.id})
+
+

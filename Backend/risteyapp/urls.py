@@ -65,4 +65,7 @@ urlpatterns = [
     path('verify-otp/', verify_otp, name='verify_otp'),
     # path('Uuid/', UuidView.as_view(), name='Uuid'),
     # path('Uuid/<str:pk>', UuidView.as_view(), name='Uuid'),
+    
+    path('subscribe/', SubscriberView.as_view(), name='subscribe'),
+
 ] 

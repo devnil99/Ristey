@@ -1376,3 +1376,49 @@ export const User_CasteRemove = async (id) => {
   );
   return response ? response.data : {};
 };
+
+
+
+
+// export const SubscriberPost = async (values) => {
+//   //empLogin -- function name , async -- wait for time , (value)-- form data varriable send by EmpLogin function
+//   console.log("Service Data",values)
+//   const response = await API.post(
+//     "subscribe/",
+//     values, // await - wait , Api - component (promise) , post - define a operation, api/Reg - backend Post path , value - parameter to  send data
+//     {
+//       headers: {
+//         "Content-Type": "application/json",
+//         // Authorization: `Bearer ${accessToken}`
+//       }
+//     }
+//   ).catch(
+//     // handler - backend url
+//     (err) => message.error("Registration Failed")
+//   );
+//   console.log(values);
+//   return response ? response.data : {};
+// };
+
+
+
+
+
+export const  SubscriberPost = async (values) => {
+  //empLogin -- function name , async -- wait for time , (value)-- form data varriable send by EmpLogin function
+  // console.log(values)
+  const response = await API.post(
+    "subscribe/",
+    values, // await - wait , Api - component (promise) , post - define a operation, api/Reg - backend Post path , value - parameter to  send data
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  ).catch(
+    // handler - backend url
+    (err) => message.error("Registration Failed")
+  );
+  console.log(values);
+  return response ? response.data : {};
+};
