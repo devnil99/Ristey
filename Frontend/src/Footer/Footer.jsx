@@ -98,7 +98,6 @@ import { Link } from "react-router-dom";
 import { Form, Input, Button, message } from "antd";
 import { SubscriberPost } from "../Api/CoreApi";
 const Footer = () => {
-
   //  Feedback subscribe logics
   const handlesubscribe = async (values) => {
     const res = await SubscriberPost(values);
@@ -116,7 +115,7 @@ const Footer = () => {
             meaningful relationships and lifelong companionship.
           </p>
         </div>
-
+        {/*   footer section  */}
         {/* Partners */}
         <div className="footer-section">
           <h3>Our Partners</h3>
@@ -133,7 +132,7 @@ const Footer = () => {
 
         {/* Stay Connected */}
         <div className="footer-section">
-          <h3 >Stay Connected</h3>
+          <h3>Stay Connected</h3>
           <div className="social-icons">
             <a
               href="https://www.facebook.com/yourpage"
