@@ -191,7 +191,7 @@ function Staff_Added_User() {
           <Button className="sidebar-btn">Dashboard</Button>
         </Link>
         <Link to='/Staff_Added_User'>
-          <Button className="sidebar-btn">User</Button>
+          <Button className="sidebar-btn active">User</Button>
         </Link>
         <Link to='/Staff_Transactions'>
           <Button className="sidebar-btn">Transaction</Button>
