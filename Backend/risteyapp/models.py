@@ -22,6 +22,7 @@ class User(AbstractUser):
     disttrict = models.CharField(max_length=20,blank=True)
     pic = models.ImageField(upload_to='Staff_Pic',default='Staff_Pic/profilepic.jpg',blank=True,null=True)
     contact = models.IntegerField(null=True,blank=True)
+    caste = models.CharField(max_length=20,blank=True)
 
 
     # def __str__(self):
@@ -69,6 +70,9 @@ class UserData(models.Model):
     field_of_study=models.CharField(max_length=50,null=True,blank=True)
     education_level=models.CharField(max_length=50,null=True,blank=True)
     ref = models.IntegerField(null=True,blank=True)
+    # bank_account = models.IntegerField(null=True,blank=True,default=0)
+    # ifsc_code = models.CharField(max_length=15,null=True,blank=True,default='SBIN0989054')
+    # upi_id = models.CharField(max_length=15,null=True,blank=True,default='upi_id.oksbi')
 
     def __str__(self):
         return self.username
@@ -155,6 +159,9 @@ class StaffTransactions(models.Model):
     id = models.CharField(primary_key=True,max_length=22,default=secure_short_uuid,editable=False)
     staff_id = models.CharField(max_length=25)
     amount = models.IntegerField()
+    upi_id = models.CharField(max_length=25,null=True,blank=True)
+    bank_account = models.IntegerField(null=True,blank=True)
+    contact = models.IntegerField(null=True,blank=True)
     date = models.DateField(auto_now=True)
     type = models.CharField(max_length=10)
     status = models.CharField(max_length=8,default='pending')
@@ -163,9 +170,31 @@ class UserTransactions(models.Model):
     id = models.CharField(primary_key=True,max_length=22,default=secure_short_uuid,editable=False)
     user_id = models.CharField(max_length=25)
     amount = models.IntegerField()
+    upi_id = models.CharField(max_length=25,null=True,blank=True)
+    bank_account = models.IntegerField(null=True,blank=True)
+    contact = models.IntegerField(null=True,blank=True)
     date = models.DateField(auto_now=True)
     type = models.CharField(max_length=10)
     status = models.CharField(max_length=8,default='pending')
+
+
+class DevTransactions(models.Model):
+    id = models.CharField(primary_key=True,max_length=22,default=secure_short_uuid,editable=False)
+    user_id = models.CharField(max_length=25)
+    amount = models.IntegerField()
+    upi_id = models.CharField(max_length=25,null=True,blank=True)
+    bank_account = models.IntegerField(null=True,blank=True)
+    contact = models.IntegerField(null=True,blank=True)
+    date = models.DateField(auto_now=True)
+    type = models.CharField(max_length=10)
+    status = models.CharField(max_length=8,default='pending')
+
+
+class BankDetails(models.Model):
+    user_id = models.CharField(max_length=25,null=True,blank=True)
+    bank_account = models.IntegerField(null=True,blank=True,default=0)
+    ifsc_code = models.CharField(max_length=15,null=True,blank=True,default='SBIN0989054')
+    upi_id = models.CharField(max_length=15,null=True,blank=True,default='upi_id.oksbi')
 
 
 

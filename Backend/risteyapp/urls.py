@@ -50,16 +50,21 @@ urlpatterns = [
     path('UserTransactions/', UserTransactionsView.as_view(), name='UserTransactions'),
     path('UserTransactions/<str:pk>', UserTransactionsView.as_view(), name='UserTransactions'),
 
+    path('DevTransactions/', DevTransactionsView.as_view(), name='DevTransactions'),
+    path('DevTransactions/<str:pk>', DevTransactionsView.as_view(), name='DevTransactions'),
+
     path('create-order/', create_order, name='create-order'),
     path('verify-payment/', verify_payment, name='verify_payment'),
+
+    path('state/', UserStateView.as_view(), name='user-state'),
+    path('state/<int:pk>/', UserCasteView.as_view(), name='caste_detail'),
+
 
     path('caste/', UserCasteView.as_view(), name='caste_list_create'),
     path('caste/<int:pk>/', UserCasteView.as_view(), name='caste_detail'),
     
-    path('state/', UserStateView.as_view(), name='state_list_create'),
-    path('state/<int:pk>/', UserStateView.as_view(), name='state_detail'),
-
-
+    path('BankDetails/', BankDetailsView.as_view(), name='BankDetailsView'),
+    path('BankDetails/<str:pk>', BankDetailsView.as_view(), name='BankDetailsView'),
 
     path('send-otp/', send_otp, name='send_otp'),
     path('verify-otp/', verify_otp, name='verify_otp'),

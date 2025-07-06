@@ -694,6 +694,10 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import *
 from .serializers import *
 
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+
 
 class UserRegView_wl(APIView):
 
@@ -876,14 +880,63 @@ class UserRegView_wl(APIView):
 
         
 class UserDataRegView_wl(APIView):
+    # def post(self, request):
+    #         serializer = UserDataSerializer(data=request.data)
+    #         if serializer.is_valid():
+    #             serializer.save()
+    #             employees = UserData.objects.all()
+    #             serializer1 = UserDataSerializer(employees, many=True)
+    #             return Response(serializer1.data, status=status.HTTP_200_OK)
+    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def post(self, request):
-            serializer = UserDataSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                employees = UserData.objects.all()
-                serializer1 = UserDataSerializer(employees, many=True)
-                return Response(serializer1.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+         serializer = UserDataSerializer(data=request.data)
+         if serializer.is_valid():
+            user = serializer.save()
+
+         # Gender match logic
+            opposite_gender = 'Female' if user.gender == 'Male' else 'Male'
+
+         # Step 1: Match by caste and opposite gender
+            matches = UserData.objects.filter(
+             caste=user.caste,
+              gender=opposite_gender
+              ).exclude(id=user.id)
+
+         # Step 2: If no caste match, try district and opposite gender
+            if not matches.exists():
+                matches = UserData.objects.filter(
+                disttrict=user.disttrict,
+                gender=opposite_gender
+                ).exclude(id=user.id)
+
+             # Prepare matched user info for template
+                matched_users = [{
+                "name": m.firstname,
+                "disttrict": m.disttrict,
+                "caste": m.caste
+                } for m in matches]
+
+         # HTML Email Template
+                html_message = render_to_string("welcome_email.html", {
+                "user": user,
+                "matched_users": matched_users
+                })
+
+         # Plain text fallback
+                plain_message = f"Hi {user.firstname}, welcome to our platform!"
+
+                send_mail(
+                subject="Welcome to Our Platform",
+                message=plain_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                fail_silently=True,
+                html_message=html_message,
+                 )
+            return Response({"message": "User saved and welcome email sent!"}, status=status.HTTP_201_CREATED)
+
+         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     def get(self, request, pk=None):
             try:
@@ -935,7 +988,6 @@ class UserImagesView_wl(APIView):
 class UserRegisterView(APIView):
     authentication_classes = [JWTAuthentication]  # ✅ Check Token
     permission_classes = [IsAuthenticated]
-
     def get(self, request, pk=None):
         # if request.user.role in ['admin', 'staff', 'user', 'developer']:
         if request.user.role in ['admin', 'staff', 'user', 'developer']:  # ✅ Only admin can access
@@ -1165,7 +1217,9 @@ class UserImagesView(APIView):
             try:
                 attend = UserImages.objects.get(pk=pk)
                 attend.delete()
-                return Response({"msg": "Deleted Successfully"}, status=status.HTTP_204_NO_CONTENT)
+                employees = UserImages.objects.all()
+                serializer1 = UserImagesSerializer(employees, many=True)
+                return Response(serializer1.data, status=status.HTTP_200_OK)
             except UserImages.DoesNotExist:
                 return Response({"error": "User image not found"}, status=status.HTTP_404_NOT_FOUND)
         else:
@@ -1652,6 +1706,67 @@ class UserTransactionsView(APIView):
                 return Response({"error": "Transaction record not found"}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({"error": "Permission denied! Admin only."}, status=status.HTTP_403_FORBIDDEN)
+
+
+class DevTransactionsView(APIView):
+    authentication_classes = [JWTAuthentication]  # ✅ Token Check
+    permission_classes = [IsAuthenticated]       # ✅ Only Authenticated Devs
+
+    def get(self, request, pk=None):
+        if request.user.role in ['admin', 'staff', 'user', 'developer']:  # ✅ Admin, Staff, and Dev can view
+            if pk:
+                try:
+                    employee = DevTransactions.objects.get(pk=pk)
+                    serializer = DevTransactionsSerializer(employee)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                except DevTransactions.DoesNotExist:
+                    return Response({"error": "Transaction record not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            employees = DevTransactions.objects.all()
+            serializer = DevTransactionsSerializer(employees, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Permission denied! Only Admin, Staff, and Devs can access."},
+                            status=status.HTTP_403_FORBIDDEN)
+
+    def post(self, request):
+        if request.user.role in ['admin', 'staff', 'user', 'developer']:  # ✅ Only Admin can add
+            serializer = DevTransactionsSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                employees = DevTransactions.objects.all()
+                serializer1 = DevTransactionsSerializer(employees, many=True)
+                return Response(serializer1.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "Permission denied! Admin only."}, status=status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request, pk=None):
+        if request.user.role in ['admin', 'staff', 'user', 'developer']:  # ✅ Only Admin can delete
+            try:
+                attend = DevTransactions.objects.get(pk=pk)
+                attend.delete()
+                return Response({"msg": "Transaction deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+            except DevTransactions.DoesNotExist:
+                return Response({"error": "Transaction record not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({"error": "Permission denied! Admin only."}, status=status.HTTP_403_FORBIDDEN)
+
+    def put(self, request, pk=None):
+        if request.user.role in ['admin', 'staff', 'user', 'developer']:  # ✅ Only Admin can update
+            try:
+                attend = DevTransactions.objects.get(User_id=pk)
+                serializer = DevTransactionsSerializer(attend, data=request.data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    employees = DevTransactions.objects.all()
+                    serializer1 = DevTransactionsSerializer(employees, many=True)
+                    return Response(serializer1.data, status=status.HTTP_200_OK)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            except DevTransactions.DoesNotExist:
+                return Response({"error": "Transaction record not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({"error": "Permission denied! Admin only."}, status=status.HTTP_403_FORBIDDEN)
     
 
 import razorpay
@@ -1729,8 +1844,8 @@ class UserCasteView(APIView):
         except User_Caste.DoesNotExist:
             return Response({"error": "Caste not found"}, status=status.HTTP_404_NOT_FOUND)
         
+        
 class UserStateView(APIView):
-
     def get(self, request, pk=None):
         if pk:
             try:
@@ -1770,6 +1885,45 @@ class UserStateView(APIView):
         except User_State.DoesNotExist:
             return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
 
+class BankDetailsView(APIView):
+    def get(self, request, pk=None):
+        if pk:
+            try:
+                state = BankDetails.objects.get(pk=pk)
+                serializer = BankDetailsSerializer(state)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except BankDetails.DoesNotExist:
+                return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            states = BankDetails.objects.all()
+            serializer = BankDetailsSerializer(states, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = BankDetailsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk=None):
+        try:
+            state = BankDetails.objects.get(user_id=pk)
+            serializer = BankDetailsSerializer(state, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except BankDetails.DoesNotExist:
+            return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk=None):
+        try:
+            state = BankDetails.objects.get(pk=pk)
+            state.delete()
+            return Response({"msg": "Deleted Successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except BankDetails.DoesNotExist:
+            return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
 
 # views.py
 class SubscriberView(APIView):

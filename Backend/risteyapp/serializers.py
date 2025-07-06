@@ -86,6 +86,11 @@ class UserTransactionsSerializer(serializers.ModelSerializer):
         model = UserTransactions
         fields = '__all__'
 
+class DevTransactionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DevTransactions
+        fields = '__all__'
+
 class User_CasteSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_Caste
@@ -95,6 +100,13 @@ class User_StateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_State
         fields = '__all__'
+
+class BankDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankDetails
+        fields = '__all__'
+
+
 
 
 class SubscriberSerializer(serializers.ModelSerializer):
