@@ -224,6 +224,7 @@ class DevTransactions(models.Model):
 
 #  BankDetails 
 class BankDetails(models.Model):
+    id = models.BigIntegerField(primary_key=True)
     user_id = models.CharField(max_length=25,null=True,blank=True)
     bank_account = models.IntegerField(null=True,blank=True,default=00000000000)
     ifsc_code = models.CharField(max_length=15,null=True,blank=True,default='SBIN0989054')
