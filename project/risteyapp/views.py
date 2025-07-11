@@ -1903,7 +1903,9 @@ class BankDetailsView(APIView):
         serializer = BankDetailsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            employees = BankDetails.objects.all()
+            serializer1 = BankDetailsSerializer(employees, many=True)
+            return Response(serializer1.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk=None):
@@ -1912,7 +1914,9 @@ class BankDetailsView(APIView):
             serializer = BankDetailsSerializer(state, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                employees = BankDetails.objects.all()
+                serializer1 = BankDetailsSerializer(employees, many=True)
+            return Response(serializer1.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except BankDetails.DoesNotExist:
             return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -1921,7 +1925,9 @@ class BankDetailsView(APIView):
         try:
             state = BankDetails.objects.get(pk=pk)
             state.delete()
-            return Response({"msg": "Deleted Successfully"}, status=status.HTTP_204_NO_CONTENT)
+            employees = BankDetails.objects.all()
+            serializer1 = BankDetailsSerializer(employees, many=True)
+            return Response(serializer1.data, status=status.HTTP_200_OK)
         except BankDetails.DoesNotExist:
             return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
 

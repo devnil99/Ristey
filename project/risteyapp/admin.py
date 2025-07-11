@@ -15,4 +15,6 @@ admin.site.register(User_Caste)
 admin.site.register(User_State)
 admin.site.register(Subscriber)
 admin.site.register(BankDetails)
+admin.site.register(Suceess_Story)
+
 
