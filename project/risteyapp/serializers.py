@@ -101,15 +101,15 @@ class User_StateSerializer(serializers.ModelSerializer):
         model = User_State
         fields = '__all__'
 
-class BankDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BankDetails
-        fields = '__all__'
+# class BankDetailsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = BankDetails
+#         fields = '__all__'
 
 
 
 
-class SubscriberSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subscriber
-        fields = '__all__'
+# class SubscriberSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Subscriber
+#         fields = '__all__'

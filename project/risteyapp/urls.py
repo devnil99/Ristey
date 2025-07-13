@@ -63,14 +63,14 @@ urlpatterns = [
     path('caste/', UserCasteView.as_view(), name='caste_list_create'),
     path('caste/<int:pk>/', UserCasteView.as_view(), name='caste_detail'),
     
-    path('BankDetails/', BankDetailsView.as_view(), name='BankDetailsView'),
-    path('BankDetails/<str:pk>', BankDetailsView.as_view(), name='BankDetailsView'),
+    # path('BankDetails/', BankDetailsView.as_view(), name='BankDetailsView'),
+    # path('BankDetails/<str:pk>', BankDetailsView.as_view(), name='BankDetailsView'),
 
     path('send-otp/', send_otp, name='send_otp'),
     path('verify-otp/', verify_otp, name='verify_otp'),
     # path('Uuid/', UuidView.as_view(), name='Uuid'),
     # path('Uuid/<str:pk>', UuidView.as_view(), name='Uuid'),
     
-    path('subscribe/', SubscriberView.as_view(), name='subscribe'),
+    # path('subscribe/', SubscriberView.as_view(), name='subscribe'),
 
 ] 

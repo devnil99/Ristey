@@ -25,6 +25,9 @@ class User(AbstractUser):
     pic = models.ImageField(upload_to='Staff_Pic',default='Staff_Pic/profilepic.jpg',blank=True,null=True)
     contact = models.IntegerField(null=True,blank=True)
     caste = models.CharField(max_length=20,blank=True)
+    bank_account = models.IntegerField(null=True,blank=True,default=00000000000)
+    ifsc_code = models.CharField(max_length=15,null=True,blank=True,default='SBIN0989054')
+    upi_id = models.CharField(max_length=15,null=True,blank=True,default='upi_id.oksbi')
 
 
     # def __str__(self):
@@ -212,7 +215,7 @@ class UserTransactions(models.Model):
 #  DevTransactions 
 class DevTransactions(models.Model):
     id = models.CharField(primary_key=True,max_length=22,default=secure_short_uuid,editable=False)
-    user_id = models.CharField(max_length=25)
+    dev_id = models.CharField(max_length=25)
     amount = models.IntegerField()
     upi_id = models.CharField(max_length=25,null=True,blank=True)
     bank_account = models.IntegerField(null=True,blank=True)
@@ -223,28 +226,27 @@ class DevTransactions(models.Model):
     status = models.CharField(max_length=8,default='pending')
 
 #  BankDetails 
-class BankDetails(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    user_id = models.CharField(max_length=25,null=True,blank=True)
-    bank_account = models.IntegerField(null=True,blank=True,default=00000000000)
-    ifsc_code = models.CharField(max_length=15,null=True,blank=True,default='SBIN0989054')
-    upi_id = models.CharField(max_length=15,null=True,blank=True,default='upi_id.oksbi')
+# class BankDetails(models.Model):
+#     user_id = models.CharField(max_length=25,null=True,blank=True)
+#     bank_account = models.IntegerField(null=True,blank=True,default=00000000000)
+#     ifsc_code = models.CharField(max_length=15,null=True,blank=True,default='SBIN0989054')
+#     upi_id = models.CharField(max_length=15,null=True,blank=True,default='upi_id.oksbi')
 
  
 #  Subscriber 
-class Subscriber(models.Model):
-    email = models.EmailField(unique=True)
-    subscribed_at = models.DateTimeField(auto_now_add=True)
+# class Subscriber(models.Model):
+#     email = models.EmailField(unique=True)
+#     subscribed_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.email
+#     def __str__(self):
+#         return self.email
 
 
 #  Suceess_Story
-class Suceess_Story(models.Model):
-    title=models.CharField(max_length=250,null=True,blank=True)
-    description = models.TextField(null=True, blank=True)
+# class Suceess_Story(models.Model):
+#     title=models.CharField(max_length=250,null=True,blank=True)
+#     description = models.TextField(null=True, blank=True)
 
 
-    def __str__(self):
-        return self.title
+#     def __str__(self):
+#         return self.title

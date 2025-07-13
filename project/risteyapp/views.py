@@ -1755,7 +1755,7 @@ class DevTransactionsView(APIView):
     def put(self, request, pk=None):
         if request.user.role in ['admin', 'staff', 'user', 'developer']:  # ✅ Only Admin can update
             try:
-                attend = DevTransactions.objects.get(User_id=pk)
+                attend = DevTransactions.objects.get(pk=pk)
                 serializer = DevTransactionsSerializer(attend, data=request.data, partial=True)
                 if serializer.is_valid():
                     serializer.save()
@@ -1885,61 +1885,51 @@ class UserStateView(APIView):
         except User_State.DoesNotExist:
             return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
 
-class BankDetailsView(APIView):
-    def get(self, request, pk=None):
-        if pk:
-            try:
-                state = BankDetails.objects.get(pk=pk)
-                serializer = BankDetailsSerializer(state)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            except BankDetails.DoesNotExist:
-                return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            states = BankDetails.objects.all()
-            serializer = BankDetailsSerializer(states, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+# class BankDetailsView(APIView):
+#     def get(self, request, pk=None):
+#         if pk:
+#             try:
+#                 state = BankDetails.objects.get(pk=pk)
+#                 serializer = BankDetailsSerializer(state)
+#                 return Response(serializer.data, status=status.HTTP_200_OK)
+#             except BankDetails.DoesNotExist:
+#                 return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
+#         else:
+#             states = BankDetails.objects.all()
+#             serializer = BankDetailsSerializer(states, many=True)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request):
-        serializer = BankDetailsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            employees = BankDetails.objects.all()
-            serializer1 = BankDetailsSerializer(employees, many=True)
-            return Response(serializer1.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request):
+#         serializer = BankDetailsSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             employees = BankDetails.objects.all()
+#             serializer1 = BankDetailsSerializer(employees, many=True)
+#             return Response(serializer1.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, pk=None):
-        try:
-            state = BankDetails.objects.get(user_id=pk)
-            serializer = BankDetailsSerializer(state, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                employees = BankDetails.objects.all()
-                serializer1 = BankDetailsSerializer(employees, many=True)
-            return Response(serializer1.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except BankDetails.DoesNotExist:
-            return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
+#     def put(self, request, pk=None):
+#         try:
+#             state = BankDetails.objects.get(user_id=pk)
+#             serializer = BankDetailsSerializer(state, data=request.data, partial=True)
+#             if serializer.is_valid():
+#                 serializer.save()
+#                 employees = BankDetails.objects.all()
+#                 serializer1 = BankDetailsSerializer(employees, many=True)
+#             return Response(serializer1.data, status=status.HTTP_200_OK)
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         except BankDetails.DoesNotExist:
+#             return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    def delete(self, request, pk=None):
-        try:
-            state = BankDetails.objects.get(pk=pk)
-            state.delete()
-            employees = BankDetails.objects.all()
-            serializer1 = BankDetailsSerializer(employees, many=True)
-            return Response(serializer1.data, status=status.HTTP_200_OK)
-        except BankDetails.DoesNotExist:
-            return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
-
-# views.py
-class SubscriberView(APIView):
-    def post(self, request):
-        serializer = SubscriberSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Subscribed successfully!"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+#     def delete(self, request, pk=None):
+#         try:
+#             state = BankDetails.objects.get(pk=pk)
+#             state.delete()
+#             employees = BankDetails.objects.all()
+#             serializer1 = BankDetailsSerializer(employees, many=True)
+#             return Response(serializer1.data, status=status.HTTP_200_OK)
+#         except BankDetails.DoesNotExist:
+#             return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
 
 import random
 from django.core.cache import cache
