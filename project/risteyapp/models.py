@@ -232,7 +232,7 @@ class EmailOTP(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_expired(self):
-        return timezone.now() > self.created_at + timezone.timedelta(minutes=2)
+        return timezone.now() > self.created_at + timezone.timedelta(minutes=5)
 #  BankDetails 
 # class BankDetails(models.Model):
 #     user_id = models.CharField(max_length=25,null=True,blank=True)
