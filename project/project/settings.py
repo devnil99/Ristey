@@ -290,9 +290,9 @@ STATICFILES_DIRS = [
 SECRET_KEY = 'django-insecure-ibcyk8miskllj!hi9r1c_xrv%37znodk_gxp#=^90vyl_=6l*-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['56.228.15.88', 'communityrishtey.com', 'www.communityrishtey.com']
+ALLOWED_HOSTS = ['65.2.75.45', 'communityrishtey.com', 'www.communityrishtey.com']
 
 
 # Application definition
@@ -444,22 +444,22 @@ EMAIL_HOST_USER = 'nilkamalshriwas91@gmail.com'
 EMAIL_HOST_PASSWORD = 'empictsgmjkylrce'
 
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-#         'LOCATION': 'otp-cache'
-#     }
-# }
-
 CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": "redis://172.31.20.153:6379/1",  # Replace with Redis EC2 private IP
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'otp-cache'
     }
 }
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#                 "LOCATION": "redis://172.31.20.153:6379/1",  # Replace with Redis EC2 private IP
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
 
 
 # settings.py
@@ -470,7 +470,7 @@ RAZORPAY_KEY_SECRET = 'QzYdSOGEipVBpcpTymw4vNOY'
 AWS_ACCESS_KEY_ID = ""
 AWS_SECRET_ACCESS_KEY = ""
 AWS_STORAGE_BUCKET_NAME = "risteybucket"
-AWS_S3_REGION_NAME = "eu-north-1"
+AWS_S3_REGION_NAME = "ap-south-1"
 
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
 
