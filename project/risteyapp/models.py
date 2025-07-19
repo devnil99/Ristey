@@ -2,6 +2,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from .utils import *
+from django.utils import timezone
 
 
 # User Abstract user
@@ -225,6 +226,13 @@ class DevTransactions(models.Model):
     type = models.CharField(max_length=10)
     status = models.CharField(max_length=8,default='pending')
 
+class EmailOTP(models.Model):
+    email = models.EmailField(unique=True)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        return timezone.now() > self.created_at + timezone.timedelta(minutes=2)
 #  BankDetails 
 # class BankDetails(models.Model):
 #     user_id = models.CharField(max_length=25,null=True,blank=True)

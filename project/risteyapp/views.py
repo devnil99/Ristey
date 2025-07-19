@@ -1885,6 +1885,83 @@ class UserStateView(APIView):
         except User_State.DoesNotExist:
             return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
 
+
+import random
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.contrib.auth import get_user_model
+from .models import EmailOTP
+
+User = get_user_model()
+
+@api_view(['POST'])
+def send_otp(request):
+    email = request.data.get('email')
+
+    if not email:
+        return Response({'error': 'Email is required'}, status=400)
+
+    # Optional: block if already registered
+    if User.objects.filter(email=email).exists():
+        return Response({'message': 'Email already registered'}, status=404)
+
+    # Remove any old OTP for the email
+    EmailOTP.objects.filter(email=email).delete()
+
+    # Generate OTP
+    otp = str(random.randint(100000, 999999))
+
+    # Save OTP
+    EmailOTP.objects.create(email=email, otp=otp)
+
+    # Render the HTML email
+    try:
+        html_content = render_to_string('otp_email_template.html', {'otp': otp})
+    except Exception as e:
+        return Response({'error': f'Template rendering error: {str(e)}'}, status=500)
+
+    # Email setup
+    subject = 'Your OTP Code'
+    from_email = 'your_email@gmail.com'  # ✅ must match settings.EMAIL_HOST_USER
+    recipient_list = [email]
+
+    try:
+        msg = EmailMultiAlternatives(subject, f'Your OTP is: {otp}', from_email, recipient_list)
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+    except Exception as e:
+        return Response({'error': f'Email sending failed: {str(e)}'}, status=500)
+
+    return Response({'message': 'OTP sent to your email'}, status=200)
+
+# Verify OTP
+@api_view(['POST'])
+def verify_otp(request):
+    email = request.data.get('email')
+    otp = str(request.data.get('otp'))
+
+    if not email or not otp:
+        return Response({'error': 'Email and OTP are required'}, status=400)
+
+    try:
+        record = EmailOTP.objects.get(email=email)
+    except EmailOTP.DoesNotExist:
+        return Response({'error': 'OTP not found'}, status=404)
+
+    # Check expiry
+    if record.is_expired():
+        record.delete()
+        return Response({'error': 'OTP expired'}, status=400)
+
+    # Check match
+    if record.otp == otp:
+        user, _ = User.objects.get_or_create(username=email, email=email)
+        record.delete()  # delete OTP after success
+        return Response({'message': 'OTP verified', 'user_id': user.id, 'email': user.email}, status=200)
+
+    return Response({'error': 'Invalid OTP'}, status=400)
 # class BankDetailsView(APIView):
 #     def get(self, request, pk=None):
 #         if pk:
@@ -1931,67 +2008,67 @@ class UserStateView(APIView):
 #         except BankDetails.DoesNotExist:
 #             return Response({"error": "State not found"}, status=status.HTTP_404_NOT_FOUND)
 
-import random
-from django.core.cache import cache
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from django.core.mail import EmailMultiAlternatives
-from django.contrib.auth import get_user_model
-from django.template.loader import render_to_string
+# import random
+# from django.core.cache import cache
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from django.core.mail import EmailMultiAlternatives
+# from django.contrib.auth import get_user_model
+# from django.template.loader import render_to_string
 
-User = get_user_model()
+# User = get_user_model()
 
-@api_view(['POST'])
-def send_otp(request):
-    email = request.data.get('email')
-    if not email:
-        return Response({"error": "Email is required"}, status=400)
+# @api_view(['POST'])
+# def send_otp(request):
+#     email = request.data.get('email')
+#     if not email:
+#         return Response({"error": "Email is required"}, status=400)
 
-    if User.objects.filter(email=email).exists():
-        return Response({"message": "Email already exists."}, status=200)
+#     if User.objects.filter(email=email).exists():
+#         return Response({"message": "Email already exists."}, status=200)
 
-    otp = str(random.randint(100000, 999999))
-    cache.set(email, otp, timeout=300)  # 5 minutes
+#     otp = str(random.randint(100000, 999999))
+#     cache.set(email, otp, timeout=300)  # 5 minutes
 
-    # Render HTML template with OTP
-    html_content = render_to_string('otp_email_template.html', {'otp': otp})
-    subject = 'Your OTP Code'
-    from_email = 'your_email@gmail.com'  # Replace with your sender email
+#     # Render HTML template with OTP
+#     html_content = render_to_string('otp_email_template.html', {'otp': otp})
+#     subject = 'Your OTP Code'
+#     from_email = 'your_email@gmail.com'  # Replace with your sender email
 
-    msg = EmailMultiAlternatives(subject, f'Your OTP is: {otp}', from_email, [email])
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
+#     msg = EmailMultiAlternatives(subject, f'Your OTP is: {otp}', from_email, [email])
+#     msg.attach_alternative(html_content, "text/html")
+#     msg.send()
 
-    return Response({"message": "OTP sent to your email."}, status=200)
+#     return Response({"message": "OTP sent to your email."}, status=200)
 
 
-from django.core.cache import cache
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from django.contrib.auth import get_user_model
+# from django.core.cache import cache
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from django.contrib.auth import get_user_model
 
-User = get_user_model()
+# User = get_user_model()
 
-@api_view(['POST'])
-def verify_otp(request):
-    email = request.data.get('email')
-    otp = str(request.data.get('otp'))
+# @api_view(['POST'])
+# def verify_otp(request):
+#     email = request.data.get('email')
+#     otp = str(request.data.get('otp'))
 
-    if not email or not otp:
-        return Response({"error": "Email and OTP required"}, status=400)
+#     if not email or not otp:
+#         return Response({"error": "Email and OTP required"}, status=400)
 
-    saved_otp = cache.get(email)
-    if saved_otp is None:
-        return Response({"error": "OTP expired or not found"}, status=400)
+#     saved_otp = cache.get(email)
+#     if saved_otp is None:
+#         return Response({"error": "OTP expired or not found"}, status=400)
 
-    if saved_otp != otp:
-        return Response({"error": "Invalid OTP"}, status=400)
+#     if saved_otp != otp:
+#         return Response({"error": "Invalid OTP"}, status=400)
 
-    user, created = User.objects.get_or_create(username=email)
-    user.email = email
-    user.save()
+#     user, created = User.objects.get_or_create(username=email)
+#     user.email = email
+#     user.save()
 
-    cache.delete(email)  # remove used OTP
-    return Response({"message": "OTP verified", "email": user.email,"user_id": user.id})
+#     cache.delete(email)  # remove used OTP
+#     return Response({"message": "OTP verified", "email": user.email,"user_id": user.id})
 
 
