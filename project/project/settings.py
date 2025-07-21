@@ -434,14 +434,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:9000",
 ]
 
-
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'nilkamalshriwas91@gmail.com'
-EMAIL_HOST_PASSWORD = 'empictsgmjkylrce'
+EMAIL_HOST_USER = 'rishteymatrimonialservice@gmail.com'
+EMAIL_HOST_PASSWORD = 'ywsdxzzizuulqjoa'
 
 
 CACHES = {
@@ -464,8 +462,8 @@ CACHES = {
 
 # settings.py
 
-RAZORPAY_KEY_ID = 'rzp_test_NxUdo9RFPdEr8W'
-RAZORPAY_KEY_SECRET = 'QzYdSOGEipVBpcpTymw4vNOY'
+RAZORPAY_KEY_ID = 'rzp_live_LuQGVJr7WRuDQI'
+RAZORPAY_KEY_SECRET = 'UpLACmUzO29Acj7Qbj4CREas'
 
 AWS_ACCESS_KEY_ID = ""
 AWS_SECRET_ACCESS_KEY = ""

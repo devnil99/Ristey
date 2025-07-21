@@ -4,7 +4,6 @@ from django.db import models
 from .utils import *
 from django.utils import timezone
 
-
 # User Abstract user
 class User(AbstractUser):
     id = models.CharField(primary_key=True, max_length=22, default=secure_short_uuid, editable=False)
