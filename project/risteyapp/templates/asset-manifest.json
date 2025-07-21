@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c69269ca.css",
+    "main.js": "/static/js/main.a0b9c473.js",
+    "static/js/488.0f6f66ca.chunk.js": "/static/js/488.0f6f66ca.chunk.js",
+    "static/media/flowers-background.jpg": "/static/media/flowers-background.33c3c5f67d6ed3c78c74.jpg",
+    "static/media/wedding1.jpg": "/static/media/wedding1.f0c06c2476aefab17989.jpg",
+    "static/media/stuff_logo-removebg-preview.png": "/static/media/stuff_logo-removebg-preview.3b7ba4a005461c1bda5d.png",
+    "static/media/img3.jpg": "/static/media/img3.a49d87b3c0e358703166.jpg",
+    "static/media/admin.png": "/static/media/admin.e12669215698c3026936.png",
+    "static/media/img1.jpg": "/static/media/img1.6803ca7f577ce5fa48bc.jpg",
+    "static/media/img2.jpg": "/static/media/img2.65ba1ef27b72e42756e3.jpg",
+    "index.html": "/index.html",
+    "main.c69269ca.css.map": "/static/css/main.c69269ca.css.map",
+    "main.a0b9c473.js.map": "/static/js/main.a0b9c473.js.map",
+    "488.0f6f66ca.chunk.js.map": "/static/js/488.0f6f66ca.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c69269ca.css",
+    "static/js/main.a0b9c473.js"
+  ]
+}
