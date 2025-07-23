@@ -25,9 +25,9 @@ class User(AbstractUser):
     pic = models.ImageField(upload_to='Staff_Pic',default='Staff_Pic/profilepic.jpg',blank=True,null=True)
     contact = models.CharField(max_length=10,null=True,blank=True)
     caste = models.CharField(max_length=20,blank=True)
-    bank_account = models.CharField(max_length=16,null=True,blank=True,default='Account Number')
-    ifsc_code = models.CharField(max_length=15,null=True,blank=True,default='SBIN0989054')
-    upi_id = models.CharField(max_length=15,null=True,blank=True,default='upi_id@oksbi')
+    bank_account = models.CharField(max_length=20,null=True,blank=True,default='Account Number')
+    ifsc_code = models.CharField(max_length=25,null=True,blank=True,default='SBIN0989054')
+    upi_id = models.CharField(max_length=25,null=True,blank=True,default='upi_id@oksbi')
 
 
     # def __str__(self):
