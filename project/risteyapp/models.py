@@ -198,7 +198,7 @@ class StaffTransactions(models.Model):
     date = models.DateField(auto_now=True)
     type = models.CharField(max_length=10)
     status = models.CharField(max_length=8,default='pending')
-    UTI = models.CharField(max_length=50,default='UTI')
+    UTI = models.CharField(max_length=100,null=True,blank=True,default='UTI')
 # UserTransactions
 class UserTransactions(models.Model):
     id = models.CharField(primary_key=True,max_length=22,default=secure_short_uuid,editable=False)
@@ -224,7 +224,7 @@ class DevTransactions(models.Model):
     date = models.DateField(auto_now=True)
     type = models.CharField(max_length=10)
     status = models.CharField(max_length=8,default='pending')
-    UTI = models.CharField(max_length=50,default='UTI')
+    UTI = models.CharField(max_length=100,null=True,blank=True,default='UTI')
 
 
 class EmailOTP(models.Model):
