@@ -966,6 +966,16 @@ class UserDataRegView_wl(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             except UserData.DoesNotExist:
                 return Response({"error": "UserData not found"}, status=status.HTTP_404_NOT_FOUND)
+            
+    def delete(self, request, pk=None):
+            try:
+                user = UserData.objects.get(User_id=pk)
+                user.delete()
+                employees = UserData.objects.all()
+                serializer1 = UserDataSerializer(employees, many=True)
+                return Response(serializer1.data, status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
   
 class UserImagesView_wl(APIView):
 
