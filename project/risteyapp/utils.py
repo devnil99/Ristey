@@ -1,19 +1,26 @@
 import requests
 from rest_framework_simplejwt.tokens import RefreshToken
 
-# def send_otp(phone, otp):
-#     url = "https://www.fast2sms.com/dev/bulkV2"
-#     headers = {
-#         "authorization": "dNVsEfQs8UHIpvzNm0VNOiL90MM9R4Fm8BHER75wtZ5unvxf7QqqAMPNiCH9",  # Replace with your Fast2SMS API Key
-#         "Content-Type": "application/x-www-form-urlencoded"
-#     }
-#     payload = {
-#         "variables_values": otp,
-#         "route": "otp",
-#         "numbers": phone
-#     }
-#     response = requests.post(url, headers=headers, data=payload)
-#     return response.json()
+def send_otp_via_f2sms(phone):
+    otp = str(random.randint(100000, 999999))
+    message = f"Your OTP is {otp}"
+
+    url = "https://www.fast2sms.com/dev/bulkV2"
+    headers = {
+        'authorization': 'saDXeQTBQMM2o6t02RfzxwtV2LyhZ2lcoxzs5Kv8CJ8Abchb8hHiLr61tygp',  # 🔐 Replace with your Fast2SMS key
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        "route": "otp",
+        "variables_values": otp,
+        "numbers": phone
+    }
+
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        return response.status_code == 200, otp
+    except Exception as e:
+        return False, None
 
 
 import hashlib

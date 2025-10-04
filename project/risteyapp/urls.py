@@ -19,8 +19,8 @@ urlpatterns = [
     path('UserData/', UserDataView.as_view(), name='UserDataView'),
     path('UserData/<str:pk>', UserDataView.as_view(), name='UserDataView'),
 
-    # path('send-otp/', SendOtpView.as_view(), name='send-otp'),
-    # path('verify-otp/', VerifyOtpView.as_view(), name='verify-otp'),
+    path('send-phone-otp/', SendPhoneOTP.as_view(), name='send-phone-otp'),
+    path('verify-phone-otp/', VerifyPhoneOTP.as_view(), name='verify-phone-otp'),
 
     path("send-email/", SendEmailView.as_view(), name="send_email"),
 
@@ -31,6 +31,10 @@ urlpatterns = [
 
     path('PostCharges/', PostChargesView.as_view(), name='PostCharges'),
     path('PostCharges/<str:pk>', PostChargesView.as_view(), name='PostCharges'),
+    
+    
+    path('RechargePlan/', RechargePlanView.as_view(), name='RechargePlan'),
+    path('RechargePlan/<str:pk>', RechargePlanView.as_view(), name='RechargePlan'),
     
     path('UserTotalRevenue/', UserTotalRevenueView.as_view(), name='UserTotalRevenue'),
     path('UserTotalRevenue/<str:pk>', UserTotalRevenueView.as_view(), name='UserTotalRevenue'),
@@ -68,6 +72,15 @@ urlpatterns = [
 
     path('send-otp/', send_otp, name='send_otp'),
     path('verify-otp/', verify_otp, name='verify_otp'),
+    
+  # Contacts
+    path('contactdetails/', ContactView.as_view(), name='contact_list_create'),
+    path('contactdetails/<int:pk>/', ContactView.as_view(), name='contact_detail'),
+
+    # Success Stories
+    path('successstories/', SuccessStoryView.as_view(), name='successstory_list_create'),
+    path('successstories/<int:pk>', SuccessStoryView.as_view()),
+    
     # path('Uuid/', UuidView.as_view(), name='Uuid'),
     # path('Uuid/<str:pk>', UuidView.as_view(), name='Uuid'),
     

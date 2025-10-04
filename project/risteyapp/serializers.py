@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+import json
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,13 +31,14 @@ class UserDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserData
         fields = '__all__'
-# class PhoneOtpSerializer(serializers.Serializer):
-#     phone = serializers.CharField(max_length=15) 
 
-# class VerifyOtpSerializer(serializers.Serializer):
-#     phone = serializers.RegexField(regex=r'^\d{10,15}$', error_messages={"invalid": "Invalid phone number"})
-#     otp = serializers.RegexField(regex=r'^\d{6}$', error_messages={"invalid": "Invalid OTP"})
-    
+
+class PhoneOTPSerializer(serializers.Serializer):
+    contact = serializers.CharField(max_length=15)
+
+class VerifyOTPSerializer(serializers.Serializer):
+    contact = serializers.CharField(max_length=15)
+    otp = serializers.CharField(max_length=6)
     
 # serializers.py
 
@@ -101,15 +103,21 @@ class User_StateSerializer(serializers.ModelSerializer):
         model = User_State
         fields = '__all__'
 
-# class BankDetailsSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = BankDetails
-#         fields = '__all__'
+class SuccessStorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SuccessStory
+        fields = '__all__'
 
 
 
 
-# class SubscriberSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Subscriber
-#         fields = '__all__'
+class ContactDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactDetails
+        fields = '__all__'
+
+
+class RechargePlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RechargePlan
+        fields = '__all__'
