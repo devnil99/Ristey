@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.fc40db5f.css",
+    "main.js": "/static/js/main.f38e2ed4.js",
+    "static/js/239.2733b7b6.chunk.js": "/static/js/239.2733b7b6.chunk.js",
+    "static/js/977.59757c35.chunk.js": "/static/js/977.59757c35.chunk.js",
+    "static/js/667.1f634904.chunk.js": "/static/js/667.1f634904.chunk.js",
+    "static/js/488.0f6f66ca.chunk.js": "/static/js/488.0f6f66ca.chunk.js",
+    "static/media/flowers-background.jpg": "/static/media/flowers-background.33c3c5f67d6ed3c78c74.jpg",
+    "static/media/wedding1.jpg": "/static/media/wedding1.f0c06c2476aefab17989.jpg",
+    "static/media/stuff_logo-removebg-preview.png": "/static/media/stuff_logo-removebg-preview.3b7ba4a005461c1bda5d.png",
+    "static/media/admin.png": "/static/media/admin.e12669215698c3026936.png",
+    "index.html": "/index.html",
+    "main.fc40db5f.css.map": "/static/css/main.fc40db5f.css.map",
+    "main.f38e2ed4.js.map": "/static/js/main.f38e2ed4.js.map",
+    "239.2733b7b6.chunk.js.map": "/static/js/239.2733b7b6.chunk.js.map",
+    "977.59757c35.chunk.js.map": "/static/js/977.59757c35.chunk.js.map",
+    "667.1f634904.chunk.js.map": "/static/js/667.1f634904.chunk.js.map",
+    "488.0f6f66ca.chunk.js.map": "/static/js/488.0f6f66ca.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fc40db5f.css",
+    "static/js/main.f38e2ed4.js"
+  ]
+}
