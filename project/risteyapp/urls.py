@@ -21,6 +21,9 @@ urlpatterns = [
 
     path('send-phone-otp/', SendPhoneOTP.as_view(), name='send-phone-otp'),
     path('verify-phone-otp/', VerifyPhoneOTP.as_view(), name='verify-phone-otp'),
+    path('send-phone-otp_WO/', SendPhoneOTPWO.as_view(), name='send-phone-otp_WO'),
+    path('verify-phone-WO/', VerifyPhoneWO.as_view(), name='verify-phone-WO'),
+
 
     path("send-email/", SendEmailView.as_view(), name="send_email"),
 

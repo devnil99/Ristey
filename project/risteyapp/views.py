@@ -1197,7 +1197,59 @@ class VerifyPhoneOTP(APIView):
             return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-       
+
+class SendPhoneOTPWO(APIView):
+    def post(self, request):
+        serializer = PhoneOTPSerializer(data=request.data)
+        if serializer.is_valid():
+            contact = serializer.validated_data['contact']
+
+            # ✅ Generate OTP (no SMS sending)
+            import random
+            otp = str(random.randint(100000, 999999))  # 6-digit OTP
+
+            # ✅ Save or update OTP in DB
+            PhoneOTP.objects.update_or_create(
+                contact=contact,
+                defaults={'otp': otp, 'created_at': timezone.now()}
+            )
+
+            # ✅ Return OTP in response instead of sending SMS
+            return Response(
+                {'message': 'OTP generated successfully', 'otp': otp},
+                status=status.HTTP_200_OK
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+class VerifyPhoneWO(APIView):
+    def post(self, request):
+        serializer = VerifyOTPSerializer(data=request.data)
+        if serializer.is_valid():
+            contact = serializer.validated_data['contact']
+            otp = serializer.validated_data['otp']
+
+            try:
+                record = PhoneOTP.objects.get(contact=contact)
+            except PhoneOTP.DoesNotExist:
+                return Response({'error': 'OTP not found'}, status=status.HTTP_404_NOT_FOUND)
+
+            if record.is_expired():
+                record.delete()
+                return Response({'error': 'OTP expired'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if record.otp == otp:
+                user, _ = User.objects.get_or_create(contact=contact)
+                record.delete()
+                return Response({
+                    'message': 'OTP verified',
+                    'user_id': user.id,
+                    'contact': user.contact
+                }, status=status.HTTP_200_OK)
+            return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class UserImagesView(APIView):
     authentication_classes = [JWTAuthentication]  # ✅ Token Check
     permission_classes = [IsAuthenticated]  # ✅ Only Authenticated Users
